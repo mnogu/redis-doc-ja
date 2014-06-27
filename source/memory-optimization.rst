@@ -6,8 +6,6 @@ Memory optimization
    このドキュメントは `Memory optimization <http://redis.io/topics/memory-optimization>`_ の翻訳です。
    誤訳を見つけたら `翻訳リポジトリ <https://github.com/mocobeta/redis-doc-ja>`_ に Issue を登録してください。
 
-   Contact: `@moco_beta <https://twitter.com/moco_beta>`_
-
 .. This page is a work in progress. Currently it is just a list of things you should check if you have problems with memory.
 
 このページは作業中です。現在のところ、メモリに関する問題が発生したときにチェックするべき項目のリストにすぎません。
