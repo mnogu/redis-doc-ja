@@ -7,5 +7,5 @@ Redis 上でのプログラミング
    pipelining
    pubsub
    memory-optimization
-
+   lru-cache
 
