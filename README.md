@@ -7,8 +7,6 @@ About
 
 This is unofficial Japanese translation of Redis Documentation (http://redis.io/documentation).
 
-Sorry, Japanse only...
-
 このプロジェクトは、Redis Documentation (http://redis.io/documentation) の非公式翻訳です。
 
 (Redis が Google Code にあった頃の Wiki 翻訳プロジェクトがすでに存在しているのですが、内容が少し古くなっているのと、公式サイトが現在のドメインに移行してからのドキュメントの翻訳はないようなので作成、公開しています。)
