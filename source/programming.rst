@@ -8,4 +8,5 @@ Redis 上でのプログラミング
    pubsub
    memory-optimization
    lru-cache
+   transactions
 
