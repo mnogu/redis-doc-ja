@@ -36,3 +36,5 @@ Change Log
 ==========
 
 * 2014.06.26 'Pipelining', 'Redis Pub/Sub', 'Memory optimization' 公開
+* 2014.06.28 'Redis as an LRU cache'公開
+* 2014.06.29 'Redis transactions', 'Mass insertion of data' 公開
