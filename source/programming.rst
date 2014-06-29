@@ -9,4 +9,4 @@ Redis 上でのプログラミング
    memory-optimization
    lru-cache
    transactions
-
+   mass-insert
