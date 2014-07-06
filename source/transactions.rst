@@ -6,7 +6,7 @@
 
 .. note:: 
    このドキュメントは `Transactions <http://redis.io/topics/transactions>`_ の翻訳です。
-   誤訳を見つけたら `翻訳リポジトリ <https://github.com/mocobeta/redis-doc-ja>`_ に Issue を登録してください。
+   誤訳を見つけたら `翻訳リポジトリ <https://github.com/mocobeta/redis-doc-ja>`_ に Issue 登録をお願いします。
 
 .. `MULTI`, `EXEC`, `DISCARD` and `WATCH` are the foundation of
 .. transactions in Redis.  They allow the execution of a group of commands

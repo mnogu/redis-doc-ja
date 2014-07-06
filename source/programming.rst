@@ -1,4 +1,4 @@
-Redis 上でのプログラミング
+Redis プログラミング
 =============================
 
 .. toctree::
@@ -10,3 +10,4 @@ Redis 上でのプログラミング
    lru-cache
    transactions
    mass-insert
+   distlock

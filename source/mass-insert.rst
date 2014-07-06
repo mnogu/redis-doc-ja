@@ -4,7 +4,7 @@ Redis Mass Insertion
 
 .. note:: 
    このドキュメントは `Redis Mass Insertion <http://redis.io/topics/mass-insert>`_ の翻訳です。
-   誤訳を見つけたら `翻訳リポジトリ <https://github.com/mocobeta/redis-doc-ja>`_ に Issue を登録してください。
+   誤訳を見つけたら `翻訳リポジトリ <https://github.com/mocobeta/redis-doc-ja>`_ に Issue 登録をお願いします。
 
 .. Sometimes Redis instances needs to be loaded with big amount of preexisting
 .. or user generated data in a short amount of time, so that millions of keys

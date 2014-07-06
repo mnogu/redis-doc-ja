@@ -4,7 +4,7 @@ Redis Pub/Sub
 
 .. note:: 
    このドキュメントは `Pub/Sub <http://redis.io/topics/pubsub>`_ の翻訳です。
-   誤訳を見つけたら `翻訳リポジトリ <https://github.com/mocobeta/redis-doc-ja>`_ に Issue を登録してください。
+   誤訳を見つけたら `翻訳リポジトリ <https://github.com/mocobeta/redis-doc-ja>`_ に Issue 登録をお願いします。
 
 Pub/Sub
 =======

@@ -35,6 +35,7 @@ Redis documentation は、Creative Commons Attribution-ShareAlike 4.0 Internatio
 Change Log
 ==========
 
-* 2014.06.26 'Pipelining', 'Redis Pub/Sub', 'Memory optimization' 公開
-* 2014.06.28 'Redis as an LRU cache'公開
-* 2014.06.29 'Redis transactions', 'Mass insertion of data' 公開
+* 2014.06.26 'Pipelining', 'Redis Pub/Sub', 'Memory optimization' の翻訳を公開
+* 2014.06.28 'Redis as an LRU cache'の翻訳を公開
+* 2014.06.29 'Redis transactions', 'Mass insertion of data' の翻訳を公開
+* 2014.07.06 'Distributed locks with Redis' の翻訳を公開

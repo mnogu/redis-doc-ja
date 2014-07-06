@@ -6,7 +6,7 @@ Redis を LRU キャッシュとして使う
 
 .. note:: 
    このドキュメントは `Using Redis as an LRU cache <http://redis.io/topics/lru-cache>`_ の翻訳です。
-   誤訳を見つけたら `翻訳リポジトリ <https://github.com/mocobeta/redis-doc-ja>`_ に Issue を登録してください。
+   誤訳を見つけたら `翻訳リポジトリ <https://github.com/mocobeta/redis-doc-ja>`_ に Issue 登録をお願いします。
 
 .. When Redis is used as a cache, sometimes it is handy to let it automatically
 .. evict old data as you add new one. This behavior is very well known in the
