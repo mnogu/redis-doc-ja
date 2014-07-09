@@ -11,3 +11,4 @@ Redis プログラミング
    transactions
    mass-insert
    distlock
+   notifications

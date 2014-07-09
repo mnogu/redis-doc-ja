@@ -39,3 +39,4 @@ Change Log
 * 2014.06.28 'Redis as an LRU cache'の翻訳を公開
 * 2014.06.29 'Redis transactions', 'Mass insertion of data' の翻訳を公開
 * 2014.07.06 'Distributed locks with Redis' の翻訳を公開
+* 2014.07.10 'Redis Keyspace Notifications' の翻訳を公開
