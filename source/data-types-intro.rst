@@ -1,7 +1,7 @@
 .. An introduction to Redis data types and abstractions
 
 ===================================
-入門 : Redis データ構造と概念
+入門 : Redis のデータ構造と概念
 ===================================
 
 .. note:: 
@@ -35,7 +35,7 @@ Redis は *プレーン* なキー・バリューストアではありません�
 ..   it seems... See later in the HyperLogLog section of this tutorial.
 
 * バイナリ・セーフな文字列
-* Lists: 文字列のコレクション。挿入された順序を保つ。基本的には *linked list* 。
+* Lists: 文字列のコレクション。挿入された順序を保つ。基本的には *linked list*.
 * Sets: ユニークで、順序づけられない文字列のコレクション。
 * Sorted sets: Sets に似ているが、すべての要素には *スコア* と呼ばれる浮動小数点数が関連づけられる。要素は常にスコアによりソートされており、Sets とは違い特定の範囲の要素を取り出すことができる(たとえば、上位 10 件、または下位 10 件を返す、など)。
 * Hashes: フィールドと、それに関連づけられた値から構成されるマップ。フィールドと値はどちらも文字列。Ruby や Python でいうハッシュ、によく似ている。
@@ -86,6 +86,9 @@ Redis のキーはバイナリ・セーフです。つまり、"foo" のよう�
 .. * The maximum allowed key size is 512 MB.
 
 * 長すぎるキーを使うのは良くありません。たとえば、1024 バイトのキーはメモリ消費の面からだけでなく、データセットからのキーのルックアップ時、キーの比較に高いコストを要します。手元のタスクが、ある大きな値が存在するか、というマッチングである場合も、(SHA1 などで) ハッシングしておくことは、メモリ使用量と帯域の観点から良い考えです。
+* 短すぎるキーもしばしば良い考えではありません。 "user:1000:followers" と書けるところを、 "u1000flw" と書くのはあまり意味がありません。前者のほうがより読みやすく、追加で必要となるスペースは、キーオブジェクトそのものやバリューオブジェクトに比較するとささいなものです。しかし、短いキーのほうが少ないメモリを消費する、ということは否定できません。適切なバランスを見極めるのがあなたの仕事です。
+* スキーマにこだわってください。たとえば、"user:1000" のように "object-type:id" という形は良いアイディアです。"comment:1234:reply.to" や "coment:1234:reply-to" のように、ドットやダッシュはしばしば複数ワードのフィールドに使われます。
+* 許容される最大のキー長は 512 MB です。
 
 .. Redis Strings
 
@@ -132,7 +135,7 @@ Redis のキーは文字列であるため、String タイプを値として使�
 .. arguments. For example if I may ask `SET` to fail if the key already exists,
 .. or the exact contrary, that is, to only succeed if the key already exists:
 
-`SET <http://redis.io/commands/set>`_ コマンドには、追加の引数として指定される、興味深いオプションがあります。たとえば、キーがすでに存在する場合は `SET <http://redis.io/commands/get>`_ が失敗するように指示したり、またその逆、すでに存在する場合のみ成功するように指示したりできます:
+`SET <http://redis.io/commands/set>`_ コマンドには、追加の引数として指定される、興味深いオプションがあります。たとえば、キーがすでに存在する場合は `SET <http://redis.io/commands/set>`_ が失敗するように指示したり、またその逆、すでに存在する場合のみ成功するように指示したりできます:
 
 .. code-block:: none
 
@@ -163,7 +166,7 @@ String は Redis の基本的な値ですが、興味深い操作も行えます
 .. [DECR](commands/decr) and [DECRBY](/commands/decrby).  Internally it's
 .. always the same command, acting in a slightly different way.
 
-`INCR <http://redis.io/commands/incr>`_ コマンドは文字列値を整数としてパースし、1 だけインクリメントし、得られた値を新しい値としてセットします。その他、類似する `INCRBY <http://redis.io/commands/incrby>`_, `DECR <http://redis.io/commands/get>`_, `DECRBY <http://redis.io/commands/get>`_ といったコマンドがあります。内部的にはこれらは同じコマンドで、振る舞いを少し変えています。
+`INCR <http://redis.io/commands/incr>`_ コマンドは文字列値を整数としてパースし、1 だけインクリメントし、得られた値を新しい値としてセットします。その他、類似する `INCRBY <http://redis.io/commands/incrby>`_, `DECR <http://redis.io/commands/decr>`_, `DECRBY <http://redis.io/commands/decrby>`_ といったコマンドがあります。内部的には、これらは同じコマンドの振る舞いを少し変えたものです。
 
 .. What does it mean that INCR is atomic?
 .. That even multiple clients issuing INCR against
@@ -184,7 +187,7 @@ INCR がアトミックである、とは何を意味するのでしょう？こ
 .. You can `GETSET` the key, assigning it the new value of "0" and reading the
 .. old value back.
 
-String を操作するコマンドは多数あります。たとえば `GETSET <http://redis.io/commands/getset>`_ コマンドはキーに新しい値をセットし、古い値を戻り値として返します。例として、Web サイトの訪問数を数えるために `INCR <http://redis.io/commands/getset>`_ を使ってあるキーをインクリメントするシステムを考えます。1 つのインクリメントも失うことなく、 1 時間ごとにこの情報を収集したい、としましょう。 `GETSET <http://redis.io/commands/getset>`_ を使って、新しい値として "0" を割り当てながら、古い値を取得することができます。
+String を操作するコマンドは多数あります。たとえば `GETSET <http://redis.io/commands/getset>`_ コマンドはキーに新しい値をセットし、古い値を戻り値として返します。例として、Web サイトの訪問数を数えるために `INCR <http://redis.io/commands/incr>`_ を使ってあるキーをインクリメントするシステムを考えます。1 つのインクリメントも失うことなく、 1 時間ごとにこの情報を収集したい、としましょう。 `GETSET <http://redis.io/commands/getset>`_ を使って、新しい値として "0" を割り当てながら、古い値を取得することができます。
 
 .. The ability to set or retrieve the value of multiple keys in a single
 .. command is also useful for reduce latency. For this reason there are
@@ -203,7 +206,7 @@ String を操作するコマンドは多数あります。たとえば `GETSET <
 
 .. When `MSET` is used, Redis returns an array of values.
 
-`MSET <http://redis.io/commands/mset>`_ が呼ばれると、Redis は値の配列を返却します。
+`MSET <http://redis.io/commands/mset>`_ [訳注: `MGET <http://redis.io/commands/mset>`_ のミス？]が呼ばれると、Redis は値の配列を返却します。
 
 .. Altering and querying the key space
 
@@ -220,7 +223,7 @@ String を操作するコマンドは多数あります。たとえば `GETSET <
 .. exists or not in the data base, while the `DEL` command deletes a key
 .. and associated value, whatever the value is.
 
-たとえば `EXISTS <http://redis.io/commands/exists>`_ コマンドは、指定されたキーがデータベース中に存在するかどうかに応じて 1 または 0 を返します。一方、 `DEL <http://redis.io/commands/del>`_ コマンドは値が何であるかに関わらず、キーと関連づけられた値を削除します。
+たとえば `EXISTS <http://redis.io/commands/exists>`_ コマンドは、指定されたキーがデータベース中に存在するかどうかに応じて 1 または 0 を返します。一方、 `DEL <http://redis.io/commands/del>`_ コマンドは値が何であるかに関わらず、キーとそれに関連する値を削除します。
 
 .. code-block:: none
 
@@ -243,7 +246,7 @@ String を操作するコマンドは多数あります。たとえば `GETSET <
 .. essential ones together with the `TYPE` command, that returns the kind
 .. of value stored at the specified key:
 
-キー・スペースに関連するコマンドは多くありますが、上記の 2 つは `TYPE <http://redis.io/commands/type>`_ コマンドと同様に最も重要なものです。これは特定のキーに格納されている値の種類を返します。
+キー・スペースに関連するコマンドは多くありますが、上記の 2 つとともに `TYPE <http://redis.io/commands/type>`_ コマンドと同様に最も重要なものです。これは特定のキーに格納されている値の種類を返します。
 
 .. code-block:: none
 
@@ -272,7 +275,7 @@ Redis expires: 有効期間(time to live)が制限されたキー
 
 .. A few quick info about Redis expires:
 
-Redis expires について、すぐに役立つ情報をいくつか:
+Redis expires について、即席の情報をいくつか:
 
 .. * They can be set both using seconds or milliseconds precision.
 .. * However the expire time resolution is always 1 millisecond.
@@ -280,7 +283,7 @@ Redis expires について、すぐに役立つ情報をいくつか:
 
 * 秒またはミリ秒の精度が指定できる
 * ただし、 expire 時の精度は常に 1 ミリ秒
-* expire に関する情報はレプリケーション、またディスクに永続化され、Redis サーバーが停止している間も、実質的な時間が経過する(つまり、 Redis はキーが expire される日時を保存している)。
+* expire に関する情報はレプリケーションおよびディスクに永続化され、Redis サーバーが停止している間も、実質的な時間が経過する(つまり、 Redis はキーが expire される日時を保存している)。
 
 .. Setting an expire is trivial:
 
@@ -336,7 +339,7 @@ Redis Lists
 .. Lists), they are actually Arrays (the same data type is called Array in
 .. Ruby actually).
 
-List データタイプを説明するために、ちょっとした理論から始めます。なぜなら、情報技術に関わる人たちの間で、しばしば *List* という語は正しくない使い方をされるためです。たとえば、 "Python Lists" はそれが示唆するもの(Linked List)ではなく、実際のところは配列(Ruby では 配列と呼ばれるデータタイプと同じもの)です。
+List データタイプを説明するために、ちょっとした理論から始めます。なぜなら、情報技術に関わる人たちの間で、しばしば *List* という語は正しくない使い方をされるためです。たとえば、 "Python Lists" はそれが示唆するもの(Linked List)ではなく、実質的に配列(Ruby では実際に配列と呼ばれているデータタイプと同じもの)です。
 
 .. From a very general point of view a List is just a sequence of ordered
 .. elements: 10,20,1,2,3 is a list. But the properties of a List implemented using
@@ -556,7 +559,7 @@ Redis は両方のユースケースについて、信頼性と効率を向上�
 .. newest elements into the list. With `LRANGE` you can access the top items
 .. without any need to remember very old data.
 
-上記の組合せでは、最新の 1000 要素だけをリストに残しながら、新しい要素を追加しています。併せて `LRANGE <http://redis.io/commands/lrange>`_ を使うにより、古いデータを覚えておく必要なしに、上位のアイテムを取得することができます。
+上記の組合せでは、最新の 1000 要素だけをリストに残しながら、新しい要素を追加しています。併せて `LRANGE <http://redis.io/commands/lrange>`_ を使うことにより、古いデータを覚えておく必要なしに、上位のアイテムを取得することができます。
 
 .. Note: while `LRANGE` is technically an O(N) command, accessing small ranges
 .. towards the head or the tail of the list, is a constant time operation.
@@ -627,7 +630,7 @@ List は、キュー (より一般的に言うと、プロセス間通信を行�
 .. lists at the same time, and get notified when the first list receives an
 .. element.
 
-タイムアウトを 0 に指定することで、要素が追加されるのを永久に待つことができます。また、ひとつのリストだけではなく複数のリストを指定できます。同時に複数のリストを待ち、最初のリストが要素を受信すると通知されます。
+タイムアウトを 0 に指定することで、要素が追加されるのを永久に待つことができます。また、同時に複数のリストを待ち、最初のリストが要素を受信したときに通知を受け取るために、ひとつのリストのみでなく複数のリストを指定できます。
 
 .. A few things to note about `BRPOP`.
 
@@ -663,13 +666,13 @@ List とブロッキング操作について、さらに知っておくべきこ
 .. an empty list if the key does not exist and we are trying to add elements
 .. to it, for example, with `LPUSH`.
 
-ここまでの例で、要素の追加前に空のリストを作成したり、もう要素をもたなくなった空のリストの削除を行う必要はありませんでした。これは、リストが空になった場合はキーを削除し、また存在しないキーに対して要素を追加しようとした場合(たとえば `LPUSH <http://redis.io/commands/lpush>`_ などで)、空のリストを作成するよう、Redis が気を配っているためです。
+ここまでの例で、要素の追加前に空のリストを作成したり、もう要素をもたなくなった空のリストの削除を行う必要はありませんでした。これは、リストが空になった場合はキーを削除し、また存在しないキーに対して要素を追加しようとした場合(たとえば `LPUSH <http://redis.io/commands/lpush>`_ などで)は空のリストを作成するよう、Redis が気を配っているためです。
 
 .. This is not specific to lists, it applies to all the Redis data types
 .. composed of multiple elements, so also applies to Sets, Sorted Sets and
 .. Hashes.
 
-これはリストに限った話ではなく、複数の要素をから構成されるすべての Redis データタイプについて適用されます。すなわち、Sets, Sorted Sets, Hashes にも同様に適用されます。
+これはリストに限った話ではなく、複数の要素をから構成されるすべての Redis データタイプについて適用されます。すなわち、Sets, Sorted Sets, Hashes についても同様です。
 
 .. Basically we can summarize the behavior with three rules:
 
@@ -726,7 +729,9 @@ List とブロッキング操作について、さらに知っておくべきこ
     > exists mylist
     (integer) 0 
 
-The key does no longer exist after all the elements are popped.
+.. The key does no longer exist after all the elements are popped.
+
+要素がすべて pop された後は、キーはもはや存在しない。
 
 .. Example of rule 3:
 
@@ -802,7 +807,7 @@ Redis のハッシュは、あなたが期待する "hash" のイメージと一
 .. It is worth to note that small hashes (a few elements, not too big values) are
 .. encoded in special way in memory that make them very memory efficient.
 
-小さなハッシュ(少ない要素数、大きすぎない値)は、大変メモリ効率の良い特殊な方法でエンコードされる、ということも留意する価値があります。
+小さなハッシュ(少ない要素数、大きすぎない値)は、大変メモリ効率の良い特殊な方法でエンコードされる、ということにも留意する価値があります。
 
 Redis Sets
 ==========
@@ -833,7 +838,7 @@ Redis の Set は、順序をもたない文字列のコレクションです。
 
 .. We have commands to test for membership. Does a given element exists?
 
-メンバーシップを検査するためのコマンドもあります。ある指定された要素が存在するでしょうか？
+メンバーシップを検査するためのコマンドもあります。ある要素は[訳注: セット中に]存在するでしょうか？
 
 .. code-block:: none
 
@@ -977,13 +982,13 @@ Redis の Set は、順序をもたない文字列のコレクションです。
 
 .. One pair of jacks, not great...
 
-ジャックの 1 ペア、あまり良くない...
+ジャックの 1 ペア、あまり良くはない...
 
 .. It is a good time to introduce the set command that provides the number
 .. of elements inside a set. This is often called *cardinality of a set*
 .. in the context of set theory, so the Redis command is called `SCARD`.
 
-セット中の要素の数を取得するコマンドを導入する、良いタイミングです。集合論ではしばしば *濃度(cardinality)* と呼ばれるため、Redis コマンドは `SCARD <http://redis.io/commands/scard>` といいます。
+セット中の要素の数を取得するコマンドを導入する、良いタイミングです。集合論ではしばしば *濃度(cardinality)* と呼ばれるため、Redis コマンドは `SCARD <http://redis.io/commands/scard>`_ といいます。
 
 .. code-block:: none
 
@@ -1007,7 +1012,7 @@ Redis Sorted sets
 .. an hash. Like sets, sorted sets are composed of unique, non-repeating
 .. string elements, so in some sense a sorted set is a set as well.
 
-ソート済みセットは、セットとハッシュの混合に似ています。セットのように、ソート済みセットはユニークで繰り返しのない文字列の要素から構成されます。そのため、ソート済みセットはある意味セットとみなすことができます。
+ソート済みセットは、セットとハッシュの混合に似ています。セットのように、ソート済みセットはユニークで繰り返しのない文字列要素から構成されます。そのため、ソート済みセットはある種のセットとみなすことができます。
 
 .. However while elements inside sets are not ordered, every element in
 .. a sorted set is associated with a floating point value, called *the score*
@@ -1065,7 +1070,7 @@ Redis Sorted sets
 .. With sorted sets it is trivial to return a list of hackers sorted by their
 .. birth year because actually *they are already sorted*.
 
-ソート済みセットを使っているため、ハッカーのリストが生年でソートされた状態で返却されるのは当然ということになります。なぜなら、実際のところ *それらはすでにソート済みである* ためです。
+ソート済みセットを使うと、ハッカーのリストが生年でソートされた状態で返却されるのは自明です。なぜなら、実際のところ *それらはすでにソート済みである* ためです。
 
 .. Implementation note: Sorted sets are implemented via a
 .. dual-ported data structure containing both a skip list and a hash table, so
@@ -1073,7 +1078,7 @@ Redis Sorted sets
 .. good, but when we ask for sorted elements Redis does not have to do any work at
 .. all, it's already all sorted:
 
-実装上の注意: ソート済みセットは、スキップリストとハッシュテーブルの両方を含む、 dual-ported なデータ構造で実装されています。そのため、ひとつの要素を追加するたびに Redis は O(log(N)) の計算量の操作を実行します。けっこうなことだ、しかしソート済みセットを取得するとき、Redis はどのような仕事もこなす必要がありません。すべては既にソート済みであるためです:
+実装上の注意: ソート済みセットは、スキップリストとハッシュテーブルの両方を含む、 dual-ported なデータ構造で実装されています。そのため、ひとつの要素を追加するたびに Redis は O(log(N)) の計算量の操作を実行します。悪くありません。一方、ソート済みセットを取得するとき、Redis はどのような仕事もこなす必要がありません。すべては既にソート済みであるためです:
 
 .. code-block:: none
 
@@ -1091,12 +1096,12 @@ Redis Sorted sets
 .. Note: 0 and -1 means from element index 0 to the last element (-1 works
 .. like in the case of the `LRANGE` command).
 
-注意: 0 と -1 は、インデックス 0 の要素から最後の要素まで、を意味します(-1 は `LRANGE <http://redis.io/commands/lrange>`_)。
+注意: 0 と -1 は、インデックス 0 の要素から最後の要素まで、を意味します(-1 は `LRANGE <http://redis.io/commands/lrange>`_ のときと同じはたらきをします)。
 
 .. What if I want to order them the opposite way, youngest to oldest?
 .. Use [ZREVRANGE](/commands/zrevrange) instead of [ZRANGE](/commands/zrange):
 
-逆方向、若い順に並べたい場合はどうしたら良いでしょう？ `ZRANGE <http://redis.io/commands/zrange>`_ の代わりに `ZREVRANGE <http://redis.io/commands/zravrange>`_ が使えます。
+逆方向、若い順に並べたい場合はどうしたら良いでしょう？ `ZRANGE <http://redis.io/commands/zrange>`_ の代わりに `ZREVRANGE <http://redis.io/commands/zrevrange>`_ が使えます。
 
 .. code-block:: none
 
@@ -1146,7 +1151,7 @@ Redis Sorted sets
 .. Let's get all the individuals that were born up to the 1950 inclusive. We
 .. use the `ZRANGEBYSCORE` command to do it:
 
-ソート済みセットはこれよりももっとパワフルです。範囲を指定した操作を実行できます。1950年以降に生まれた人、を取得してみましょう。 `ZRANGEBYSCORE <http://redis.io/commands/zrangebyscore>`_ コマンドがこの仕事をします:
+ソート済みセットは上記で説明したよりももっとパワフルで、範囲を扱う操作を実行できます。1950年以降に生まれた人、を取得してみましょう。 `ZRANGEBYSCORE <http://redis.io/commands/zrangebyscore>`_ コマンドがこの仕事をします:
 
 .. code-block:: none
 
@@ -1191,7 +1196,7 @@ Redis Sorted sets
 .. The `ZREVRANK` command is also available in order to get the rank considering
 .. the elements sorted a descending way.
 
-要素を降順に並べた場合のランクを取得するため、 `ZREVRANK <http://redis.io/commands/zrevrank>` コマンドも使うことができます。
+要素を降順に並べた場合のランクを取得するため、 `ZREVRANK <http://redis.io/commands/zrevrank>`_ コマンドも使うことができます。
 
 .. Lexicographical scores
 
@@ -1209,7 +1214,7 @@ Redis 2.8 以降のバージョンでは、すべての要素が同じスコア�
 .. The main commands to operate with lexicographical ranges are `ZRANGEBYLEX`,
 .. `ZREVRANGEBYLEX`, `ZREMRANGEBYLEX` and `ZLEXCOUNT`.
 
-辞書順での範囲操作を行う主なコマンドには `ZRANGEBYLEX <http://redis.io/commands/zrangebylex>`_, `ZREVRANGEBYLEX <http://redis.io/commands/zrevrangebyles>`_, `ZREMRANGEBYLEX <http://redis.io/commands/zremrangebylex>`_, そして `ZLEXCOUNT <http://redis.io/commands/zlexcount>`_ があります。
+辞書順での範囲操作を行う主なコマンドには `ZRANGEBYLEX <http://redis.io/commands/zrangebylex>`_, `ZREVRANGEBYLEX`, `ZREMRANGEBYLEX <http://redis.io/commands/zremrangebylex>`_, そして `ZLEXCOUNT <http://redis.io/commands/zlexcount>`_ があります。
 
 .. For example, let's add again our list of famous hackers. But this time,
 .. use a score of zero for all the elements:
@@ -1257,18 +1262,16 @@ Redis 2.8 以降のバージョンでは、すべての要素が同じスコア�
 
 範囲は、端を含むことも含まないこともでき(最初の文字に依存する)、また、無限大や負の無限大はそれぞれ、'+' と '-' という文字列で表現されます。より詳しい情報はドキュメントを参照してください。
 
-/* TODO */
+.. This feature is important because allows to use sorted sets as a generic
+.. index. For example, if you want to index elements by a 128-bit unsigned
+.. integer argument, all you need to do is to add elements into a sorted
+.. set with the same score (for example 0) but with an 8 bytes prefix
+.. consisting of **the 128 bit number in big endian**. Since numbers in big
+.. endian, when ordered lexicographically (in raw bytes order) are actually
+.. ordered numerically as well, you can ask for ranges in the 128 bit space,
+.. and get the elements value discarding the prefix.
 
-This feature is important because allows to use sorted sets as a generic
-index. For example, if you want to index elements by a 128-bit unsigned
-integer argument, all you need to do is to add elements into a sorted
-set with the same score (for example 0) but with an 8 bytes prefix
-consisting of **the 128 bit number in big endian**. Since numbers in big
-endian, when ordered lexicographically (in raw bytes order) are actually
-ordered numerically as well, you can ask for ranges in the 128 bit space,
-and get the elements value discarding the prefix.
-
-.. これにより、ソート済みセットを一般的なインデックスとして使うことができるようになるため、この機能は重要です。たとえば、要素を 128 bit の符号なし整数によりインデックスしたい、としましょう。必要なのは、ソート済みセットに、同じスコア(たとえば 0)で、ただし **128 bit をビッグエンディアンで表現した場合の** 8 byte をプレフィックスに付与した要素として追加するだけです。数値はビッグエンディアン表現なので、辞書順(生のバイトオーダー)で並べたものは数値で並べたものと一致します。
+これにより、ソート済みセットを一般的なインデックスとして使うことができるようになるため、この機能は重要です。たとえば、要素を 128 bit の符号なし整数によりインデックスしたい、としましょう。必要なのは、ソート済みセットに、同じスコア(たとえば 0)で、ただし **128 bit をビッグエンディアン方式で表現した** 8 byte をプレフィックスに付与した要素を追加するだけです。数値はビッグエンディアン方式なので、辞書順(生のバイトオーダー)で並べたものは数値で並べたものと一致します。そのため、128 bit 空間で範囲を問合せることができ、その後でプレフィクスを除去することで求める要素が得られます。
 
 .. If you want to see the feature in the context of a more serious demo,
 .. check the [Redis autocomplete demo](http://autocomplete.redis.io).
@@ -1294,7 +1297,7 @@ and get the elements value discarding the prefix.
 .. to show the top-N users, and the user rank in the leader board (you are
 .. the #4932 best score here).
 
-この性質をもつため、よくあるユースケースは順位表(leader boards)です。典型的なアプリケーションに Facebook ゲームがあります。これは、ユーザーをスコアの高い順に並べる機能に加えて、ランキングを取得する操作を備えています。ユーザーに、上位 の N ユーザー、およびリーダーボードにおける自分の順位(「あなたのベストスコアは 4932 位です」)を示すためです。
+この性質をもつため、よくあるユースケースのひとつは順位表(leader boards)です。典型的なアプリケーションに Facebook ゲームがあります。これは、ユーザーをスコアの高い順に並べる機能に加えて、ランキングを取得する操作を備えます。ユーザーに、上位 の N ユーザー、およびリーダーボードにおける自分の順位(「あなたはベストスコア順で 4932 位です」)を示すためです。
 
 HyperLogLogs
 ============
@@ -1312,7 +1315,7 @@ HyperLogLogs
 .. constant amount of memory! 12k bytes in the worst case, or a lot less if you
 .. HyperLogLog (We'll just call them HLL from now) has seen very few elements.
 
-HyperLogLog はユニークなものを数えるための確率的なデータ構造です(技術的には、集合の濃度を推定する際に言及されます)。通常、ユニークなアイテムを数え上げるためには、数えたいアイテム数に比例するメモリを必要とします。なぜなら、過去に数えた要素を、何度も数えてしまわないように、覚えておく必要があるためです。メモリと精度のトレードオフを考慮して、いくつかのアルゴリズムが存在します: Redis の実装では、標準誤差を 1% 未満に抑えながらも、(アルゴリズムの魔法により)数え上げる対象の数に比例するメモリを必要とせず、必要なのは一定量のメモリだけです！最悪で 12k バイト、HyperLogLog (以降、単に HLL と呼びます) で考慮する要素数が非常に少ない場合は、もっと少なくて済みます。
+HyperLogLog はユニークなものを数えるための確率的なデータ構造です(技術的には、集合の濃度を推定する際に言及されます)。通常、ユニークなアイテムを数え上げるためには、数えたいアイテム数に比例するメモリを必要とします。なぜなら、過去に数えた要素を、何度も数えてしまわないように覚えておく必要があるためです。メモリと精度のトレードオフを考慮して、いくつかのアルゴリズムが存在します: Redis の実装では、標準誤差を 1% 未満に抑えながらも、(アルゴリズムの魔法により)数え上げる対象の数に比例するメモリを必要とせず、必要なのは一定量のメモリだけです！最悪で 12k バイト、HyperLogLog (以降、単に HLL と呼びます) で考慮する要素数が非常に少ない場合は、もっと少なくて済みます。
 
 .. HLLs in Redis, while technically a different data structure, is encoded
 .. as a Redis string, so you can call `GET` to serialize an HLL, and `SET`
@@ -1331,36 +1334,57 @@ Redis の HLL は、(技術的には異なるデータ構造ですが、) 文字
 .. only contains a state that does not include actual elements, the API is the
 .. same:
 
-HLL のデータ構造が含むのは状態だけで、要素自体を含まないため、HLL は実際には *要素の追加* を行いません。しかし API は同様です。
+HLL のデータ構造が含むのは状態だけで要素自体を含まないため、実際には *要素の追加* を行うわけではありませんが、API は同様です。
 
-* Every time you see a new element, you add it to the count with `PFADD`.
-* Every time you want to retrieve the current approximation of the unique elements *added* with `PFADD` so far, you use the `PFCOUNT`.
+.. * Every time you see a new element, you add it to the count with `PFADD`.
+.. * Every time you want to retrieve the current approximation of the unique elements *added* with `PFADD` so far, you use the `PFCOUNT`.
+
+* 新しい要素が見つかる都度、それを `PFADD <http://redis.io/commands/pfadd>`_ で数え上げます。
+* `PFADD <http://redis.io/commands/pfadd>`_ で *追加された* ユニークな要素数の現在の近似値を検索する都度、 `PFCOUNT <http://redis.io/commands/pfcount>`_ を使います。
+
+.. code-block:: none
 
     > pfadd hll a b c d
     (integer) 1
     > pfcount hll
     (integer) 4
 
-An example of use case for this data structure is counting unique queries
-performed by users in a search form every day.
+.. An example of use case for this data structure is counting unique queries
+.. performed by users in a search form every day.
 
-Redis is also able to perform the union of HLLs, please check the
-[full documentation](/commands#hyperloglog) for more information.
+このデータ構造のひとつのユースケースは、ユーザーが検索フォームから実行した、日々のユニーククエリの数を数える、というものです。
 
-Other notable features
----
+.. Redis is also able to perform the union of HLLs, please check the
+.. [full documentation](/commands#hyperloglog) for more information.
 
-There are other important things in the Redis API that can't be explored
-in the context of this document, but are worth your attention:
+Redis は HLL の和集合をとることもできます。より詳しい情報は `ドキュメント <http://redis.io/commands#hyperloglog>`_ を参照してください。
 
-* It is possible to [iterate the key space or a large collection incrementally](/commands/scan).
-* It is possible to run [Lua scripts server side](/commands/eval) to win latency and bandwidth.
-* Redis is also a [Pub-Sub server](/topics/pubsub).
+.. Other notable features
 
-Learn more
----
+その他、特筆すべき機能
+====================================
 
-This tutorial is in no way complete and has covered just the basics of the API.
-Read the [command reference](/commands) to discover a lot more.
+.. There are other important things in the Redis API that can't be explored
+.. in the context of this document, but are worth your attention:
+
+Redis API には他にも、このドキュメントでは詳しく掘り下げることができなかった重要な事項があります。
+
+.. * It is possible to [iterate the key space or a large collection incrementally](/commands/scan).
+.. * It is possible to run [Lua scripts server side](/commands/eval) to win latency and bandwidth.
+.. * Redis is also a [Pub-Sub server](/topics/pubsub).
+
+* `大きなコレクションのキースペースをひとつひとつインクリメントする <http://redis.io/commands/scan>`_ ことができます。
+* レイテンシと帯域を節約するため、 `サーバーサイド Lua スクリプト <http://redis.io/commands/eval>`_ を実行できます。
+* Redis は `Pub-Sub サーバー <http://redis.io/topics/pubsub>`_ にもなれます。
+
+.. Learn more
+
+さらに学ぶ
+===================
+
+.. This tutorial is in no way complete and has covered just the basics of the API.
+.. Read the [command reference](/commands) to discover a lot more.
+
+このチュートリアルは、包括的なものではなく、API の基礎にすぎません。さらに学ぶため、 `コマンドリファレンス <http://redis.io/commands>`_ を読んでください。
 
 Thanks for reading, and have a good hacking with Redis!
