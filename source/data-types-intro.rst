@@ -5,6 +5,7 @@
 ===================================
 
 .. note:: 
+
    このドキュメントは `An introduction to Redis data types and abstractions <http://redis.io/topics/data-types-intro>`_ の翻訳です。
    誤訳を見つけたら `翻訳リポジトリ <https://github.com/mocobeta/redis-doc-ja>`_ に Issue 登録をお願いします。
 
@@ -845,21 +846,33 @@ Redis の Set は、順序をもたない文字列のコレクションです。
 
 "3" はセットのメンバーですが、"30" はメンバーではありません。
 
-Sets are good for expressing relations between objects.
-For instance we can easily use sets in order to implement tags.
+.. Sets are good for expressing relations between objects.
+.. For instance we can easily use sets in order to implement tags.
 
-A simple way to model this problem is to have a set for every object we
-want to tag. The set contains the IDs of the tags associated with the object.
+セットは、オブジェクト間の関係を表現するのに有用です。たとえば、タグを実装するのに、セットが簡易に使えます。
 
-Imagine we want to tag news.
-If our news ID 1000 is tagged with tag 1,2,5 and 77, we can have one set
-associating our tag IDs with the news:
+.. A simple way to model this problem is to have a set for every object we
+.. want to tag. The set contains the IDs of the tags associated with the object.
+
+この問題をモデリングする簡単な方法は、タグを付与したいすべてのオブジェクトごとにセットを用意することです。セットには、オブジェクトに関連するタグの ID をもたせます。
+
+.. Imagine we want to tag news.
+.. If our news ID 1000 is tagged with tag 1,2,5 and 77, we can have one set
+.. associating our tag IDs with the news:
+
+ニュースにタグづけすることを考えましょう。ID 1000 をもつニュースに、タグ 1,2,5,77 を付与したい場合、これらのタグ ID とニュースを関連づける一つのセットを作れます。
+
+.. code-block:: none
 
     > sadd news:1000:tags 1 2 5 77
     (integer) 4
 
-However sometimes I may want to have the inverse relation as well: the list
-of all the news tagged with a given tag:
+.. However sometimes I may want to have the inverse relation as well: the list
+.. of all the news tagged with a given tag:
+
+しばしば、逆の関係も保持しておきたいことがあります。つまり、あるタグが付与されたすべてのニュースの一覧です:
+
+.. code-block:: none
 
     > sadd tag:1:news 1000
     (integer) 1
@@ -870,7 +883,11 @@ of all the news tagged with a given tag:
     > sadd tag:77:news 1000
     (integer) 1
 
-To get all the tags for a given object is trivial:
+.. To get all the tags for a given object is trivial:
+
+あるオブジェクトに付与されたすべてのタグを取得するのはとても簡単です:
+
+.. code-block:: none
 
     > smembers news:1000:tags
     1. 5
@@ -878,25 +895,37 @@ To get all the tags for a given object is trivial:
     3. 77
     4. 2
 
-Note: in the example we assume you have another data structure, for example
-a Redis hash, which maps tag IDs to tag names.
+.. Note: in the example we assume you have another data structure, for example
+.. a Redis hash, which maps tag IDs to tag names.
 
-There are other non trivial operations that are still easy to implement
-using the right Redis commands. For instance we may want a list of all the
-objects with the tags 1, 2, 10, and 27 together. We can do this using
-the `SINTER` command, that performs the intersection between different
-sets. We can just use:
+注意: この例では、タグ ID とタグの名前をマッピングするためのデータ構造(たとえば Redis のハッシュ)が別にあることを想定しています。
+
+.. There are other non trivial operations that are still easy to implement
+.. using the right Redis commands. For instance we may want a list of all the
+.. objects with the tags 1, 2, 10, and 27 together. We can do this using
+.. the `SINTER` command, that performs the intersection between different
+.. sets. We can just use:
+
+その他に、Redis のコマンドを適切に使えば、少し難しい操作も簡単に実装できます。たとえば、タグ 1, 2, 10, 27 がすべて付与されたニュースの一覧を取得したいとしましょう。これは `SINTER <http://redis.io/commands/sinter>`_ (複数のセットの共通集合をとるコマンド) で実現できます。使い方はこれだけです:
+
+.. code-block: none
 
     > sinter tag:1:news tag:2:news tag:10:news tag:27:news
     ... results here ...
 
-Intersection is not the only operation performed, you can also perform
-unions, difference, extract a random element, and so forth.
+.. Intersection is not the only operation performed, you can also perform
+.. unions, difference, extract a random element, and so forth.
 
-The command to extract an element is called `SPOP`, and is handy to model
-certain problems. For example in order to implement a web-based poker game,
-you may want to represent your deck into a set. Imagine we use a one-char
-prefix for (C)lubs, (D)iamonds, (H)earts, (S)pades.
+利用できる操作は共通集合だけではありません。和集合、差集合、ランダムな要素の抽出、その他いろいろあります:
+
+.. The command to extract an element is called `SPOP`, and is handy to model
+.. certain problems. For example in order to implement a web-based poker game,
+.. you may want to represent your deck into a set. Imagine we use a one-char
+.. prefix for (C)lubs, (D)iamonds, (H)earts, (S)pades.
+
+ひとつの要素を抽出するコマンドは `SPOP <http://redis.io/commands/spop>`_ と呼ばれるもので、ある種の問題をモデル化するのに便利です。たとえば、Web ベースのポーカーゲームを実装するのに、デッキをセットで表現したいとしましょう。(C)lubs, (D)iamonds, (H)earts, (S)pades のようにプレフィックスとして 1 文字を使います
+
+.. code-block:: none
 
     >  sadd deck C1 C2 C3 C4 C5 C6 C7 C8 C9 C10 CJ CQ CK
        D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 DJ DQ DK H1 H2 H3
@@ -904,24 +933,36 @@ prefix for (C)lubs, (D)iamonds, (H)earts, (S)pades.
        S7 S8 S9 S10 SJ SQ SK
        (integer) 52
 
-Now we want to provide each player with 5 cards. The `SPOP` command
-removes a random element, returning it to the client, so it is the
-perfect operation in this case.
+.. Now we want to provide each player with 5 cards. The `SPOP` command
+.. removes a random element, returning it to the client, so it is the
+.. perfect operation in this case.
 
-However if we call it against our deck directly, in the next play of the
-game we'll need to populate the deck of cards again, which may not be
-ideal. So to start, we can make a copy of the set stored in the `deck` key,
-into the `game:1:deck` key.
+各プレーヤーに 5 枚のカードを配ります。 `SPOP <http://redis.io/commands/spop>`_ コマンドはランダムな要素をひとつ取り除き、それをクライアントに返します。このケースに完璧にマッチする操作です。
 
-This is accomplished using `SUNIONSTORE`, which normally performs the
-intersection between multiple sets, and stores the result into anther set.
-However the intersection of a single set, is itself, so I can copy my deck
-with:
+.. However if we call it against our deck directly, in the next play of the
+.. game we'll need to populate the deck of cards again, which may not be
+.. ideal. So to start, we can make a copy of the set stored in the `deck` key,
+.. into the `game:1:deck` key.
+
+しかし、これを直接デッキに適用してしまうと、ゲームの次のプレイ時に再度デッキにカードを投入する必要があります。これは望ましくはないでしょう。そのため、'deck' キーに格納されているセットを、'game:1:deck' キーにコピーすることができます。
+
+.. This is accomplished using `SUNIONSTORE`, which normally performs the
+.. intersection between multiple sets, and stores the result into anther set.
+.. However the intersection of a single set, is itself, so I can copy my deck
+.. with:
+
+これは `SUNIONSTORE <http://redis.io/commands/sunionstore>`_ で実現できます。通常は複数のセットの和集合をとり、別のセットに結果を格納する操作ですが、ひとつのセットの和集合はそれ自身であるため、デッキのコピーをこのように書けます:
+
+.. code-block:: none
 
     > sunionstore game:1:deck deck
     (integer) 52
 
-Now I'm ready to provide the first player with its five cards:
+.. Now I'm ready to provide the first player with its five cards:
+
+最初のプレーヤーに 5 枚のカードを配る準備が整いました:
+
+.. code-block:: none
 
     > spop game:1:deck
     "C6"
@@ -934,42 +975,65 @@ Now I'm ready to provide the first player with its five cards:
     > spop game:1:deck
     "SJ"
 
-One pair of jacks, not great...
+.. One pair of jacks, not great...
 
-It is a good time to introduce the set command that provides the number
-of elements inside a set. This is often called *cardinality of a set*
-in the context of set theory, so the Redis command is called `SCARD`.
+ジャックの 1 ペア、あまり良くない...
+
+.. It is a good time to introduce the set command that provides the number
+.. of elements inside a set. This is often called *cardinality of a set*
+.. in the context of set theory, so the Redis command is called `SCARD`.
+
+セット中の要素の数を取得するコマンドを導入する、良いタイミングです。集合論ではしばしば *濃度(cardinality)* と呼ばれるため、Redis コマンドは `SCARD <http://redis.io/commands/scard>` といいます。
+
+.. code-block:: none
 
     > scard game:1:deck
     (integer) 47
 
-The math works: 52 - 5 = 47.
+.. The math works: 52 - 5 = 47.
 
-When you need to just get random elements without removing them from the
-set, there is the `SRANDMEMBER` command suitable for the task. It also features
-the ability to return both repeating and non-repeating elements.
+算数の問題: 52 - 5 = 47.
+
+.. When you need to just get random elements without removing them from the
+.. set, there is the `SRANDMEMBER` command suitable for the task. It also features
+.. the ability to return both repeating and non-repeating elements.
+
+セットから要素を削除せずにランダムな要素を取得したい場合は、 `SRANDMEMBER <http://redis.io/commands/srandmember>`_ コマンドが適切です。これは、返却される要素に繰り返しがある場合、繰り返しなしの場合の、どちらにも対応できる機能を備えています。
 
 Redis Sorted sets
----
+=================
 
-Sorted sets are a data type which is similar to a mix between asSet and
-an hash. Like sets, sorted sets are composed of unique, non-repeating
-string elements, so in some sense a sorted set is a set as well.
+.. Sorted sets are a data type which is similar to a mix between asSet and
+.. an hash. Like sets, sorted sets are composed of unique, non-repeating
+.. string elements, so in some sense a sorted set is a set as well.
 
-However while elements inside sets are not ordered, every element in
-a sorted set is associated with a floating point value, called *the score*
-(this is why the type is also similar to an hash, since every element
-is mapped to a value).
+ソート済みセットは、セットとハッシュの混合に似ています。セットのように、ソート済みセットはユニークで繰り返しのない文字列の要素から構成されます。そのため、ソート済みセットはある意味セットとみなすことができます。
 
-Moreover, elements in a sorted sets are *taken in order* (so they are not
-ordered on request, order is a peculiarity of the data structure used to
-represent sorted sets). They are ordered according to the following rule:
+.. However while elements inside sets are not ordered, every element in
+.. a sorted set is associated with a floating point value, called *the score*
+.. (this is why the type is also similar to an hash, since every element
+.. is mapped to a value).
 
-* If A and B are two elements with a different score, then A > B if A.score is > B.score.
-* If A and B have exactly the same score, than A > B if the A string is lexicographically greater than the B string. A and B strings can't be equal since sorted sets only have unique elements.
+しかし一方、セットの要素は順序づけされていませんが、ソート済みセットのそれぞれの要素は、*スコア* と呼ばれる浮動小数点数と関連づけられています(ハッシュと似ている、というのは、各要素がある値にマッピングされるためです)。
 
-Let's start with a simple example, adding a few selected hackers names as
-sorted set elements, with their year of birth as "score".
+.. Moreover, elements in a sorted sets are *taken in order* (so they are not
+.. ordered on request, order is a peculiarity of the data structure used to
+.. represent sorted sets). They are ordered according to the following rule:
+
+さらに、ソート済みセット内の要素は *順序を意識します* (リクエスト時に順序づけられるわけではなく、順番はソート済みセットに使われるデータ構造に特有のものです)。要素は以下のルールに従って並べられます:
+
+.. * If A and B are two elements with a different score, then A > B if A.score is > B.score.
+.. * If A and B have exactly the same score, than A > B if the A string is lexicographically greater than the B string. A and B strings can't be equal since sorted sets only have unique elements.
+
+* もし A と B が異なるスコア値をもつなら、A.score > B.score ならば A > B となる。
+* もし A と B がまったく同じスコア値をもつなら、A の文字列が辞書順で B より大きいならば A > B となる。ソート済みセットの要素はユニークなので、A と B の文字列は等しくなることはない。
+
+.. Let's start with a simple example, adding a few selected hackers names as
+.. sorted set elements, with their year of birth as "score".
+
+シンプルな例から始めましょう。何人かのハッカーの名前を、彼らの生年を "スコア" としてソート済みセットに追加します。
+
+.. code-block:: none
 
     > zadd hackers 1940 "Alan Kay"
     (integer) 1
@@ -991,19 +1055,27 @@ sorted set elements, with their year of birth as "score".
     (integer) 1
 
 
-As you can see `ZADD` is similar to `SADD`, but takes one argument more
-(placed before the element to add itself), which is the score.
-`ZADD` is also variadic, so you are free to specify multiple score-value
-pairs, even if this is not used in the example above.
+.. As you can see `ZADD` is similar to `SADD`, but takes one argument more
+.. (placed before the element to add itself), which is the score.
+.. `ZADD` is also variadic, so you are free to specify multiple score-value
+.. pairs, even if this is not used in the example above.
 
-With sorted sets it is trivial to return a list of hackers sorted by their
-birth year because actually *they are already sorted*.
+`ZADD <http://redis.io/commands/zadd>`_ は `SADD <http://redis.io/commands/sadd>`_ とよく似ていますが、引数がひとつ多い(追加される要素の前に置かれる)ことがわかります。これがスコアになります。 `ZADD <http://redis.io/commands/zadd>`_ は可変個の引数をとるため、（上記の例では使われていませんが、）複数のスコアと値のペアを指定することができます。
 
-Implementation note: Sorted sets are implemented via a
-dual-ported data structure containing both a skip list and a hash table, so
-every time we add an element Redis performs an O(log(N)) operation. That's
-good, but when we ask for sorted elements Redis does not have to do any work at
-all, it's already all sorted:
+.. With sorted sets it is trivial to return a list of hackers sorted by their
+.. birth year because actually *they are already sorted*.
+
+ソート済みセットを使っているため、ハッカーのリストが生年でソートされた状態で返却されるのは当然ということになります。なぜなら、実際のところ *それらはすでにソート済みである* ためです。
+
+.. Implementation note: Sorted sets are implemented via a
+.. dual-ported data structure containing both a skip list and a hash table, so
+.. every time we add an element Redis performs an O(log(N)) operation. That's
+.. good, but when we ask for sorted elements Redis does not have to do any work at
+.. all, it's already all sorted:
+
+実装上の注意: ソート済みセットは、スキップリストとハッシュテーブルの両方を含む、 dual-ported なデータ構造で実装されています。そのため、ひとつの要素を追加するたびに Redis は O(log(N)) の計算量の操作を実行します。けっこうなことだ、しかしソート済みセットを取得するとき、Redis はどのような仕事もこなす必要がありません。すべては既にソート済みであるためです:
+
+.. code-block:: none
 
     > zrange hackers 0 -1
     1) "Alan Turing"
@@ -1016,11 +1088,17 @@ all, it's already all sorted:
     8) "Yukihiro Matsumoto"
     9) "Linus Torvalds"
 
-Note: 0 and -1 means from element index 0 to the last element (-1 works
-like in the case of the `LRANGE` command).
+.. Note: 0 and -1 means from element index 0 to the last element (-1 works
+.. like in the case of the `LRANGE` command).
 
-What if I want to order them the opposite way, youngest to oldest?
-Use [ZREVRANGE](/commands/zrevrange) instead of [ZRANGE](/commands/zrange):
+注意: 0 と -1 は、インデックス 0 の要素から最後の要素まで、を意味します(-1 は `LRANGE <http://redis.io/commands/lrange>`_)。
+
+.. What if I want to order them the opposite way, youngest to oldest?
+.. Use [ZREVRANGE](/commands/zrevrange) instead of [ZRANGE](/commands/zrange):
+
+逆方向、若い順に並べたい場合はどうしたら良いでしょう？ `ZRANGE <http://redis.io/commands/zrange>`_ の代わりに `ZREVRANGE <http://redis.io/commands/zravrange>`_ が使えます。
+
+.. code-block:: none
 
     > zrevrange hackers 0 -1
     1) "Linus Torvalds"
@@ -1033,7 +1111,11 @@ Use [ZREVRANGE](/commands/zrevrange) instead of [ZRANGE](/commands/zrange):
     8) "Hedy Lamarr"
     9) "Alan Turing"
 
-It is possible to return scores as well, using the `WITHSCORES` argument:
+.. It is possible to return scores as well, using the `WITHSCORES` argument:
+
+'WITHSCORES' 引数を使うと、スコアも一緒に返すことが可能です。
+
+.. code-block:: none
 
     > zrange hackers 0 -1 withscores
     1) "Alan Turing"
@@ -1055,12 +1137,18 @@ It is possible to return scores as well, using the `WITHSCORES` argument:
     17) "Linus Torvalds"
     18) "1969"
 
-Operating on ranges
----
+.. Operating on ranges
 
-Sorted sets are more powerful than this. They can operate on ranges.
-Let's get all the individuals that were born up to the 1950 inclusive. We
-use the `ZRANGEBYSCORE` command to do it:
+範囲操作
+---------------
+
+.. Sorted sets are more powerful than this. They can operate on ranges.
+.. Let's get all the individuals that were born up to the 1950 inclusive. We
+.. use the `ZRANGEBYSCORE` command to do it:
+
+ソート済みセットはこれよりももっとパワフルです。範囲を指定した操作を実行できます。1950年以降に生まれた人、を取得してみましょう。 `ZRANGEBYSCORE <http://redis.io/commands/zrangebyscore>`_ コマンドがこの仕事をします:
+
+.. code-block:: none
 
     > zrangebyscore hackers -inf 1950
     1) "Alan Turing"
@@ -1069,49 +1157,77 @@ use the `ZRANGEBYSCORE` command to do it:
     4) "Alan Kay"
     5) "Anita Borg"
 
-We asked Redis to return all the elements with a score between negative
-infinity and 1950 (both extremes are included).
+.. We asked Redis to return all the elements with a score between negative
+.. infinity and 1950 (both extremes are included).
 
-It's also possible to remove ranges of elements. Let's remove all
-the hackers born between 1940 and 1960 from the sorted set:
+ここでは Redis に、スコアが負の無限大から 1950 の範囲(両端を含む)にあるすべての要素を返すように問い合わせています。
+
+.. It's also possible to remove ranges of elements. Let's remove all
+.. the hackers born between 1940 and 1960 from the sorted set:
+
+特定の範囲にある要素を削除することもできます。ソート済みセット中の 1940 から 1960 の間に生まれたハッカーをすべて削除してみましょう。
+
+.. code-block:: none
 
     > zremrangebyscore hackers 1940 1960
     (integer) 4
 
-`ZREMRANGEBYSCORE` is perhaps not the best command name,
-but it can be very useful, and returns the number of removed elements.
+.. `ZREMRANGEBYSCORE` is perhaps not the best command name,
+.. but it can be very useful, and returns the number of removed elements.
 
-Another extremely useful operation defined for sorted set elements
-is the get-rank operation. It is basically possible to ask what is the
-position of an element in the set of the order elements.
+`ZREMRANGEBYSCORE <http://redis.io/commands/zremrangebyscore>`_ はおそらく最適なコマンド名ではないですが、しかしとても役に立ち、戻り値としては削除された要素数を返します。
+
+.. Another extremely useful operation defined for sorted set elements
+.. is the get-rank operation. It is basically possible to ask what is the
+.. position of an element in the set of the order elements.
+
+ソート済みセットに対して定義される、別の非常に便利な操作に、ランクを取得する操作があります。これはざっくり言って、順序づけられた要素の中で、ある要素が何番目にあるのかを問い合わせるものです。
+
+.. code-block:: none
 
     > zrank hackers "Anita Borg"
     (integer) 4
 
-The `ZREVRANK` command is also available in order to get the rank considering
-the elements sorted a descending way.
+.. The `ZREVRANK` command is also available in order to get the rank considering
+.. the elements sorted a descending way.
 
-Lexicographical scores
----
+要素を降順に並べた場合のランクを取得するため、 `ZREVRANK <http://redis.io/commands/zrevrank>` コマンドも使うことができます。
 
-With recent versions of Redis 2.8, a new feature was introduced that allows,
-assuming elements in a sorted set are all inserted with the same identical
-score, to get ranges lexicographically (elements are compared with the C
-`memcmp` function, so it is guaranteed that there is no collation, and every
-Redis instance will reply with the same output).
+.. Lexicographical scores
 
-The main commands to operate with lexicographical ranges are `ZRANGEBYLEX`,
-`ZREVRANGEBYLEX`, `ZREMRANGEBYLEX` and `ZLEXCOUNT`.
+辞書順のスコア
+------------------------
 
-For example, let's add again our list of famous hackers. But this time,
-use a score of zero for all the elements:
+.. With recent versions of Redis 2.8, a new feature was introduced that allows,
+.. assuming elements in a sorted set are all inserted with the same identical
+.. score, to get ranges lexicographically (elements are compared with the C
+.. `memcmp` function, so it is guaranteed that there is no collation, and every
+.. Redis instance will reply with the same output).
+
+Redis 2.8 以降のバージョンでは、すべての要素が同じスコア値で追加されていることを前提として、辞書順で範囲を取得する新しい機能が導入されました(要素は C の 'memcmp' 関数で比較されるため、衝突がなく、すべての Redis インスタンスが同じ出力を返すことが保証されます)。
+
+.. The main commands to operate with lexicographical ranges are `ZRANGEBYLEX`,
+.. `ZREVRANGEBYLEX`, `ZREMRANGEBYLEX` and `ZLEXCOUNT`.
+
+辞書順での範囲操作を行う主なコマンドには `ZRANGEBYLEX <http://redis.io/commands/zrangebylex>`_, `ZREVRANGEBYLEX <http://redis.io/commands/zrevrangebyles>`_, `ZREMRANGEBYLEX <http://redis.io/commands/zremrangebylex>`_, そして `ZLEXCOUNT <http://redis.io/commands/zlexcount>`_ があります。
+
+.. For example, let's add again our list of famous hackers. But this time,
+.. use a score of zero for all the elements:
+
+たとえば、リストにもう一度、有名なハッカーを追加してみましょう。ただし今度は、すべての要素のスコアに 0 を指定します。
+
+.. code-block:: none
 
     > zadd hackers 0 "Alan Kay" 0 "Sophie Wilson" 0 "Richard Stallman" 0
       "Anita Borg" 0 "Yukihiro Matsumoto" 0 "Hedy Lamarr" 0 "Claude Shannon"
       0 "Linus Torvalds" 0 "Alan Turing"
 
-Because of the sorted sets ordering rules, they are already sorted
-lexicographically:
+.. Because of the sorted sets ordering rules, they are already sorted
+.. lexicographically:
+
+ソート済みセットの順序づけルールに従い、これらは辞書順でソートされます。
+
+.. code-block:: none
 
     > zrange hackers 0 -1
     1) "Alan Kay"
@@ -1124,16 +1240,24 @@ lexicographically:
     8) "Sophie Wilson"
     9) "Yukihiro Matsumoto"
 
-Using `ZRANGEBYLEX` we can ask for lexicographical ranges:
+.. Using `ZRANGEBYLEX` we can ask for lexicographical ranges:
+
+`ZRANGEBYLEX <http://redis.io/commands/zrangebylex>`_ を使うと、辞書順での範囲問い合わせができます:
+
+.. code-block:: none
 
     > zrangebylex hackers [B [P
     1) "Claude Shannon"
     2) "Hedy Lamarr"
     3) "Linus Torvalds"
 
-Ranges can be inclusive or exclusive (depending on the first character),
-also string infinite and minus infinite are specified respectively with
-the `+` and `-` strings. See the documentation for more information.
+.. Ranges can be inclusive or exclusive (depending on the first character),
+.. also string infinite and minus infinite are specified respectively with
+.. the `+` and `-` strings. See the documentation for more information.
+
+範囲は、端を含むことも含まないこともでき(最初の文字に依存する)、また、無限大や負の無限大はそれぞれ、'+' と '-' という文字列で表現されます。より詳しい情報はドキュメントを参照してください。
+
+/* TODO */
 
 This feature is important because allows to use sorted sets as a generic
 index. For example, if you want to index elements by a 128-bit unsigned
@@ -1144,52 +1268,70 @@ endian, when ordered lexicographically (in raw bytes order) are actually
 ordered numerically as well, you can ask for ranges in the 128 bit space,
 and get the elements value discarding the prefix.
 
-If you want to see the feature in the context of a more serious demo,
-check the [Redis autocomplete demo](http://autocomplete.redis.io).
+.. これにより、ソート済みセットを一般的なインデックスとして使うことができるようになるため、この機能は重要です。たとえば、要素を 128 bit の符号なし整数によりインデックスしたい、としましょう。必要なのは、ソート済みセットに、同じスコア(たとえば 0)で、ただし **128 bit をビッグエンディアンで表現した場合の** 8 byte をプレフィックスに付与した要素として追加するだけです。数値はビッグエンディアン表現なので、辞書順(生のバイトオーダー)で並べたものは数値で並べたものと一致します。
 
-Updating the score: leader boards
----
+.. If you want to see the feature in the context of a more serious demo,
+.. check the [Redis autocomplete demo](http://autocomplete.redis.io).
 
-Just a final note about sorted sets before switching to the next topic.
-Sorted sets scores can be updated at any time. Just calling again ZADD against
-an element already included in the sorted set will update its score
-(and position) with O(log(N)) time complexity, so sorted sets are suitable
-when there are tons of updates.
+この機能をより本格的なデモで見てみたいなら、 `Redis autocomplete demo <http://autocomplete.redis.io>`_ を見てください。
 
-Because of this characteristic a common use case is leader boards.
-The typical application is a Facebook game where you combine the ability to
-take users sorted by their high score, plus the get-rank operation, in order
-to show the top-N users, and the user rank in the leader board (you are
-the #4932 best score here).
+.. Updating the score: leader boards
+
+スコア更新: 順位表(leader boards)
+----------------------------------------------
+
+.. Just a final note about sorted sets before switching to the next topic.
+.. Sorted sets scores can be updated at any time. Just calling again ZADD against
+.. an element already included in the sorted set will update its score
+.. (and position) with O(log(N)) time complexity, so sorted sets are suitable
+.. when there are tons of updates.
+
+次のトピックに移る前に、ソート済みセットについて、最後の覚書です。ソート済みセットのスコアはいつでも更新可能です。ソート済みセット中にすでに含まれている要素に対して ZADD を呼ぶと、そのスコア(と位置)が更新されます。計算量は高々 O(log(N)) のため、ソート済みセットは大量の更新があるケースに適しています。
+
+.. Because of this characteristic a common use case is leader boards.
+.. The typical application is a Facebook game where you combine the ability to
+.. take users sorted by their high score, plus the get-rank operation, in order
+.. to show the top-N users, and the user rank in the leader board (you are
+.. the #4932 best score here).
+
+この性質をもつため、よくあるユースケースは順位表(leader boards)です。典型的なアプリケーションに Facebook ゲームがあります。これは、ユーザーをスコアの高い順に並べる機能に加えて、ランキングを取得する操作を備えています。ユーザーに、上位 の N ユーザー、およびリーダーボードにおける自分の順位(「あなたのベストスコアは 4932 位です」)を示すためです。
 
 HyperLogLogs
----
+============
 
-An HyperLogLog is a probabilistic data structure used in order to count
-unique things (technically this is referred to estimating the cardinality
-of a set). Usually counting unique items require to use an amount of memory
-proportional to the number of items you want to count, because you need
-to remember the elements you already seen in the past, in order to avoid
-to count them multiple times. However there is a set of algorithms that trade
-memory for precision: you end with an estimated measure, with a standard error,
-in the case of the Redis implementation, which is less than 1%, but the
-magic of this algorithms is that you no longer need to use an amount of memory
-proportional to the number of things counted, you just need to use a
-constant amount of memory! 12k bytes in the worst case, or a lot less if you
-HyperLogLog (We'll just call them HLL from now) has seen very few elements.
+.. An HyperLogLog is a probabilistic data structure used in order to count
+.. unique things (technically this is referred to estimating the cardinality
+.. of a set). Usually counting unique items require to use an amount of memory
+.. proportional to the number of items you want to count, because you need
+.. to remember the elements you already seen in the past, in order to avoid
+.. to count them multiple times. However there is a set of algorithms that trade
+.. memory for precision: you end with an estimated measure, with a standard error,
+.. in the case of the Redis implementation, which is less than 1%, but the
+.. magic of this algorithms is that you no longer need to use an amount of memory
+.. proportional to the number of things counted, you just need to use a
+.. constant amount of memory! 12k bytes in the worst case, or a lot less if you
+.. HyperLogLog (We'll just call them HLL from now) has seen very few elements.
 
-HLLs in Redis, while technically a different data structure, is encoded
-as a Redis string, so you can call `GET` to serialize an HLL, and `SET`
-to un-serialize it back to the server.
+HyperLogLog はユニークなものを数えるための確率的なデータ構造です(技術的には、集合の濃度を推定する際に言及されます)。通常、ユニークなアイテムを数え上げるためには、数えたいアイテム数に比例するメモリを必要とします。なぜなら、過去に数えた要素を、何度も数えてしまわないように、覚えておく必要があるためです。メモリと精度のトレードオフを考慮して、いくつかのアルゴリズムが存在します: Redis の実装では、標準誤差を 1% 未満に抑えながらも、(アルゴリズムの魔法により)数え上げる対象の数に比例するメモリを必要とせず、必要なのは一定量のメモリだけです！最悪で 12k バイト、HyperLogLog (以降、単に HLL と呼びます) で考慮する要素数が非常に少ない場合は、もっと少なくて済みます。
 
-Conceptually the HLL API is like using Sets to do the same task. You would
-`SADD` every observed element into a set, and would use `SCARD` to check the
-number of elements inside the set, which are unique since `SCARD` will not
-re-add an already added element.
+.. HLLs in Redis, while technically a different data structure, is encoded
+.. as a Redis string, so you can call `GET` to serialize an HLL, and `SET`
+.. to un-serialize it back to the server.
 
-While you don't really *add items* into an HLL, because the data structure
-only contains a state that does not include actual elements, the API is the
-same:
+Redis の HLL は、(技術的には異なるデータ構造ですが、) 文字列としてエンコードされるため、シリアライズするために `GET <http://redis.io/commands/get>`_ を、アンシリアライズしてサーバーに書き戻すために `SET <http://redis.io/commands/set>`_ が使えます。
+
+.. Conceptually the HLL API is like using Sets to do the same task. You would
+.. `SADD` every observed element into a set, and would use `SCARD` to check the
+.. number of elements inside the set, which are unique since `SCARD` will not
+.. re-add an already added element.
+
+概念的に、HLL API はセットを使って同じタスクを実行するときとよく似ています。セットに要素を追加するのには `SADD <http://redis.io/commands/sadd>`_ を、セット中の要素数(SADD はすでに追加済みの要素を再追加しないため、これらはユニークです)を数えるのに `SCARD <http://redis.io/commands/scard>`_ を使います。
+
+.. While you don't really *add items* into an HLL, because the data structure
+.. only contains a state that does not include actual elements, the API is the
+.. same:
+
+HLL のデータ構造が含むのは状態だけで、要素自体を含まないため、HLL は実際には *要素の追加* を行いません。しかし API は同様です。
 
 * Every time you see a new element, you add it to the count with `PFADD`.
 * Every time you want to retrieve the current approximation of the unique elements *added* with `PFADD` so far, you use the `PFCOUNT`.
