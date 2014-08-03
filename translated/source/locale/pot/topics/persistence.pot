@@ -1,0 +1,563 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/persistence.rst:1
+# b5fde0fb71864d00bd93a8f94565c767
+msgid "This page provides a technical description of Redis persistence, it is a suggested read for all the Redis users. For a wider overview of Redis persistence and the durability guarantees it provides you may want to also read `Redis persistence demystified <http://antirez.com/post/redis-persistence-demystified.html>`__."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:8
+# 20712e3648144bbe9082d88b5a455d6d
+msgid "Redis Persistence"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:10
+# 289d83f5e0fc45b8a7d2f848c44f1f38
+msgid "Redis provides a different range of persistence options:"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:12
+# 7a094414330444d494c2552256b4681c
+msgid "The RDB persistence performs point-in-time snapshots of your dataset at specified intervals."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:14
+# 5a15a315611343a0bfcc6e64fdc0a025
+msgid "the AOF persistence logs every write operation received by the server, that will be played again at server startup, reconstructing the original dataset. Commands are logged using the same format as the Redis protocol itself, in an append-only fashion. Redis is able to rewrite the log on background when it gets too big."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:19
+# 5ba74d4a8dba48eba9ea4d0641f3614e
+msgid "If you wish, you can disable persistence at all, if you want your data to just exist as long as the server is running."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:21
+# 1d514c5a2f9640e282b56123135fe07e
+msgid "It is possible to combine both AOF and RDB in the same instance. Notice that, in this case, when Redis restarts the AOF file will be used to reconstruct the original dataset since it is guaranteed to be the most complete."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:26
+# 8b892954d72347638226649a61f080df
+msgid "The most important thing to understand is the different trade-offs between the RDB and AOF persistence. Let's start with RDB:"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:30
+# 4c974e60a07a4475a3d668f2ef7f7bba
+msgid "RDB advantages"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:32
+# a3562edda3174e7da6458f005cbe096c
+msgid "RDB is a very compact single-file point-in-time representation of your Redis data. RDB files are perfect for backups. For instance you may want to archive your RDB files every hour for the latest 24 hours, and to save an RDB snapshot every day for 30 days. This allows you to easily restore different versions of the data set in case of disasters."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:38
+# 8521e681beb04e04b26bd7c465fbc553
+msgid "RDB is very good for disaster recovery, being a single compact file can be transfered to far data centers, or on Amazon S3 (possibly encrypted)."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:41
+# 561f2bc5e3ab4640b17031d3a435340f
+msgid "RDB maximizes Redis performances since the only work the Redis parent process needs to do in order to persist is forking a child that will do all the rest. The parent instance will never perform disk I/O or alike."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:45
+# 97ca8facf3ff454fb92e1745803e2fa4
+msgid "RDB allows faster restarts with big datasets compared to AOF."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:48
+# 653990da2bd64ec2b28692c23458b703
+msgid "RDB disadvantages"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:50
+# fb703659a55a4a6c9e1d8d9a6c598509
+msgid "RDB is NOT good if you need to minimize the chance of data loss in case Redis stops working (for example after a power outage). You can configure different *save points* where an RDB is produced (for instance after at least five minutes and 100 writes against the data set, but you can have multiple save points). However you'll usually create an RDB snapshot every five minutes or more, so in case of Redis stopping working without a correct shutdown for any reason you should be prepared to lose the latest minutes of data."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:58
+# 86ab8ec612774986a38971c34a20f610
+msgid "RDB needs to fork() often in order to persist on disk using a child process. Fork() can be time consuming if the dataset is big, and may result in Redis to stop serving clients for some millisecond or even for one second if the dataset is very big and the CPU performance not great. AOF also needs to fork() but you can tune how often you want to rewrite your logs without any trade-off on durability."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:66
+# a355fc8a96f84766b0dc8acbb9bb2a59
+msgid "AOF advantages"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:68
+# 516ad7a83d6b4fdfba2f6ea705ecfd58
+msgid "Using AOF Redis is much more durable: you can have different fsync policies: no fsync at all, fsync every second, fsync at every query. With the default policy of fsync every second write performances are still great (fsync is performed using a background thread and the main thread will try hard to perform writes when no fsync is in progress.) but you can only lose one second worth of writes."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:74
+# 040b390c17254731a7c769ce8954c971
+msgid "The AOF log is an append only log, so there are no seeks, nor corruption problems if there is a power outage. Even if the log ends with an half-written command for some reason (disk full or other reasons) the redis-check-aof tool is able to fix it easily."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:78
+# 1c221813771d4d5cbbea438335fab9e2
+msgid "Redis is able to automatically rewrite the AOF in background when it gets too big. The rewrite is completely safe as while Redis continues appending to the old file, a completely new one is produced with the minimal set of operations needed to create the current data set, and once this second file is ready Redis switches the two and starts appending to the new one."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:84
+# 5bb95f444cfe49209b739eb7bdbba28f
+msgid "AOF contains a log of all the operations one after the other in an easy to understand and parse format. You can even easily export an AOF file. For instance even if you flushed everything for an error using a FLUSHALL command, if no rewrite of the log was performed in the meantime you can still save your data set just stopping the server, removing the latest command, and restarting Redis again."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:92
+# f773fe1b8b1f41bbb937155c525e716a
+msgid "AOF disadvantages"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:94
+# 311d57704dbd491db9f8c9551d348f25
+msgid "AOF files are usually bigger than the equivalent RDB files for the same dataset."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:96
+# 40c473d181a949c0bc9b762e48ef1743
+msgid "AOF can be slower than RDB depending on the exact fsync policy. In general with fsync set to *every second* performances are still very high, and with fsync disabled it should be exactly as fast as RDB even under high load. Still RDB is able to provide more guarantees about the maximum latency even in the case of an huge write load."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:101
+# 92bbc0f3563d46a887a665dc28b68503
+msgid "In the past we experienced rare bugs in specific commands (for instance there was one involving blocking commands like BRPOPLPUSH) causing the AOF produced to not reproduce exactly the same dataset on reloading. This bugs are rare and we have tests in the test suite creating random complex datasets automatically and reloading them to check everything is ok, but this kind of bugs are almost impossible with RDB persistence. To make this point more clear: the Redis AOF works incrementally updating an existing state, like MySQL or MongoDB does, while the RDB snapshotting creates everything from scratch again and again, that is conceptually more robust. However -"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:112
+# d31ce1cf93014edaaea8849dc160a34f
+msgid "It should be noted that every time the AOF is rewritten by Redis it is recreated from scratch starting from the actual data contained in the data set, making resistance to bugs stronger compared to an always appending AOF file (or one rewritten reading the old AOF instead of reading the data in memory)."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:117
+# 4794e10eebfa4555a14b2a002057b060
+msgid "We never had a single report from users about an AOF corruption that was detected in the real world."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:121
+# c4a59397b117461fa9acc53fd7914687
+msgid "Ok, so what should I use?"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:123
+# 50e64bfaf94b4c82bf5408cb1036e5c6
+msgid "The general indication is that you should use both persistence methods if you want a degree of data safety comparable to what PostgreSQL can provide you."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:127
+# 4de53f7083084a51a268e535e880bafb
+msgid "If you care a lot about your data, but still can live with a few minutes of data lose in case of disasters, you can simply use RDB alone."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:130
+# d1abba3fbef946df80e18851beba9f26
+msgid "There are many users using AOF alone, but we discourage it since to have an RDB snapshot from time to time is a great idea for doing database backups, for faster restarts, and in the event of bugs in the AOF engine."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:135
+# 749baffcd1784c45bd9493f3ba2027c8
+msgid "Note: for all these reasons we'll likely end up unifying AOF and RDB into a single persistence model in the future (long term plan)."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:138
+# f41f534f917648239626c3eb5d6b4763
+msgid "The following sections will illustrate a few more details about the two persistence models."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:141
+# 7117b028e3514adcb97a53ca7d104942
+msgid "Snapshotting ---"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:143
+# 4f00b928ae394d988417608ccd1ece9e
+msgid "By default Redis saves snapshots of the dataset on disk, in a binary file called ``dump.rdb``. You can configure Redis to have it save the dataset every N seconds if there are at least M changes in the dataset, or you can manually call the ``SAVE`` or ``BGSAVE`` commands."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:148
+# bf3dcc3a345849e2b60231b893467773
+msgid "For example, this configuration will make Redis automatically dump the dataset to disk every 60 seconds if at least 1000 keys changed:"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:155
+# 07494d44633a4c3b899f7fc1fbca0f54
+msgid "This strategy is known as *snapshotting*."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:158
+#: ../../source/topics/persistence.rst:253
+# c8aa19f9cf1b4b46b57c9ef3e6b11c46
+# edeb1e94d4b24726be2a9147530aedf0
+msgid "How it works"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:160
+# d72508a128c245289f907c88256e11f0
+msgid "Whenever Redis needs to dump the dataset to disk, this is what happens:"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:162
+# f328a0cbff49406e95ebbcdc04ab9686
+msgid "Redis `forks <http://linux.die.net/man/2/fork>`__. We now have a child and a parent process."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:165
+# c6fc3279687f417d889c887daa1b5e8f
+msgid "The child starts to write the dataset to a temporary RDB file."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:167
+# 2f691d8ef71f424e96ae1f518ff8ebd2
+msgid "When the child is done writing the new RDB file, it replaces the old one."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:170
+# 1b887d72b82c4bccb144d4d2682bf5ab
+msgid "This method allows Redis to benefit from copy-on-write semantics."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:172
+# d12df0cd94af4be8b01d088dd93dce99
+msgid "Append-only file ---"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:174
+# c3c46a386eed46fabbf57ee6de2fa2c9
+msgid "Snapshotting is not very durable. If your computer running Redis stops, your power line fails, or you accidentally ``kill -9`` your instance, the latest data written on Redis will get lost. While this may not be a big deal for some applications, there are use cases for full durability, and in these cases Redis was not a viable option."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:180
+# ab1a13a97fe54fc4a54ac65c4692278c
+msgid "The *append-only file* is an alternative, fully-durable strategy for Redis. It became available in version 1.1."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:183
+# b06ca003b35b4ec2a582b055ef439172
+msgid "You can turn on the AOF in your configuration file:"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:189
+# 44cc9528ace04df882edd0c8c9347115
+msgid "From now on, every time Redis receives a command that changes the dataset (e.g. ``SET``) it will append it to the AOF. When you restart Redis it will re-play the AOF to rebuild the state."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:194
+# bb9d9ed7e6e240858c9f822d57874938
+msgid "Log rewriting"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:196
+# 7d2c9604879e4e58b2b339a1dee9d020
+msgid "As you can guess, the AOF gets bigger and bigger as write operations are performed. For example, if you are incrementing a counter 100 times, you'll end up with a single key in your dataset containing the final value, but 100 entries in your AOF. 99 of those entries are not needed to rebuild the current state."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:202
+# dfd101ab41014664903008eb8f5e0858
+msgid "So Redis supports an interesting feature: it is able to rebuild the AOF in the background without interrupting service to clients. Whenever you issue a ``BGREWRITEAOF`` Redis will write the shortest sequence of commands needed to rebuild the current dataset in memory. If you're using the AOF with Redis 2.2 you'll need to run ``BGREWRITEAOF`` from time to time. Redis 2.4 is able to trigger log rewriting automatically (see the 2.4 example configuration file for more information)."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:211
+# 2c58be946a2843c09d72be932b2012dd
+msgid "How durable is the append only file?"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:213
+# 6dda8587e0f64731b9b964d1898d78d2
+msgid "You can configure how many times Redis will ```fsync`` <http://linux.die.net/man/2/fsync>`__ data on disk. There are three options:"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:217
+# ce1581a537944e5c828510526a3946a5
+msgid "``fsync`` every time a new command is appended to the AOF. Very very slow, very safe."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:220
+# e73f48c2e306494080c02e2fe7e00972
+msgid "``fsync`` every second. Fast enough (in 2.4 likely to be as fast as snapshotting), and you can lose 1 second of data if there is a disaster."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:224
+# c3fbae0f5c6f47bbb5593a6007f4db48
+msgid "Never ``fsync``, just put your data in the hands of the Operating System. The faster and less safe method."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:227
+# ed0d5dc748dc410fb12d8287eb1f0fc7
+msgid "The suggested (and default) policy is to ``fsync`` every second. It is both very fast and pretty safe. The ``always`` policy is very slow in practice (although it was improved in Redis 2.0) – there is no way to make ``fsync`` faster than it is."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:233
+# 6c91fc4ae8d740418a423fbb3a225944
+msgid "What should I do if my AOF gets corrupted?"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:235
+# 14e50b46640b41aabd1ebb9b9fbb9136
+msgid "It is possible that the server crashes while writing the AOF file (this still should never lead to inconsistencies), corrupting the file in a way that is no longer loadable by Redis. When this happens you can fix this problem using the following procedure:"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:240
+# 1512929bc30e4f7cacd658e8322062d8
+msgid "Make a backup copy of your AOF file."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:242
+# 3acc503038874c4b9f24b15bc054706d
+msgid "Fix the original file using the ``redis-check-aof`` tool that ships with Redis:"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:245
+# 9a7bd1bcb3ba4d07acd47ea6b2513803
+msgid "$ redis-check-aof --fix"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:247
+# ee774b4caf03444cb190fbaabc3ef81e
+msgid "Optionally use ``diff -u`` to check what is the difference between two files."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:250
+# f46ce44472fc4c5e93ea3ce9eee7f1b3
+msgid "Restart the server with the fixed file."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:255
+# 14748f41580d4f9c8567d155fa0fa048
+msgid "Log rewriting uses the same copy-on-write trick already in use for snapshotting. This is how it works:"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:258
+# 157bbff460a145978366cdc4237af65c
+msgid "Redis `forks <http://linux.die.net/man/2/fork>`__, so now we have a child and a parent process."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:261
+# 19e6eb54baf04d7aa15e50687465c231
+msgid "The child starts writing the new AOF in a temporary file."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:263
+# 5d37b4a70119491aaad1eb3ba6698dba
+msgid "The parent accumulates all the new changes in an in-memory buffer (but at the same time it writes the new changes in the old append-only file, so if the rewriting fails, we are safe)."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:267
+# 4a73511a952643ce8a4e922c7b487b4b
+msgid "When the child is done rewriting the file, the parent gets a signal, and appends the in-memory buffer at the end of the file generated by the child."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:271
+# 580c43b5b0044fd19ffff6d497b1a8b3
+msgid "Profit! Now Redis atomically renames the old file into the new one, and starts appending new data into the new file."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:275
+# b2e0a4fc20614b69a2136f0bd0671f23
+msgid "How I can switch to AOF, if I'm currently using dump.rdb snapshots?"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:277
+# 14c6c970f7da45368239286b52374215
+msgid "There is a different procedure to do this in Redis 2.0 and Redis 2.2, as you can guess it's simpler in Redis 2.2 and does not require a restart at all."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:281
+# ddb65daef5614307a419e1eeb8fbe4d7
+msgid "**Redis >= 2.2**"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:283
+#: ../../source/topics/persistence.rst:306
+# 68769dfc6ea6448f96e1f515a4303c09
+# 6230bc8355a14f52b8782d3d0b94b98e
+msgid "Make a backup of your latest dump.rdb file."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:284
+#: ../../source/topics/persistence.rst:307
+# c25f49b86d474df1a6e9bbfa17cc271c
+# c6429599f4d2454e85afd72d0dedf1a8
+msgid "Transfer this backup into a safe place."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:285
+# 9357a2f4373f48c393b55c22dbc02722
+msgid "Issue the following two commands:"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:286
+# fa26462daec74d0a8d667da748753f58
+msgid "redis-cli config set appendonly yes"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:287
+# d650e094d5cb46ce81e94ea1f2b4f01c
+msgid "redis-cli config set save \"\""
+msgstr ""
+
+#: ../../source/topics/persistence.rst:288
+#: ../../source/topics/persistence.rst:314
+# 37099a65b39a45bc85fd203dc355f936
+# 3024e8b31b4c4076bb577ea417289c0b
+msgid "Make sure that your database contains the same number of keys it contained."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:290
+#: ../../source/topics/persistence.rst:316
+# 1b0df3fac57d440cb7007fe616d06812
+# 85a0f4a8dbb249c9a572204e33424d91
+msgid "Make sure that writes are appended to the append only file correctly."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:292
+# e0347b7fa6664a91b4f168450f36cf2c
+msgid "The first CONFIG command enables the Append Only File. In order to do so **Redis will block** to generate the initial dump, then will open the file for writing, and will start appending all the next write queries."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:296
+# e856aee443cf4fdd9e3fe6e8b5dfd903
+msgid "The second CONFIG command is used to turn off snapshotting persistence. This is optional, if you wish you can take both the persistence methods enabled."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:300
+# 91c4627c6fae46e7bd981763c7a2efed
+msgid "**IMPORTANT:** remember to edit your redis.conf to turn on the AOF, otherwise when you restart the server the configuration changes will be lost and the server will start again with the old configuration."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:304
+# 84b5d5eb7f784ff0923738c3c573e51c
+msgid "**Redis 2.0**"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:308
+# 61e873dbb2554e748de0742c90526b28
+msgid "Stop all the writes against the database!"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:309
+# 8234c7c0ea604f888f89fb69793b631b
+msgid "Issue a redis-cli bgrewriteaof. This will create the append only file."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:311
+# 490bca12f59e4cc38ed4d5f1cc3e9cd3
+msgid "Stop the server when Redis finished generating the AOF dump."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:312
+# 76c677090435437b9d24ee3ba02845bf
+msgid "Edit redis.conf end enable append only file persistence."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:313
+# e3528ec6b2494f159c7276e90ac71c23
+msgid "Restart the server."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:319
+# 5214ea52475f4a3186a553c8b10258ba
+msgid "Interactions between AOF and RDB persistence"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:321
+# fc5330243e2e4b79bcc359be97e4b331
+msgid "Redis >= 2.4 makes sure to avoid triggering an AOF rewrite when an RDB snapshotting operation is already in progress, or allowing a BGSAVE while the AOF rewrite is in progress. This prevents two Redis background processes from doing heavy disk I/O at the same time."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:326
+# bd529076d6a946139ddf2fa455e8f8e4
+msgid "When snapshotting is in progress and the user explicitly requests a log rewrite operation using BGREWRITEAOF the server will reply with an OK status code telling the user the operation is scheduled, and the rewrite will start once the snapshotting is completed."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:331
+# 825383f0b53c4f84ad0b29a91226f6af
+msgid "In the case both AOF and RDB persistence are enabled and Redis restarts the AOF file will be used to reconstruct the original dataset since it is guaranteed to be the most complete."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:336
+# f2799a2ba4584dfea3b28761f30900fe
+msgid "Backing up Redis data"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:338
+# 6b9bf45f26ec4049b93962fa55af462d
+msgid "Before starting this section, make sure to read the following sentence: **Make Sure to Backup Your Database**. Disks break, instances in the cloud disappear, and so forth: no backups means huge risk of data disappearing into /dev/null."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:343
+# d6a78fec8fb240ea90ccc7ba7bdf8412
+msgid "Redis is very data backup friendly since you can copy RDB files while the database is running: the RDB is never modified once produced, and while it gets produced it uses a temporary name and is renamed into its final destination atomically using rename(2) only when the new snapshot is complete."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:349
+# 1502ac4e5c15433fb9fdd0549ed41392
+msgid "This means that copying the RDB file is completely safe while the server is running. This is what we suggest:"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:352
+# dbfe704297774772b8b5aa120ca37e3e
+msgid "Create a cron job in your server creating hourly snapshots of the RDB file in one directory, and daily snapshots in a different directory."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:354
+# ac22d0c8809a41939c5b99b88ced6bdc
+msgid "Every time the cron script runs, make sure to call the ``find`` command to make sure too old snapshots are deleted: for instance you can take hourly snapshots for the latest 48 hours, and daily snapshots for one or two months. Make sure to name the snapshots with data and time information."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:359
+# a950fa1dc21b45c9931b8fab6e2740d4
+msgid "At least one time every day make sure to transfer an RDB snapshot *outside your data center* or at least *outside the physical machine* running your Redis instance."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:364
+# 3165905871634d2eb5a7b1423c53432d
+msgid "Disaster recovery"
+msgstr ""
+
+#: ../../source/topics/persistence.rst:366
+# e792ab26cf4942dfa7d04d74042848ce
+msgid "Disaster recovery in the context of Redis is basically the same story as backups, plus the ability to transfer those backups in many different external data centers. This way data is secured even in the case of some catastrophic event affecting the main data center where Redis is running and producing its snapshots."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:372
+# a8799c2fbca04063a8170bdba8efe8cb
+msgid "Since many Redis users are in the startup scene and thus don't have plenty of money to spend we'll review the most interesting disaster recovery techniques that don't have too high costs."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:376
+# 39882240e9554f299adff43e4ebe6a6d
+msgid "Amazon S3 and other similar services are a good way for mounting your disaster recovery system. Simply transfer your daily or hourly RDB snapshot to S3 in an encrypted form. You can encrypt your data using ``gpg -c`` (in symmetric encryption mode). Make sure to store your password in many different safe places (for instance give a copy to the most important guys of your organization). It is recommanded to use multiple storage services for improved data safety."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:383
+# 9e69b15267e84b8a9825306f9a196bc2
+msgid "Transfer your snapshots using SCP (part of SSH) to far servers. This is a fairly simple and safe route: get a small VPS in a place that is very far from you, install ssh there, and greate an ssh client key without passphrase, then make add it in the authorized\\_keys file of your small VPS. You are ready to transfer backups in an automated fashion. Get at least two VPS in two different providers for best results."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:391
+# 9f5527f53ab74ec8974dac2077e6445f
+msgid "It is important to understand that this systems can easily fail if not coded in the right way. At least make absolutely sure that after the transfer is completed you are able to verify the file size (that should match the one of the file you copied) and possibly the SHA1 digest if you are using a VPS."
+msgstr ""
+
+#: ../../source/topics/persistence.rst:397
+# ec9d5a7d36774dea9d39a3cb53dbb474
+msgid "You also need some kind of independent alert system if the transfer of fresh backups is not working for some reason."
+msgstr ""
+

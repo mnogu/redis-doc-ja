@@ -1,0 +1,202 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/pubsub.rst:2
+# 15786ae85cef4ed7b1c41e89e551e91e
+msgid "Pub/Sub"
+msgstr ""
+
+#: ../../source/topics/pubsub.rst:4
+# 5110b1820d3c4336b63be32e59831d21
+msgid "``SUBSCRIBE``, ``UNSUBSCRIBE`` and ``PUBLISH`` implement the `Publish/Subscribe messaging paradigm <http://en.wikipedia.org/wiki/Publish/subscribe>`__ where (citing Wikipedia) senders (publishers) are not programmed to send their messages to specific receivers (subscribers). Rather, published messages are characterized into channels, without knowledge of what (if any) subscribers there may be. Subscribers express interest in one or more channels, and only receive messages that are of interest, without knowledge of what (if any) publishers there are. This decoupling of publishers and subscribers can allow for greater scalability and a more dynamic network topology."
+msgstr "`SUBSCRIBE <http://redis.io/commands/subscribe>`_, `UNSUBSCRIBE <http://redis.io/commands/unsubscribe>`_, および `PUBLISH <http://redis.io/commands/publish>`_ は、 `Publish/Subscribe messaging paradigm <http://en.wikipedia.org/wiki/Publish/subscribe>`_ を実装しています。送信者(パブリッシャー)はメッセージを特定の受信者(サブスクライバ)へ向けて送信するようにはプログラムされていません。代わりに、特定のチャネルにメッセージを配信します。(存在するとしたら)どのようなサブスクライバが存在するのかという知識はもっていません。サブスクライバは、関心のある一つもしくは複数のチャネルを購読し、そのチャネルからのみメッセージを受信します。(存在するとしたら)どのようなパブリッシャーが存在するのかという知識はもっていません。このような、パブリッシャーとサブスクライバの疎な関係は、スケーラビリティとダイナミックなネットワークトポロジーを可能にします。"
+
+#: ../../source/topics/pubsub.rst:16
+# 01fd48a19c494b88916c113bd86fa172
+msgid "For instance in order to subscribe to channels ``foo`` and ``bar`` the client issues a ``SUBSCRIBE`` providing the names of the channels:"
+msgstr "たとえば、'foo', 'bar' という 2 つのチャネル購読するには、クライアントはチャネル名を指定して `SUBSCRIBE <http://redis.io/commands/subscribe>`_ コマンドを発行します:"
+
+#: ../../source/topics/pubsub.rst:23
+# 3e382f0b5cb5441683ff2efb1b35af9e
+msgid "Messages sent by other clients to these channels will be pushed by Redis to all the subscribed clients."
+msgstr "これらのチャネルに他のクライアントが送信したメッセージは、Redis により、購読しているすべてのクライアントへプッシュ配信されます。"
+
+#: ../../source/topics/pubsub.rst:26
+# 58c4daab0c9b4f07a42226085c3b317b
+msgid "A client subscribed to one or more channels should not issue commands, although it can subscribe and unsubscribe to and from other channels. The reply of the ``SUBSCRIBE`` and ``UNSUBSCRIBE`` operations are sent in the form of messages, so that the client can just read a coherent stream of messages where the first element indicates the type of message."
+msgstr "一つ、もしくは複数のチャネルを購読しているサブスクライバは、コマンドを発行するべきではありません(とはいえ、他のチャネルを購読したり購読停止したりすることはできます)。 `SUBSCRIBE <http://redis.io/commands/subscribe>`_, `UNSUBSCRIBE <http://redis.io/commands/unsubscribe>`_ 操作の戻り値は、メッセージ形式で返却され、クライアントは一貫したメッセージのストリームを読み取ることができるようになります。なお最初の要素はメッセージのタイプを示します。"
+
+#: ../../source/topics/pubsub.rst:34
+# 1ae99f7f2c5a4aa49a17fa11f5df4fcf
+msgid "Format of pushed messages"
+msgstr "配信メッセージのフォーマット"
+
+#: ../../source/topics/pubsub.rst:36
+# 80c762a66f7d46399156a87bfe825811
+msgid "A message is a @array-reply with three elements."
+msgstr "ひとつのメッセージは、3 つの要素からなる `Array reply <http://redis.io/topics/protocol#array-reply>`_ です。"
+
+#: ../../source/topics/pubsub.rst:38
+# 4ec932de0dfd47b99b02cf3637c5f0f0
+msgid "The first element is the kind of message:"
+msgstr "最初の要素は、メッセージの種類です:"
+
+#: ../../source/topics/pubsub.rst:40
+# c61a37e4711d4dca986f1c05a75e86fc
+msgid "``subscribe``: means that we successfully subscribed to the channel given as the second element in the reply. The third argument represents the number of channels we are currently subscribed to."
+msgstr "'subscribe' : チャネルの購読に成功したことを意味します。チャネル名は応答の 2 つめの要素で与えられます。3 つめの要素は現在購読中のチャネル数を表します。"
+
+#: ../../source/topics/pubsub.rst:44
+# 179c8ae0ff46432cb02415fbdedb97c1
+msgid "``unsubscribe``: means that we successfully unsubscribed from the channel given as second element in the reply. The third argument represents the number of channels we are currently subscribed to. When the last argument is zero, we are no longer subscribed to any channel, and the client can issue any kind of Redis command as we are outside the Pub/Sub state."
+msgstr "'unsubscribe': チャネルの購読停止に成功したことを意味します。チャネル名は応答の 2 つめの要素で与えられます。3 つめの要素は現在購読中のチャネル数を表します。最後の要素が 0 なら、もういずれのチャネルも購読しておらず、Pub/Sub 状態を抜けているため、クライアントは任意の Redis コマンドを発行できます。"
+
+#: ../../source/topics/pubsub.rst:51
+# 67d3b17e1a4a457d840ccf93acf88eb5
+msgid "``message``: it is a message received as result of a ``PUBLISH`` command issued by another client. The second element is the name of the originating channel, and the third argument is the actual message payload."
+msgstr "'message': 他のクライアントが発行した `PUBLISH <http://redis.io/commands/publish>`_ コマンドにより生成されたメッセージを受信したことを意味します。2 つめの要素は受信元のチャネル名、3 つめの要素は実際のメッセージペイロードです。"
+
+#: ../../source/topics/pubsub.rst:57
+# 60a786db12bc4a8782b0371cb0b4d950
+msgid "Database & Scoping"
+msgstr "データベースとスコープ"
+
+#: ../../source/topics/pubsub.rst:59
+# 3d1993945a7843ffb5309e9a67d593aa
+msgid "Pub/Sub has no relation to the key space. It was made to not interfere with it on any level, including database numbers."
+msgstr "Pub/Sub はいずれのキースペースとも関係していません。データベース番号を含むどのレベルとも干渉しません。"
+
+#: ../../source/topics/pubsub.rst:62
+# 6a10b8bb3e234e0fa02b62cf78e4a03a
+msgid "Publishing on db 10, will be heard on by a subscriber on db 1."
+msgstr "DB 10 で発行されたメッセージは、DB 1 のサブスクライバが購読できます。"
+
+#: ../../source/topics/pubsub.rst:64
+# 9e0550e54e7e4e318fd8dce56ef1e4a7
+msgid "If you need scoping of some kind, prefix the channels with the name of the environment (test, staging, production, ...)."
+msgstr "もし何らかのスコープが必要なら、チャネル名に環境に応じた prefix (test, staging, production, ...) を付与してください。"
+
+#: ../../source/topics/pubsub.rst:68
+# ea800311f9cb4f48bf3566bd22dfc856
+msgid "Wire protocol example"
+msgstr "ワイヤープロトコル例"
+
+#: ../../source/topics/pubsub.rst:86
+# b8253458725d44fabaafb7acadb6734d
+msgid "At this point, from another client we issue a ``PUBLISH`` operation against the channel named ``second``:"
+msgstr "ここで、他のクライアントから `PUBLISH <http://redis.io/commands/publish>`_ 操作を 'second' チャネルに対して発行します:"
+
+#: ../../source/topics/pubsub.rst:93
+# f3a687e5e256416d86d07940c3d2b6f0
+msgid "This is what the first client receives:"
+msgstr "すると最初のクライアントは、以下のデータを受信します:"
+
+#: ../../source/topics/pubsub.rst:105
+# 79acd742a8b34999af9885f9bb296a11
+msgid "Now the client unsubscribes itself from all the channels using the ``UNSUBSCRIBE`` command without additional arguments:"
+msgstr "ここでクライアントが、 `UNSCRIBE <http://redis.io/commands/unsubscribe>`_ コマンドを引数なしで発行し、すべてのチャネルの購読を停止します:"
+
+#: ../../source/topics/pubsub.rst:125
+# 9f993ae512954f0b8e87b973cff2e693
+msgid "Pattern-matching subscriptions"
+msgstr "パターンマッチによる購読"
+
+#: ../../source/topics/pubsub.rst:127
+# a7082787b83147639446a475adf36216
+msgid "The Redis Pub/Sub implementation supports pattern matching. Clients may subscribe to glob-style patterns in order to receive all the messages sent to channel names matching a given pattern."
+msgstr "Redis Pub/Sub の実装はパターンマッチをサポートします。クライアントは、glob スタイル のパターンを購読することで、指定したパターンにマッチするすべてのチャネルに送信されたメッセージをを受信できます。"
+
+#: ../../source/topics/pubsub.rst:131
+# fc6c99dc2a66428cb467aef9dcf63008
+msgid "For instance:"
+msgstr "たとえば:"
+
+#: ../../source/topics/pubsub.rst:137
+# 96705c2a23e64e13b52df1dc7e893998
+msgid "Will receive all the messages sent to the channel ``news.art.figurative``, ``news.music.jazz``, etc. All the glob-style patterns are valid, so multiple wildcards are supported."
+msgstr "この場合、'news.arg.figurative', 'news.music.jazz', といったチャネルに送信されたすべてのメッセージを受信します。どのような glob スタイルのパターンも許可されるため、複数のワイルドカードもサポートされます。"
+
+#: ../../source/topics/pubsub.rst:145
+# 3c366b402e2c49feb9db11263a9a79ce
+msgid "Will then unsubscribe the client from that pattern. No other subscriptions will be affected by this call."
+msgstr "この場合、クライアントはこのパターンにマッチするチャネルの購読を停止します。その他の購読には影響を与えません。"
+
+#: ../../source/topics/pubsub.rst:148
+# 35294b1bfcdb451993f2c0a02032c74e
+msgid "Messages received as a result of pattern matching are sent in a different format:"
+msgstr "パターンマッチにより受信されるメッセージは、異なるフォーマットをもちます:"
+
+#: ../../source/topics/pubsub.rst:151
+# 51d046c784044e8693d66d91e6c0a7f2
+msgid "The type of the message is ``pmessage``: it is a message received as result of a ``PUBLISH`` command issued by another client, matching a pattern-matching subscription. The second element is the original pattern matched, the third element is the name of the originating channel, and the last element the actual message payload."
+msgstr "メッセージタイプ 'pmessage': 他のクライアントが発行した `PUBLISH <http://redis.io/commands/publish>`_ コマンドにより生成されたメッセージを受信したことを意味します。2 つめの要素はマッチしたパターン、最後の要素は実際のメッセージペイロードです。"
+
+#: ../../source/topics/pubsub.rst:157
+# 285d56a5dddd47129dd0ffca6512a526
+msgid "Similarly to ``SUBSCRIBE`` and ``UNSUBSCRIBE``, ``PSUBSCRIBE`` and ``PUNSUBSCRIBE`` commands are acknowledged by the system sending a message of type ``psubscribe`` and ``punsubscribe`` using the same format as the ``subscribe`` and ``unsubscribe`` message format."
+msgstr "`SUBSCRIBE <http://redis.io/commands/subscribe>`_, `UNSUBSCRIBE <http://redis.io/commands/unsubscribe>`_ と同様に、 `PSUBSCRIBE <http://redis.io/commands/psubscribe>`_, `PUNSUBSCRIBE <http://redis.io/commands/punsubscribe>`_ コマンドがシステムにより確認されると、'subscribe', 'unsubscribe' と同じフォーマット'psubscribe' および 'punsubscribe' メッセージタイプが送信されます。"
+
+#: ../../source/topics/pubsub.rst:163
+# 2ab1abde836d4657b3b674d595d2d764
+msgid "Messages matching both a pattern and a channel subscription"
+msgstr "パターンとチャネルの両方にマッチするメッセージについて"
+
+#: ../../source/topics/pubsub.rst:165
+# 8cf37275628543249a353c1cd5d98dab
+msgid "A client may receive a single message multiple times if it's subscribed to multiple patterns matching a published message, or if it is subscribed to both patterns and channels matching the message. Like in the following example:"
+msgstr "クライアントが、複数のパターンを購読していたり、パターンとチャネルの両方を購読している場合、ひとつのメッセージを複数回受信する可能性があります。たとえば以下の例のように:"
+
+#: ../../source/topics/pubsub.rst:175
+# d0371a7b5f6e439383f0efbcef158442
+msgid "In the above example, if a message is sent to channel ``foo``, the client will receive two messages: one of type ``message`` and one of type ``pmessage``."
+msgstr "上記の例では、'foo' チャネルにメッセージが送信されると、クライアントは 2 つのメッセージを受信します: ひとつは 'message' タイプ、もうひとつは 'pmessage' タイプです。"
+
+#: ../../source/topics/pubsub.rst:180
+# 4012003a23094678896d1a3357b80bfa
+msgid "The meaning of the subscription count with pattern matching"
+msgstr "パターンマッチにおける購読数の意味"
+
+#: ../../source/topics/pubsub.rst:182
+# d7259339105843eab3efcf99e65713a5
+msgid "In ``subscribe``, ``unsubscribe``, ``psubscribe`` and ``punsubscribe`` message types, the last argument is the count of subscriptions still active. This number is actually the total number of channels and patterns the client is still subscribed to. So the client will exit the Pub/Sub state only when this count drops to zero as a result of unsubscription from all the channels and patterns."
+msgstr "'subscribe', 'unsubscribe', 'psubscribe', および 'psubscribe' メッセージタイプにおいて、最後の要素はアクティブな購読数を表します。この数は、実際には、クライアントがまだ受信を続けているチャネルとパターンの総数です。クライアントは、すべてのチャネルとパターンの購読が停止され、この数が 0 になった時にかぎり、Pub/Sub 状態から抜けます。"
+
+#: ../../source/topics/pubsub.rst:190
+# 655adea35bc7499b8b2330d82e78f363
+msgid "Programming example"
+msgstr "プログラミング例"
+
+#: ../../source/topics/pubsub.rst:192
+# d9a2c960fcef4e18927bafb811f06ad7
+msgid "Pieter Noordhuis provided a great example using EventMachine and Redis to create `a multi user high performance web chat <https://gist.github.com/348262>`__."
+msgstr "Pieter Noordhuis は EventMachine と Redis を使って、素晴らしい `高性能なマルチユーザーWebチャット <https://gist.github.com/348262>`_ の例を公開しています。"
+
+#: ../../source/topics/pubsub.rst:197
+# d6d9edc51f9b47d285d2853404c4b0a7
+msgid "Client library implementation hints"
+msgstr "クライアントライブラリ実装のヒント"
+
+#: ../../source/topics/pubsub.rst:199
+# 1b3e30e2fd5c4b0a91d03dd75be93e84
+msgid "Because all the messages received contain the original subscription causing the message delivery (the channel in the case of message type, and the original pattern in the case of pmessage type) client libraries may bind the original subscription to callbacks (that can be anonymous functions, blocks, function pointers), using an hash table."
+msgstr "受信されるすべてのメッセージは、メッセージデリバリーの元になった購読情報('message'タイプの場合はチャネル名、'pmessage'タイプの場合はパターン)を含んでいるため、クライアントライブラリは、ハッシュテーブルを使って元の購読をコールバック(無名関数、ブロック、関数ポインタ、など)にバインドすることができます。"
+
+#: ../../source/topics/pubsub.rst:205
+# 5be2e939d47a43608afdacd730c4a4fa
+msgid "When a message is received an O(1) lookup can be done in order to deliver the message to the registered callback."
+msgstr "あるメッセージが受信されたとき、そのメッセージをあらかじめ登録されたコールバックに届けるために、O(1) の計算量でルックアップができるでしょう。"

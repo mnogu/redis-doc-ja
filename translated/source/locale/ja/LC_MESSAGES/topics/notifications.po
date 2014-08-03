@@ -1,0 +1,378 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/notifications.rst:2
+# cc873d322cc74e78aec0c3999da4cb82
+msgid "Redis Keyspace Notifications"
+msgstr "キー・スペース通知"
+
+#: ../../source/topics/notifications.rst:4
+# 2503e090d6554704b645c0687f3d6de7
+msgid "**IMPORTANT** Keyspace notifications is a feature available since 2.8.0"
+msgstr "**重要** keyspace notifications は 2.8.0 以上で提供される機能です。"
+
+#: ../../source/topics/notifications.rst:7
+# fda7e8a17ba843189a2d0223d647a128
+msgid "Feature overview"
+msgstr "機能概要"
+
+#: ../../source/topics/notifications.rst:9
+# 03b87979613040eda13380d870fdf3da
+msgid "Keyspace notifications allows clients to subscribe to Pub/Sub channels in order to receive events affecting the Redis data set in some way."
+msgstr "keyspace notifications は、Redis データセットに対するなんらかの変更イベントを、クライアントが Pub/Sub チャネルで受け取るための仕組みです。"
+
+#: ../../source/topics/notifications.rst:12
+# 9b080d3e584d4d61a391d700b64b86af
+msgid "Examples of the events that is possible to receive are the following:"
+msgstr "以下は、受け取れるイベントの例です:"
+
+#: ../../source/topics/notifications.rst:14
+# 677f339a760040b58361ada204ce1704
+msgid "All the commands affecting a given key."
+msgstr "あるキーに作用するすべてのコマンド"
+
+#: ../../source/topics/notifications.rst:15
+# a50cc68bac404671aa784b1c0763c686
+msgid "All the keys receiving an LPUSH operation."
+msgstr "LPUSH 操作を受けたすべてのキー"
+
+#: ../../source/topics/notifications.rst:16
+# be65eb7e7b97479581a8fee9f6896e4b
+msgid "All the keys expiring in the database 0."
+msgstr "database 0 の中で、expire されたすべてのキー"
+
+#: ../../source/topics/notifications.rst:18
+# ad08cc472f4a46d4b05dcb143f60c634
+msgid "Events are delivered using the normal Pub/Sub layer of Redis, so clients implementing Pub/Sub are able to use this feature without modifications."
+msgstr "イベントは、ノーマルな Redis の Pub/Sub レイヤを介して配信されます。そのため、Pub/Sub を実装しているクライアントであれば、修正を加えることなくこの機能が利用できます。"
+
+#: ../../source/topics/notifications.rst:21
+# 18c9cd18dc99442486c40d9806eeb08f
+msgid "Because Redis Pub/Sub is *fire and forget* currently there is no way to use this feature if you application demands **reliable notification** of events, that is, if your Pub/Sub client disconnects, and reconnects later, all the events delivered during the time the client was disconnected are lost."
+msgstr "Redis の Pub/Sub は現在のところ *fire and forget* であるため、 **信頼性のある通知** を必要とするアプリケーションで使うことはできません。つまり、Pub/Sub クライアントが接続を失って、後に再接続をしても、接続が途切れていた間に配信されたイベントの情報は失われます。"
+
+#: ../../source/topics/notifications.rst:27
+# bfcb0e7e4c3a41578d695f9e9c6e051c
+msgid "In the future there are plans to allow for more reliable delivering of events, but probably this will be addressed at a more general level either bringing reliability to Pub/Sub itself, or allowing Lua scripts to intercept Pub/Sub messages to perform operations like pushing the events into a list."
+msgstr "将来的にはより信頼性のあるイベント配信の提供も検討されていますが、おそらくそれは Pub/Sub 自身の信頼性を上げていくか、または Lua スクリプトで Pub/Sub メッセージを捉えてリストにプッシュするなどの方法で、より上位のレベルで対応されることになるでしょう。"
+
+#: ../../source/topics/notifications.rst:34
+# 978ac61301ef4cd4b148eda7c6df1f7f
+msgid "Type of events"
+msgstr "イベントタイプ"
+
+#: ../../source/topics/notifications.rst:36
+# 151e26d8c05f4fb9a138339208e366e2
+msgid "Keyspace notifications are implemented sending two distinct type of events for every operation affecting the Redis data space. For instance a ``DEL`` operation targeting the key named ``mykey`` in database ``0`` will trigger the delivering of two messages, exactly equivalent to the following two ``PUBLISH`` commands:"
+msgstr "keyspace notifications は、Redis データセットに作用する各操作に対し、2 つの異なるタイプのイベントを送信するように実装されています。たとえば database 0 の 'mykey' に対する `DEL <http://redis.io/commands/del>`_ 操作は 2 つのメッセージを配信します。メッセージは以下の 2 つの `PUBLISH <http://redis.io/commands/publish>`_ コマンドと等価です。"
+
+#: ../../source/topics/notifications.rst:47
+# 19e184d3f60b48999a35c1823a7afd70
+msgid "It is easy to see how one channel allows to listen to all the events targeting the key ``mykey`` and the other channel allows to obtain informations about all the keys that are target of a ``del`` operation."
+msgstr "一方のチャネルで 'mykey' に対するすべてのイベントを検知でき、もう一方のチャネルからは 'del' 操作の対象となったすべてのキーに関する情報を取得できることが、簡単に推測できるでしょう。"
+
+#: ../../source/topics/notifications.rst:51
+# eb8c925cb8e042f48fbf36f85865ac38
+msgid "The first kind of event, with ``keyspace`` prefix in the channel is called a **Key-space notification**, while the second, with the ``keyevent`` prefix, is called a **Key-event notification**."
+msgstr "'keyspace' から始まる、最初のイベントタイプは **Key-space notification** と呼ばれ、2 つめの 'keyevent' から始まるイベントタイプは **Key-event notification** と呼ばれます。"
+
+#: ../../source/topics/notifications.rst:55
+# 7dc6724b99ea40ab810b97be3720a043
+msgid "In the above example a ``del`` event was generated for the key ``mykey``. What happens is that:"
+msgstr "上述の例では、'del' イベントが 'mykey' に対して発行されています。起こることは以下です:"
+
+#: ../../source/topics/notifications.rst:58
+# 530ad87fa9d34920aef2aa234397d16d
+msgid "The Key-space channel receives as message the name of the event."
+msgstr "Key-space チャネルはイベント名を受信する"
+
+#: ../../source/topics/notifications.rst:59
+# 555deed8383443198648ebda8ad289d0
+msgid "The Key-event channel receives as message the name of the key."
+msgstr "Key-event チャネルはキー名を受信する"
+
+#: ../../source/topics/notifications.rst:61
+# 88fea76e393346d1bc42546422e7fba5
+msgid "It is possible to enable only one kind of notification in order to deliver just the subset of events we are interested in."
+msgstr "関心のあるイベントのサブセットだけを配信するため、どちらかの通知のみを有効にすることも可能です。"
+
+#: ../../source/topics/notifications.rst:65
+# 038c9a47dbbf47a783c20e24df8f1f2f
+msgid "Configuration"
+msgstr "設定"
+
+#: ../../source/topics/notifications.rst:67
+# cc91d10fdeda45e997f74b08e8d55707
+msgid "By default keyspace events notifications are disabled because while not very sensible the feature uses some CPU power. Notifications are enabled using the ``notify-keyspace-events`` of redis.conf or via the **CONFIG SET**."
+msgstr "この機能は少なからず CPU パワーを使用するため、デフォルトではは無効になっています。通知は redis.conf の 'notify-keyspace-events' か **CONFIG SET** を通して有効にすることができます。"
+
+#: ../../source/topics/notifications.rst:72
+# 4b249fa9e74e476897c93deab3cd8d0d
+msgid "Setting the parameter to the empty string disables notifications. In order to enable the feature a non-empty string is used, composed of multiple characters, where every character has a special meaning according to the following table:"
+msgstr "パラメータに空文字列を設定すると、通知が無効になります。通知機能を有効にするためには、以下のテーブルに記載の、特別な意味をもつ文字の組合せから構成される文字列を設定します。"
+
+#: ../../source/topics/notifications.rst:91
+# c3a31711fc934e7db662f2cd07e224f3
+msgid "At least ``K`` or ``E`` should be present in the string, otherwise no event will be delivered regardless of the rest of the string."
+msgstr "少なくとも、'K' または 'E' が指定される必要があります。そうでないと、残りの文字列にかかわらずいずれのイベントも配信されません。"
+
+#: ../../source/topics/notifications.rst:94
+# 2352ecc4d8f1485db9bc57c2026d4086
+msgid "For instance to enable just Key-space events for lists, the configuration parameter must be set to ``Kl``, and so forth."
+msgstr "たとえばリストに関する Key-space events の通知だけを有効にするには、パラメータは 'Kl' と設定します。その他も同様です。"
+
+#: ../../source/topics/notifications.rst:97
+# a5e9f7529dbb4c1d8510ec5500c1ab01
+msgid "The string ``KEA`` can be used to enable every possible event."
+msgstr "'KEA' という文字列を指定すると、発生しうるすべてのイベントに関する通知を有効にします。"
+
+#: ../../source/topics/notifications.rst:100
+# 749620c7c7074cdaa48134c711650475
+msgid "Events generated by different commands"
+msgstr "各コマンドにより生成されるイベント"
+
+#: ../../source/topics/notifications.rst:102
+# 44eae6f0363c4965a623d0b90037a465
+msgid "Different commands generate different kind of events according to the following list."
+msgstr "異なるコマンドは、異なるイベントを生成します。以下のリストに列挙します。"
+
+#: ../../source/topics/notifications.rst:105
+# 881b5c2a1c324a26ab95f47bb30883a7
+msgid "``DEL`` generates a ``del`` event for every deleted key."
+msgstr "`DEL <http://redis.io/commands/del>`_ は削除された各キーに対し 'del' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:106
+# fb71e6d916794d6ebe31b38bd747679e
+msgid "``RENAME`` generates two events, a ``rename_from`` event for the source key, and a ``rename_to`` event for the destination key."
+msgstr "`RENAME <http://redis.io/commands/rename>`_ は 2 つのイベントを生成します。ひとつは変更元キーに対する 'rename_from' イベント、もうひとつは 変更先キーに対する 'rename_to' イベントです。"
+
+#: ../../source/topics/notifications.rst:108
+# d24da4e244d043a592b4054ff6e58e9f
+msgid "``EXPIRE`` generates an ``expire`` event when an expire is set to the key, or a ``del`` event every time setting an expire results into the key being deleted (see ``EXPIRE`` documentation for more info)."
+msgstr "`EXPIRE <http://redis.io/commands/expire>`_ はキーに対し expire が設定されたときに 'expires' イベントを、expire によりキーが削除されたときに 'del' イベントを生成します(詳しくは `EXPIRE` のドキュメントを参照)。"
+
+#: ../../source/topics/notifications.rst:111
+# 8a5faf806b35424db9393c477e35cba9
+msgid "``SORT`` generates a ``sortstore`` event when ``STORE`` is used to set a new key. If the resulting list is empty, and the ``STORE`` option is used, and there was already an existing key with that name, the result is that the key is deleted, so a ``del`` event is generated in this condition."
+msgstr "`SORT <http://redis.io/commands/sort>`_ は、新しいキーをセットするため `STORE` が指定されたときに 'sortstore' イベントを生成します。結果のリストが空で、 `STORE` が指定され、かつ同名のキーが存在した場合はそのキーが削除されるため、 'del' イベントが生成されます。"
+
+#: ../../source/topics/notifications.rst:116
+# fcda70144e4148e8bad36778a1f0792a
+msgid "``SET`` and all its variants (``SETEX``, ``SETNX``,\\ ``GETSET``) generate ``set`` events. However ``SETEX`` will also generate an ``expire`` events."
+msgstr "`SET <http://redis.io/commands/set>`_ およびその異型(`SETEX <http://redis.io/commands/setex>`_, `SETNX <http://redis.io/commands/setnx>`_, `GETSET <http://redis.io/commands/getset>`_) は 'set' イベントを生成します。なお `SETEX` は同時に 'expire' イベントも生成します。"
+
+#: ../../source/topics/notifications.rst:119
+# ad7bd3b2b2dc4df393ca1ab0ad74c7dc
+msgid "``MSET`` generates a separated ``set`` event for every key."
+msgstr "`MSET <http://redis.io/commands/mset>`_ は各キーごとに別々の 'set' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:120
+# 56a16bd413b44edb9b0e74998d587522
+msgid "``SETRANGE`` generates a ``setrange`` event."
+msgstr "`SETRANGE <http://redis.io/commands/setrange>`_ は 'setrange' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:121
+# 1ccb357d68e54af3b448de215e5bbad0
+msgid "``INCR``, ``DECR``, ``INCRBY``, ``DECRBY`` commands all generate ``incrby`` events."
+msgstr "`INCR <http://redis.io/commands/incr>`_, `DECR <http://redis.io/commands/decr>`_, `INCRBY <http://redis.io/commands/incrby>`_, `DECRBY <http://redis.io/commands/decrby>`_ コマンドはすべて、'incrby' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:123
+# 889b16c06b1f4fea82d24186366d2619
+msgid "``INCRBYFLOAT`` generates an ``incrbyfloat`` events."
+msgstr "`INCRBYFLOAT <http://redis.io/commands/incrbyfloat>`_ は 'incrbyfloat' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:124
+# 584eadf7e0d24843aa9c24823dcdf1dc
+msgid "``APPEND`` generates an ``append`` event."
+msgstr "`APPEND <http://redis.io/commands/append>`_ は 'append' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:125
+# abef52b0d3154ebda3ce9531e9ed0f15
+msgid "``LPUSH`` and ``LPUSHX`` generates a single ``lpush`` event, even in the variadic case."
+msgstr "`LPUSH <http://redis.io/commands/lpush>`_ と `LPUSHX <http://redis.io/commands/lpushx>`_ は、可変個の引数をとりますが、ひとつの 'lpush' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:127
+# a548458a64284c05af6b6eaa49b4215e
+msgid "``RPUSH`` and ``RPUSHX`` generates a single ``rpush`` event, even in the variadic case."
+msgstr "`RPUSH <http://redis.io/commands/rpush>`_ と `RPUSHX <http://redis.io/commands/rpushx>`_ は、可変この引数をとりますが、ひとつの 'rpush' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:129
+# e2a0f78d709a4efba06a66ae310b92cb
+msgid "``RPOP`` generates an ``rpop`` event. Additionally a ``del`` event is generated if the key is removed because the last element from the list was popped."
+msgstr "`RPOP <http://redis.io/commands/rpop>`_ は 'rpop' イベントを生成します。最後の要素がリストから pop されてキーが削除された場合は、加えて 'del' イベントが生成されます。"
+
+#: ../../source/topics/notifications.rst:132
+# f8e2c387ac774870b586e325d0c56209
+msgid "``LPOP`` generates an ``lpop`` event. Additionally a ``del`` event is generated if the key is removed because the last element from the list was popped."
+msgstr "`LPOP <http://redis.io/commands/lpop>`_ は 'lpop' イベントを生成します。最後の要素がリストから pop されてキーが削除された場合は、加えて 'del' イベントが生成されます。"
+
+#: ../../source/topics/notifications.rst:135
+# 6c87d8a165e54921b25af3970b5ff422
+msgid "``LINSERT`` generates an ``linsert`` event."
+msgstr "`LINSERT <http://redis.io/commands/linsert>`_ は 'linsert' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:136
+# d6824f97407a4f93a40235d0f44f4271
+msgid "``LSET`` generates an ``lset`` event."
+msgstr "`LSET <http://redis.io/commands/lset>`_ は 'lset' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:137
+# a9517f08c1c74ae987f385f45881a32b
+msgid "``LTRIM`` generates an ``ltrim`` event, and additionally a ``del`` event if the resulting list is empty and the key is removed."
+msgstr "`LTRIM <http://redis.io/commands/ltrim>`_ は 'ltrim' イベントを生成します。結果としてリストが空になり、キーが削除された場合は、加えて 'del' イベントが生成されます。"
+
+#: ../../source/topics/notifications.rst:139
+# a183f0b16d524ae4808345a364edf372
+msgid "``RPOPLPUSH`` and ``BRPOPLPUSH`` generate an ``rpop`` event and an ``lpush`` event. In both cases the order is guaranteed (the ``lpush`` event will always be delivered after the ``rpop`` event). Additionally a ``del`` event will be generated if the resulting list is zero length and the key is removed."
+msgstr "`RPOPLPUSH <http://redis.io/commands/rpoplpush>`_  と `BRPOPLPUSH <http://redis.io/commands/brpoplpush>`_ は ひとつの 'rpop' イベントとひとつの 'lpush' イベントを生成します。両方のケースにおいて、順序は保証されます('lpush' イベントは常に 'rpop' イベントの後に配信される)。結果としてリスト長がゼロになり、キーが削除された場合は 'del' イベントも生成されます。"
+
+#: ../../source/topics/notifications.rst:144
+# 6f7c247aeeb2444094f6ad457c346f44
+msgid "``HSET``, ``HSETNX`` and ``HMSET`` all generate a single ``hset`` event."
+msgstr "`HSET <http://redis.io/commands/hset>`_, `HSETNX <http://redis.io/commands/hsetnx>`_, および `HMSET <http://redis.io/commands/hmset>`_ はすべて、ひとつの 'hset' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:146
+# 6743a10e45164510b7b17dde25bfd2fc
+msgid "``HINCRBY`` generates an ``hincrby`` event."
+msgstr "`HINCRBY <http://redis.io/commands/hincrby>`_ は 'hincrby' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:147
+# 38d7ac154c004a368de551fbab35358f
+msgid "``HINCRBYFLOAT`` generates an ``hincrbyfloat`` event."
+msgstr "`HINCRBYFLOAT <http://redis.io/commands/hincrbyfloat>`_ は 'hincrbyfloat' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:148
+# 92c9f97192de4072ba7c9d08388c3171
+msgid "``HDEL`` generates a single ``hdel`` event, and an additional ``del`` event if the resulting hash is empty and the key is removed."
+msgstr "`HDEL <http://redis.io/commands/hdel>`_ は 'hdel' イベントを生成します。結果として Hash が空になりキーが削除された場合は、加えて 'del' イベントも生成されます。"
+
+#: ../../source/topics/notifications.rst:150
+# 79e9f98f85db467897fe2148e8a4216c
+msgid "``SADD`` generates a single ``sadd`` event, even in the variadic case."
+msgstr "`SADD <http://redis.io/commands/sadd>`_ は可変個の引数をとりますが、ひとつの 'sadd' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:152
+# 2c3a017856db47ce8aa727633dada688
+msgid "``SREM`` generates a single ``srem`` event, and an additional ``del`` event if the resulting set is empty and the key is removed."
+msgstr "`SREM <http://redis.io/commands/srem>`_ は 'srem' イベントを生成します。結果として Set が空になりキーが削除された場合は、加えて 'del' イベントも生成されます。"
+
+#: ../../source/topics/notifications.rst:154
+# 0334d0869a9f42e7ad6c2d92303d5b27
+msgid "``SMOVE`` generates an ``srem`` event for the source key, and an ``sadd`` event for the destination key."
+msgstr "`SMOVE <http://redis.io/commands/smove>`_ は移動元キーに対して 'srem' イベントを、移動先キーに対して 'sadd' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:156
+# e52198419af44c359a42759fa0783539
+msgid "``SPOP`` generates an ``spop`` event, and an additional ``del`` event if the resulting set is empty and the key is removed."
+msgstr "`SPOP <http://redis.io/commands/spop>`_ は 'spop' イベントを生成します。結果として set が空になりキーが削除された場合は加えて 'spop' イベントも生成されます。"
+
+#: ../../source/topics/notifications.rst:158
+# 8c6144d2bb1d4b6eb29ecbbc04cf498b
+msgid "``SINTERSTORE``, ``SUNIONSTORE``, ``SDIFFSTORE`` generate ``sinterstore``, ``sunionostore``, ``sdiffstore`` events respectively. In the speical case the resulting set is empty, and the key where the result is stored already exists, a ``del`` event is generated since the key is removed."
+msgstr "`SINTERSTORE <http://redis.io/commands/sinterstore>`_, `SUNIONSTORE <http://redis.io/commands/sunionstore>`_, `SDIFFSTORE <http://redis.io/commands/sdiffstore>`_ はそれぞれ 'sinterstore', 'sunionostore', 'sdiffstore' イベントを生成します。特殊なケースとして、結果セットが空で、かつ格納先のキーがすでに存在した場合は、キーが削除されるため 'del' イベントも生成されます。"
+
+#: ../../source/topics/notifications.rst:163
+# 73299dbfc6e0446c959f1c151bff7da5
+msgid "``ZINCR`` generates a ``zincr`` event."
+msgstr "`ZINCRBY <http://redis.io/commands/zincrby>`_ は 'zincr' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:164
+# fc359ce8afe9418d9c786a38de55a56d
+msgid "``ZADD`` generates a single ``zadd`` event even when multiple elements are added."
+msgstr "`ZADD <http://redis.io/commands/zadd>`_ は、複数の要素が追加される場合でも、ひとつの 'zadd' イベントを生成します。"
+
+#: ../../source/topics/notifications.rst:166
+# 8146f13ab01440a5b84106d380094cae
+msgid "``ZREM`` generates a single ``zrem`` event even when multiple elements are deleted. When the resulting sorted set is empty and the key is generated, an additional ``del`` event is generated."
+msgstr "`ZREM <http://redis.io/commands/zrem>`_ は、複数の要素が削除される場合でも、ひとつの 'zrem' イベントを生成します。結果のソート済み集合が空になり、キーが削除された場合は、加えて 'del' イベントも生成されます。"
+
+#: ../../source/topics/notifications.rst:169
+# 82bd27e270f24ed09d8288c25c505613
+msgid "``ZREMBYSCORE`` generates a single ``zrembyscore`` event. When the resulting sorted set is empty and the key is generated, an additional ``del`` event is generated."
+msgstr "`ZREMBYSCORE` [訳注: `ZREMRANGEBYSCORE <http://redis.io/commands/zremrangebyscore>`_ の間違い？] は、'zrembyscore' イベントを生成します。結果のソート済み集合が空になり、キーが削除された場合は、加えて 'del' イベントも生成されます。"
+
+#: ../../source/topics/notifications.rst:172
+# 1123e92c1b49439bb95d6bcad5fc04ab
+msgid "``ZREMBYRANK`` generates a single ``zrembyrank`` event. When the resulting sorted set is empty and the key is generated, an additional ``del`` event is generated."
+msgstr "`ZREMBYRANK` [訳注:`ZREMRANGEBYRANK <http://redis.io/commands/zremrangebyrank>`_ の間違い？] は、'zrembyrank' イベントを生成します。結果のソート済み集合が空になり、キーが削除された場合は、加えて 'del' イベントも生成されます。"
+
+#: ../../source/topics/notifications.rst:175
+# 9b5a5342c0164feab3d1a4d5ff2d172b
+msgid "``ZINTERSTORE`` and ``ZUNIONSTORE`` respectively generate ``zinterstore`` and ``zunionstore`` events. In the speical case the resulting sorted set is empty, and the key where the result is stored already exists, a ``del`` event is generated since the key is removed."
+msgstr "`ZINTERSTORE <http://redis.io/commands/zinterstore>`_ と `ZUNIONSTORE <http://redis.io/commands/zunionstore>`_ はそれぞれ 'zinterstore' イベントと 'zunionstore' イベントを生成します。特殊なケースとして、結果のソート済み集合が空で、かつ格納先のキーがすでに存在した場合は、キーが削除されるため 'del' イベントも生成されます。"
+
+#: ../../source/topics/notifications.rst:180
+# 7801a5588e334ea582bfd2e0af307500
+msgid "Every time a key with a time to live associated is removed from the data set because it expired, an ``expired`` event is generated."
+msgstr "time to live をもつキーが expire されてデータセットから削除される都度、'expired' イベントが生成されます。"
+
+#: ../../source/topics/notifications.rst:182
+# 080afa7051e94431914a44401ffdfecd
+msgid "Every time a key is evicted from the data set in order to free memory as a result of the ``maxmemory`` policy, an ``evicted`` event is generated."
+msgstr "フリーメモリ領域の確保のため 'maxmemory' ポリシーによってキーがデータセットから除去される都度、'evicted' イベントが生成されます。"
+
+#: ../../source/topics/notifications.rst:186
+# f44a010b81eb4ce48754eabb097939d9
+msgid "**IMPORTANT** all the commands generate events only if the target key is really modified. For instance an ``SREM`` deleting a non-existing element from a Set will not actually change the value of the key, so no event will be generated."
+msgstr "**重要** すべてのコマンドは、対象とするキーを実際に変更した場合にのみ、イベントを生成します。たとえば、Set に存在しない要素を 'SREM' で削除しようとした場合、実際にはキーの値を変更しないため、どのようなイベントも生成されません。"
+
+#: ../../source/topics/notifications.rst:191
+# 2603fbe00a5247829a95ad424338d8cf
+msgid "If in doubt about how events are generated for a given command, the simplest thing to do is to watch yourself:"
+msgstr "あるコマンドがどのようなイベントを生成するか疑問に思ったら、実際に確認してみるのが近道です:"
+
+#: ../../source/topics/notifications.rst:201
+# 476e40ed643f40308c809a694e82083d
+msgid "At this point use ``redis-cli`` in another terminal to send commands to the Redis server and watch the events generated:"
+msgstr "ここで、別のターミナルから 'redis-cli' を使って Redis サーバーにコマンドを送り、生成されるイベントを監視します:"
+
+#: ../../source/topics/notifications.rst:211
+# e79d4b5730b94da5bfcb7fcc139509a7
+msgid "Timing of expired events"
+msgstr "expired イベントの発生タイミング"
+
+#: ../../source/topics/notifications.rst:213
+# 64122df82a894d18acac2b5dde535f39
+msgid "Keys with a time to live associated are expired by Redis in two ways:"
+msgstr "time to live が関連づけられたキーは、Redis により 2 つの方法で expire されます。"
+
+#: ../../source/topics/notifications.rst:215
+# 736f4bbe3ae64b6eb126fe4e8a2a1c18
+msgid "When the key is accessed by a command and is found to be expired."
+msgstr "あるコマンドでキーがアクセスされ、すでに expire されていることに気づいたとき"
+
+#: ../../source/topics/notifications.rst:216
+# e13156fd0b4a4c44ab347ea57b8f3565
+msgid "Via a background system that looks for expired keys in background, incrementally, in order to be able to also collect keys that are never accessed."
+msgstr "一切アクセスされなくなったキーを集めるため、expire されたキーをひとつずつ探すバックグラウンドシステムを介して。"
+
+#: ../../source/topics/notifications.rst:220
+# 753e928023c043b1895392cfc7f6f763
+msgid "The ``expired`` events are generated when a key is accessed and is found to be expired by one of the above systems, as a result there are no guarantees that the Redis server will be able to generate the ``expired`` event at the time the key time to live reaches the value of zero."
+msgstr "'expired' イベントは、上記いずれかのシステムによりキーがアクセスされた時に生成されます。したがって、キーの time to live の値がゼロに達したタイミングで Redis サーバーが 'expired' イベントを生成するという保証はありません。"
+
+#: ../../source/topics/notifications.rst:226
+# 3255e0991bd04952885ed0ab6738c878
+msgid "If no command targets the key constantly, and there are many keys with a TTL associated, there can be a significant delay between the time the key time to live drops to zero, and the time the ``expired`` event is generated."
+msgstr "対象のキーに対してコンスタントにコマンドが実行されず、また TTL が関連づけられたキーが多く存在する場合、time to live がゼロに達したタイミングと 'expired' イベントが生成されるタイミングの間には、大きな遅延が発生する可能性があります。"
+
+#: ../../source/topics/notifications.rst:231
+# d163f7a669d841f9a886386884a8c77b
+msgid "Basically ``expired`` events **are generated when the Redis server deletes the key** and not when the time to live theorically reaches the value of zero."
+msgstr "基本的に、'expired' イベントは **Redis サーバーがキーを削除したときに生成され** 、理論上において time to live の値がゼロに達したときに生成されるものではありません。"
+

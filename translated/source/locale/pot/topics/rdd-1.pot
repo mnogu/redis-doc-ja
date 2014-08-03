@@ -1,0 +1,78 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/rdd-1.rst:2
+# b379630bffd24feeb73df2e9d282ee56
+msgid "Redis Design Draft 1 -- Redis Design Drafts"
+msgstr ""
+
+#: ../../source/topics/rdd-1.rst:4
+# c0f71e28a93648c5807fe3d732d2691c
+msgid "Author: Salvatore Sanfilippo ``antirez@gmail.com``"
+msgstr ""
+
+#: ../../source/topics/rdd-1.rst:5
+# 88fe71f7c9fa4229a130a27f45850770
+msgid "Github issue: none"
+msgstr ""
+
+#: ../../source/topics/rdd-1.rst:8
+# a72a39f9446c425896186d3d027121e5
+msgid "History of revisions"
+msgstr ""
+
+#: ../../source/topics/rdd-1.rst:10
+# 443c3e239f984616840a5271d719ddc3
+msgid "1.0, 10 April 2013 - Initial draft."
+msgstr ""
+
+#: ../../source/topics/rdd-1.rst:13
+# bf185f1e0e2249c39a966f004077877c
+msgid "Overview"
+msgstr ""
+
+#: ../../source/topics/rdd-1.rst:15
+# 4db58ecfaf494307ac629a529a078b18
+msgid "Redis Design Drafts are a way to make the community aware of designs planned in order to modify or evolve Redis. Every new Redis Design Draft is published in the Redis mailing list and announced on Twitter, in the hope to receive feedbacks before implementing a given feature."
+msgstr ""
+
+#: ../../source/topics/rdd-1.rst:20
+# b87d53e0bb8c41b496ee0ac623aac3fb
+msgid "The way the community can provide feedbacks about a RDD is simply writing a message to the Redis mailing list, or commenting in the associated Github issue if any."
+msgstr ""
+
+#: ../../source/topics/rdd-1.rst:24
+# 81d1ab55efdb4b879f6e4e3cead08afe
+msgid "Drafts are published only for features already approved as potentially very interesting for the project by the current Redis project maintainer."
+msgstr ""
+
+#: ../../source/topics/rdd-1.rst:28
+# 5ce0d423573e402fb3ed33e499f39179
+msgid "The official Redis web site includes a list of published RDDs."
+msgstr ""
+
+#: ../../source/topics/rdd-1.rst:31
+# e4b0150b36614513bdcab9e2590ecc8a
+msgid "Format"
+msgstr ""
+
+#: ../../source/topics/rdd-1.rst:33
+# 9ceeb8078ffb4da1aa87800310e06e6b
+msgid "The format of RDDs should reflect the format of this RDD."
+msgstr ""
+

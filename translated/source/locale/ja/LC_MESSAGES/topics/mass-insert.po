@@ -1,0 +1,168 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/mass-insert.rst:2
+# ced936d0d4e04b6d921c54cfbe02d77e
+msgid "Redis Mass Insertion"
+msgstr "大量データのインサート"
+
+#: ../../source/topics/mass-insert.rst:4
+# f0c71789c420478aa432f647bc55359e
+msgid "Sometimes Redis instances needs to be loaded with big amount of preexisting or user generated data in a short amount of time, so that millions of keys will be created as fast as possible."
+msgstr "しばしば Redis インスタンスは、数百万のキーをできるだけ高速に作成するため、既存の、またはユーザーが生成する大量のデータを、短時間でロードする必要があります。"
+
+#: ../../source/topics/mass-insert.rst:8
+# 5a07f917dceb48118e0027974a0b64b5
+msgid "This is called a *mass insertion*, and the goal of this document is to provide information about how to feed Redis with data as fast as possible."
+msgstr "これは *mass insertion* と呼ばれます。このドキュメントでは、Redis にできるだけ高速にデータを投入する方法について、情報を提供することを目的とします。"
+
+#: ../../source/topics/mass-insert.rst:13
+# 95899a9c12de4477859fbd91e87d78ce
+msgid "Use the protocol, Luke"
+msgstr "プロトコルを使うんだ, Luke"
+
+#: ../../source/topics/mass-insert.rst:15
+# 21257ed1d1484905b67b0ac31423a2cc
+msgid "Using a normal Redis client to perform mass insertion is not a good idea for a few reasons: the naive approach of sending one command after the other is slow because you have to pay for the round trip time for every command. It is possible to use pipelining, but for mass insertion of many records you need to write new commands while you read replies at the same time to make sure you are inserting as fast as possible."
+msgstr "大量データの投入に、標準の Redis クライアントを使うことは、いくつかの理由により良い方針ではありません: コマンドをひとつひとつ送信するナイーブなアプローチは、毎回のコマンドの度にラウンドトリップが発生するため低速です。パイプライニングを使うことも可能ですが、大量のレコードを追加するためには、書き込みコマンドを発行する一方で、同時にできるだけ高速に応答を読み込まなければいけません。"
+
+#: ../../source/topics/mass-insert.rst:22
+# 2cbbd43926914730afadddeddd39ceb2
+msgid "Only a small percentage of clients support non-blocking I/O, and not all the clients are able to parse the replies in an efficient way in order to maximize throughput. For all this reasons the preferred way to mass import data into Redis is to generate a text file containing the Redis protocol, in raw format, in order to call the commands needed to insert the required data."
+msgstr "ごく少数のクライアントしかノンブロッキングI/Oをサポートしていません。また、すべてのクライアントが、スループット最大化のための効率的な応答のパースを実現できているわけではありません。こうした理由により、Redis に大量のデータをインポートする際に望ましい方法は、生の Redis プロトコルが書かれたテキスト・ファイルを生成し、データ追加に必要なコマンドを呼び出すことです。"
+
+#: ../../source/topics/mass-insert.rst:29
+# dbaa78fe7c394194a18a1941554993ec
+msgid "For instance if I need to generate a large data set where there are billions of keys in the form: \\`keyN -> ValueN' I will create a file containing the following commands in the Redis protocol format:"
+msgstr "たとえば、私が 'KeyN -> ValueN' というフォーマットのキーを数十億個含むような、大きなデータ・セットを生成する必要がある場合、以下のような Redis プロトコル形式のファイルを作成します:"
+
+#: ../../source/topics/mass-insert.rst:40
+# 4ce22f2012094e6ab82778f96537ff33
+msgid "Once this file is created, the remaining action is to feed it to Redis as fast as possible. In the past the way to do this was to use the ``netcat`` with the following command:"
+msgstr "ファイルを作成したら、残りの仕事は、 Redis へファイルの内容をできるだけ高速に送り込むことです。以前のやり方は、以下のように 'netcat' を使うことでした。"
+
+#: ../../source/topics/mass-insert.rst:48
+# a68cb4625870471280d089580ce4a93f
+msgid "However this is not a very reliable way to perform mass import because netcat does not really know when all the data was transferred and can't check for errors. In the unstable branch of Redis at github the ``redis-cli`` utility supports a new mode called **pipe mode** that was designed in order to perform mass insertion."
+msgstr "しかしこの方法は、大量のデータをインポートするときに信頼できるやり方とは言えません。netcat はすべてのデータが転送されたか実際のところを知らず、またエラー検知もできないためです。github の Redis の unstable branch [訳注: 2014/6 時点では stable version の 2.8 にマージ済み] に含まれる 'redis-cli' ユーティリティでは、mass insertion のため **pipe mode** をサポートするようになりました。"
+
+#: ../../source/topics/mass-insert.rst:54
+# ca128e443e1642388a51de77e686174f
+msgid "Using the pipe mode the command to run looks like the following:"
+msgstr "pipe モードを使うには、以下のようにコマンドを実行します:"
+
+#: ../../source/topics/mass-insert.rst:60
+# 356d44fb3751488a9ba053f9a7358088
+msgid "That will produce an output similar to this:"
+msgstr "応答はこのようになります:"
+
+#: ../../source/topics/mass-insert.rst:68
+# 8af0e32dfef24403a1560473db6ef3e1
+msgid "The redis-cli utility will also make sure to only redirect errors received from the Redis instance to the standard output."
+msgstr "redis-cli ユーティリティは、Redis インスタンスから受信したエラーを標準出力にリダイレクトします。"
+
+#: ../../source/topics/mass-insert.rst:72
+# 59a6ec17bc88410a84eb97dce8fecacf
+msgid "Generating Redis Protocol"
+msgstr "Redis プロトコルを生成する"
+
+#: ../../source/topics/mass-insert.rst:74
+# d5ef2e93f9e44a45b41d72a620a3020e
+msgid "The Redis protocol is extremely simple to generate and parse, and is `Documented here </topics/protocol>`__. However in order to generate protocol for the goal of mass insertion you don't need to understand every detail of the protocol, but just that every command is represented in the following way:"
+msgstr "Redis プロトコルの生成およびパースは非常にシンプルで、 `ここにドキュメント化 <http://redis.io/topics/protocol>`_ されています。しかし、mass insertion のためのプロトコルを生成するにあたり、すべてのプロトコルの詳細まで理解する必要はありません。各コマンドが、以下のように表現されることだけを理解しておいてください:"
+
+#: ../../source/topics/mass-insert.rst:89
+# 522bfae9c2bd4b4fb4cddca8f670b356
+msgid "Where ``<cr>`` means \"\" (or ASCII character 13) and ``<lf>`` means \"\" (or ASCII character 10)."
+msgstr "ここで、'<cr>' は　\"\\t\" (ASCII 文字コード 13) を、'<lf>' は \"\\n\" (ASCII 文字コード 10) を表します。"
+
+#: ../../source/topics/mass-insert.rst:92
+# e33fe1135f7a43edbda4ce174bfbdaeb
+msgid "For instance the command **SET key value** is represented by the following protocol:"
+msgstr "たとえば **SET key value** というコマンドは、以下のプロトコルで表現されます:"
+
+#: ../../source/topics/mass-insert.rst:105
+# b32de7a37f774a0e921ee8dd49b2b4cb
+msgid "Or represented as a quoted string:"
+msgstr "または引用符で囲った文字列で表現すると:"
+
+#: ../../source/topics/mass-insert.rst:111
+# 453f492ff8c046c88b7413f1247a9ac0
+msgid "The file you need to generate for mass insertion is just composed of commands represented in the above way, one after the other."
+msgstr "mass insertion のために必要なファイルは、上記の方法で表現された 1 つ 1 つのコマンドから構成されます。"
+
+#: ../../source/topics/mass-insert.rst:114
+# 6abb8f85dfa04976ac37b0b1e5ebf19a
+msgid "The following Ruby function generates valid protocol:"
+msgstr "以下は、妥当なプロトコルを生成する Ruby 関数です。"
+
+#: ../../source/topics/mass-insert.rst:130
+# 461a6817c5014c5dbca9aa4c8fb77051
+msgid "Using the above function it is possible to easily generate the key value pairs in the above example, with this program:"
+msgstr "この関数を使うと、前述のキー・バリューペアは以下のプログラムで簡単に生成できます:"
+
+#: ../../source/topics/mass-insert.rst:139
+# d17db92746d94c75bc64a1b7b25435b1
+msgid "We can run the program directly in pipe to redis-cli in order to perform our first mass import session."
+msgstr "このプログラムの実行結果をパイプで直接 redis-cli に送れば、大量データをインポートするセッションを実行できます。"
+
+#: ../../source/topics/mass-insert.rst:150
+# e747a97596974f52a324c6b9453a766c
+msgid "How the pipe mode works under the hoods"
+msgstr "pipe モードが内部でどのように動作しているか"
+
+#: ../../source/topics/mass-insert.rst:152
+# 9cd9aa2b6dd44d55be0a6837e1834efa
+msgid "The magic needed inside the pipe mode of redis-cli is to be as fast as netcat and still be able to understand when the last reply was sent by the server at the same time."
+msgstr "redis-cli の pipe モードの内部で必要な魔法は、netcat と同程度に高速で、かつ、サーバーから送信される応答を理解できる、というものです。"
+
+#: ../../source/topics/mass-insert.rst:156
+# 00d27fff76e845a0a4daa65e4cc2a697
+msgid "This is obtained in the following way:"
+msgstr "これは以下の方法で実現されています:"
+
+#: ../../source/topics/mass-insert.rst:158
+# 845441de6bf04a5e9019f30b5208566d
+msgid "redis-cli --pipe tries to send data as fast as possible to the server."
+msgstr "redis-cli --pipe は可能なかぎり高速にデータをサーバーへ送信する。"
+
+#: ../../source/topics/mass-insert.rst:160
+# e40b3ca5a7064a3eb739489829048d4c
+msgid "At the same time it reads data when available, trying to parse it."
+msgstr "それと同時に、得られた受信データを読み、パースを試みる。"
+
+#: ../../source/topics/mass-insert.rst:161
+# 5fd718534eb14ee0a1c5d36a551b1938
+msgid "Once there is no more data to read from stdin, it sends a special **ECHO** command with a random 20 bytes string: we are sure this is the latest command sent, and we are sure we can match the reply checking if we receive the same 20 bytes as a bulk reply."
+msgstr "標準入力からのデータ入力が終わったら、ランダムな 20 バイトの文字列とともに、特殊な **ECHO** コマンドを送信する: これが最後のコマンドだとわかっているため、受信データをチェックし、同じ 20 バイトからなる bulk reply であるかのマッチングが可能。"
+
+#: ../../source/topics/mass-insert.rst:165
+# 5c0838c6873d4cbb98210dc8879a708b
+msgid "Once this special final command is sent, the code receiving replies starts to match replies with this 20 bytes. When the matching reply is reached it can exit with success."
+msgstr "この特殊コマンドが送信されたら、コードは応答と 20 バイト文字列とのマッチングを始める。もしマッチする応答が見つかったら、成功とともに終了する。"
+
+#: ../../source/topics/mass-insert.rst:169
+# e21a28d615e54cfa82bc9c23ce034461
+msgid "Using this trick we don't need to parse the protocol we send to the server in order to understand how many commands we are sending, but just the replies."
+msgstr "このトリックを使うことで、いくつのコマンドを送信したか把握しておくために、サーバーへ送信するプロトコルをパースする必要がなくなり、応答のパースを行うだけで済むようになります。"
+
+#: ../../source/topics/mass-insert.rst:173
+# 38d2c0a346744bcfa67fef8262549f30
+msgid "However while parsing the replies we take a counter of all the replies parsed so that at the end we are able to tell the user the amount of commands transferred to the server by the mass insert session."
+msgstr "一方応答については、受け取ったすべての応答をパースするため、最終的には、 mass insert セッション中に転送されたコマンドの数をユーザーに提示することができます。"
+

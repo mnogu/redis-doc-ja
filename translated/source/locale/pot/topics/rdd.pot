@@ -1,0 +1,48 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/rdd.rst:2
+# 3df0efa5ffa045249c4dd4fe4fa26e07
+msgid "Redis Design Drafts"
+msgstr ""
+
+#: ../../source/topics/rdd.rst:4
+# 6933b92f2dca4b2fa66fdf23de162c9e
+msgid "Redis Design Drafts are a way to make the community aware about the design of new features before this feature is actually implemented. This is done in the hope to get good feedbacks from the user base, that may result in a change of the design if a flaw or possible improvement was discovered."
+msgstr ""
+
+#: ../../source/topics/rdd.rst:10
+# b58d03fc4c65434fbbfdc6691a0b65b1
+msgid "The following is the list of published RDDs so far:"
+msgstr ""
+
+#: ../../source/topics/rdd.rst:12
+# 20ce962b1a0148e693f86807cfdcad77
+msgid "`RDD1 -- Redis Design Drafts </topics/rdd-1>`__"
+msgstr ""
+
+#: ../../source/topics/rdd.rst:13
+# d45b7191122b4c0f84ef1cf2bf16695b
+msgid "`RDD2 -- RDB version 7 info fields </topics/rdd-2>`__"
+msgstr ""
+
+#: ../../source/topics/rdd.rst:15
+# 4065705fd3a94d878558aefd2b358f5b
+msgid "To get an RDD accepted for publication you need to talk about your idea in the `Redis Google Group <http://groups.google.com/group/redis-db>`__. Once the general feature is accepted and/or considered for further exploration you can write an RDD or ask the current Redis maintainer to write one about the topic."
+msgstr ""
+

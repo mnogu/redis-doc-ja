@@ -1,0 +1,248 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/internals-rediseventlib.rst:2
+# b42c0cdfecbf4052928855f94d60fcca
+msgid "Redis Event Library"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:4
+# d299894c571848469c10c43b6a8814e5
+msgid "Redis implements its own event library. The event library is implemented in ``ae.c``."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:7
+# 8b6d164f5fbd43c0a343c30f64713257
+msgid "The best way to understand how the Redis event library works is to understand how Redis uses it."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:11
+# 03d6918d27344227a595574228e28ee4
+msgid "Event Loop Initialization"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:13
+# 31c68ef1677b4015b6f47c0405a4a1a5
+msgid "``initServer`` function defined in ``redis.c`` initializes the numerous fields of the ``redisServer`` structure variable. One such field is the Redis event loop ``el``:"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:21
+# 3b8642e3e4bc4d3eb5f0c54c35657a9d
+msgid "``initServer`` initializes ``server.el`` field by calling ``aeCreateEventLoop`` defined in ``ae.c``. The definition of ``aeEventLoop`` is below:"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:40
+# 38cd0fa3b04848c4b22306bf4e24e2aa
+msgid "``aeCreateEventLoop``"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:42
+# 02154a5d20b24b5d901b0061155b2166
+msgid "``aeCreateEventLoop`` first ``malloc``\\ s ``aeEventLoop`` structure then calls ``ae_epoll.c:aeApiCreate``."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:45
+# f3eaeb53e52f445cb99581769a526254
+msgid "``aeApiCreate`` ``malloc``\\ s ``aeApiState`` that has two fields - ``epfd`` that holds the ``epoll`` file descriptor returned by a call from ```epoll_create`` <http://man.cx/epoll_create%282%29>`__ and ``events`` that is of type ``struct epoll_event`` define by the Linux ``epoll`` library. The use of the ``events`` field will be described later."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:52
+# 6adaa60fe2df490bba08448d63fc2743
+msgid "Next is ``ae.c:aeCreateTimeEvent``. But before that ``initServer`` call ``anet.c:anetTcpServer`` that creates and returns a *listening descriptor*. The descriptor listens on *port 6379* by default. The returned *listening descriptor* is stored in ``server.fd`` field."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:58
+# 6aebcd28b7024374b7a48aac4ab27577
+msgid "``aeCreateTimeEvent``"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:60
+# fc9d1d2de91b493cb4613fa02f571255
+msgid "``aeCreateTimeEvent`` accepts the following as parameters:"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:62
+# f900400ff1d549f68e89fea0573987fd
+msgid "``eventLoop``: This is ``server.el`` in ``redis.c``"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:63
+# 214b79dde5194563ba8621f9f7d00030
+msgid "milliseconds: The number of milliseconds from the current time after which the timer expires."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:65
+# 92078f6c65bb4b5895b49b3c3d006c4a
+msgid "``proc``: Function pointer. Stores the address of the function that has to be called after the timer expires."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:67
+# 4bc7dfb5c6c440aa8b3462e07ab99603
+msgid "``clientData``: Mostly ``NULL``."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:68
+# 160db566a2d34fae9b3a0ff45e1fb3a5
+msgid "``finalizerProc``: Pointer to the function that has to be called before the timed event is removed from the list of timed events."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:71
+# 258934ef9bd04a0a8f87f9e718aff8c9
+msgid "``initServer`` calls ``aeCreateTimeEvent`` to add a timed event to ``timeEventHead`` field of ``server.el``. ``timeEventHead`` is a pointer to a list of such timed events. The call to ``aeCreateTimeEvent`` from ``redis.c:initServer`` function is given below:"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:80
+# e6706c6e69d34455a6f3ff7a091704e5
+msgid "``redis.c:serverCron`` performs many operations that helps keep Redis running properly."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:84
+# b238cc7268fb415eb155b4a3ac672048
+msgid "``aeCreateFileEvent``"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:86
+# a424ac5dea8540af8c08dc13dc02a90a
+msgid "The essence of ``aeCreateFileEvent`` function is to execute ```epoll_ctl`` <http://man.cx/epoll_ctl>`__ system call which adds a watch for ``EPOLLIN`` event on the *listening descriptor* create by ``anetTcpServer`` and associate it with the ``epoll`` descriptor created by a call to ``aeCreateEventLoop``."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:92
+# 4ab670884e764ecfb8a46c784155f91a
+msgid "Following is an explanation of what precisely ``aeCreateFileEvent`` does when called from ``redis.c:initServer``."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:95
+# 18bd25e8356a42269ea1ee87b3d9e0d2
+msgid "``initServer`` passes the following arguments to ``aeCreateFileEvent``:"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:97
+# fe74356ada2f41f3a5888769617166a3
+msgid "``server.el``: The event loop created by ``aeCreateEventLoop``. The ``epoll`` descriptor is got from ``server.el``."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:99
+# 4c5c9ba24dba4b7db0e05f8e6b895b03
+msgid "``server.fd``: The *listening descriptor* that also serves as an index to access the relevant file event structure from the ``eventLoop->events`` table and store extra information like the callback function."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:103
+# 05f9b63201984b5f8a188eeeeb0e8f2a
+msgid "``AE_READABLE``: Signifies that ``server.fd`` has to be watched for ``EPOLLIN`` event."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:105
+# 6fa6f11e019f4eaa97bf83ba1da7d465
+msgid "``acceptHandler``: The function that has to be executed when the event being watched for is ready. This function pointer is stored in ``eventLoop->events[server.fd]->rfileProc``."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:109
+# 1b1a1eebca984001a66a01039b6c9551
+msgid "This completes the initialization of Redis event loop."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:112
+# fc1eaa17677e46338db385f0dea87ffe
+msgid "Event Loop Processing"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:114
+# 2c2d6b87c945494d922d54d78a6ba890
+msgid "``ae.c:aeMain`` called from ``redis.c:main`` does the job of processing the event loop that is initialized in the previous phase."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:117
+# ac543fb3fabb478c93e75a944fc13340
+msgid "``ae.c:aeMain`` calls ``ae.c:aeProcessEvents`` in a while loop that processes pending time and file events."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:121
+# 6c5156c9cd85456eb1b982532b8b0709
+msgid "``aeProcessEvents``"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:123
+# 469fbfb8021f408c88cb8fff8aff619e
+msgid "``ae.c:aeProcessEvents`` looks for the time event that will be pending in the smallest amount of time by calling ``ae.c:aeSearchNearestTimer`` on the event loop. In our case there is only one timer event in the event loop that was created by ``ae.c:aeCreateTimeEvent``."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:128
+# 174ae8ad92924cfb9bd8c79f2c5c8453
+msgid "Remember, that timer event created by ``aeCreateTimeEvent`` has by now probably elapsed because it had a expiry time of one millisecond. Since, the timer has already expired the seconds and microseconds fields of the ``tvp`` ``timeval`` structure variable is initialized to zero."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:133
+# ec8dde5eb67f4ae48f1a3d2e932ee42b
+msgid "The ``tvp`` structure variable along with the event loop variable is passed to ``ae_epoll.c:aeApiPoll``."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:136
+# 640c936e851a44258a413b1c8d86950b
+msgid "``aeApiPoll`` functions does a ```epoll_wait`` <http://man.cx/epoll_wait>`__ on the ``epoll`` descriptor and populates the ``eventLoop->fired`` table with the details:"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:141
+# 633660d13847497e92f8fdc5df32bd32
+msgid "``fd``: The descriptor that is now ready to do a read/write operation depending on the mask value."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:143
+# 3347a810f9d14ed29c94daa24b7b3581
+msgid "``mask``: The read/write event that can now be performed on the corresponding descriptor."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:146
+# 98869dd013064f8292994387d4ee7da3
+msgid "``aeApiPoll`` returns the number of such file events ready for operation. Now to put things in context, if any client has requested for a connection then ``aeApiPoll`` would have noticed it and populated the ``eventLoop->fired`` table with an entry of the descriptor being the *listening descriptor* and mask being ``AE_READABLE``."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:152
+# 831b2838f797420a882905df846a491a
+msgid "Now, ``aeProcessEvents`` calls the ``redis.c:acceptHandler`` registered as the callback. ``acceptHandler`` executes `accept <http://man.cx/accept>`__ on the *listening descriptor* returning a *connected descriptor* with the client. ``redis.c:createClient`` adds a file event on the *connected descriptor* through a call to ``ae.c:aeCreateFileEvent`` like below:"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:167
+# 09de085127724f208d8dc6512e2631dc
+msgid "``c`` is the ``redisClient`` structure variable and ``c->fd`` is the connected descriptor."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:170
+# a53ec1a8f0af4f8dbc23e9798aa8e75f
+msgid "Next the ``ae.c:aeProcessEvent`` calls ``ae.c:processTimeEvents``"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:173
+# 57d1d3a0fad54395bbae8a1125f54660
+msgid "``processTimeEvents``"
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:175
+# 7a85eef137114f6f8eebae1db009f812
+msgid "``ae.processTimeEvents`` iterates over list of time events starting at ``eventLoop->timeEventHead``."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:178
+# 8e42c73e86614054990c4e2270cea8b8
+msgid "For every timed event that has elapsed ``processTimeEvents`` calls the registered callback. In this case it calls the only timed event callback registered, that is, ``redis.c:serverCron``. The callback returns the time in milliseconds after which the callback must be called again. This change is recorded via a call to ``ae.c:aeAddMilliSeconds`` and will be handled on the next iteration of ``ae.c:aeMain`` while loop."
+msgstr ""
+
+#: ../../source/topics/internals-rediseventlib.rst:185
+# 6c8e83dea8c541689ca3784c8f3bacbd
+msgid "That's all."
+msgstr ""
+

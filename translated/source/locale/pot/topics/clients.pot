@@ -1,0 +1,328 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/clients.rst:2
+# 983008ef4530470bb87ac3503fb305a8
+msgid "Redis Clients Handling"
+msgstr ""
+
+#: ../../source/topics/clients.rst:4
+# 27d396cd9d7c49de94622587999f0858
+msgid "This document provides information about how Redis handles clients from the point of view of the networklayer: connections, timeouts, buffers, and other similar topics are covered here."
+msgstr ""
+
+#: ../../source/topics/clients.rst:8
+# 42b3af14f3ca4e9e9e59f730a052384d
+msgid "The information contained in this document is **only applicable to Redis version 2.6 or greater**."
+msgstr ""
+
+#: ../../source/topics/clients.rst:12
+# fc8417ddbfef425ca3a86f7b089b412e
+msgid "How client connections are accepted"
+msgstr ""
+
+#: ../../source/topics/clients.rst:14
+# 64af87702e8d4c3ca6f456a0dc0a34ee
+msgid "Redis accepts clients connections on the configured listening TCP port and on the Unix socket if enabled. When a new client connection is accepted the following operations are performed:"
+msgstr ""
+
+#: ../../source/topics/clients.rst:18
+# 8dbddc56f66d4568b104d4650963f598
+msgid "The client socket is put in non-blocking state since Redis uses multiplexing and non-blocking I/O."
+msgstr ""
+
+#: ../../source/topics/clients.rst:20
+# fa42d5db203940ce98170f537bd1adad
+msgid "The ``TCP_NODELAY`` option is set in order to ensure that we don't have delays in our connection."
+msgstr ""
+
+#: ../../source/topics/clients.rst:22
+# a106e972a6a64535873c03bc273cba2b
+msgid "A *readable* file event is created so that Redis is able to collect the client queries as soon as new data is available to be read on the socket."
+msgstr ""
+
+#: ../../source/topics/clients.rst:26
+# 66b8be991a8b4405bc380f87192411ad
+msgid "After the client is initialized, Redis checks if we are already at the limit of the number of clients that it is possible to handle simultaneously (this is configured using the ``maxclients`` configuration directive, see the next section of this document for further information)."
+msgstr ""
+
+#: ../../source/topics/clients.rst:32
+# 610e28a8dfaf429ea2ba4c806baec572
+msgid "In case it can't accept the current client because the maximum number of clients was already accepted, Redis tries to send an error to the client in order to make it aware of this condition, and closes the connection immediately. The error message will be able to reach the client even if the connection is closed immediately by Redis because the new socket output buffer is usually big enough to contain the error, so the kernel will handle the transmission of the error."
+msgstr ""
+
+#: ../../source/topics/clients.rst:41
+# f28b216f3a784bf3a73d77f0cbc0675d
+msgid "In what order clients are served"
+msgstr ""
+
+#: ../../source/topics/clients.rst:43
+# 3e7f8275c9cd4eba89fd7d1ec1d2da22
+msgid "The order is determined by a combination of the client socket file descriptor number and order in which the kernel reports events, so the order is to be considered as unspecified."
+msgstr ""
+
+#: ../../source/topics/clients.rst:47
+# e1a9b0f64fad4038843466fa4dd18e31
+msgid "However Redis does the following two things when serving clients:"
+msgstr ""
+
+#: ../../source/topics/clients.rst:49
+# 05c579c3318a457e8f17bc0f8cd57c42
+msgid "It only performs a single ``read()`` system call every time there is something new to read from the client socket, in order to ensure that if we have multiple clients connected, and a few are very demanding clients sending queries at an high rate, other clients are not penalized and will not experience a bad latency figure."
+msgstr ""
+
+#: ../../source/topics/clients.rst:54
+# 6bd3203f5ef04e37ada3aabab4af6678
+msgid "However once new data is read from a client, all the queries contained in the current buffers are processed sequentially. This improves locality and does not need iterating a second time to see if there are clients that need some processing time."
+msgstr ""
+
+#: ../../source/topics/clients.rst:60
+# 48213b41c6dd4c76adf9c13054fcba30
+msgid "Maximum number of clients"
+msgstr ""
+
+#: ../../source/topics/clients.rst:62
+# 76a1c2b0e4e8435795b7aaf4ef644719
+msgid "In Redis 2.4 there was an hard-coded limit about the maximum number of clients that was possible to handle simultaneously."
+msgstr ""
+
+#: ../../source/topics/clients.rst:65
+# 48cdbbe7ab7b48dfbba58cdce36b7b3b
+msgid "In Redis 2.6 this limit is dynamic: by default is set to 10000 clients, unless otherwise stated by the ``maxmemory`` directive in Redis.conf."
+msgstr ""
+
+#: ../../source/topics/clients.rst:68
+# 072e2426c2724169ab05c48c7341385c
+msgid "However Redis checks with the kernel what is the maximum number of file descriptors that we are able to open (the *soft limit* is checked), if the limit is smaller than the maximum number of clients we want to handle, plus 32 (that is the number of file descriptors Redis reserves for internal uses), then the number of maximum clients is modified by Redis to match the amount of clients we are *really able to handle* under the current operating system limit."
+msgstr ""
+
+#: ../../source/topics/clients.rst:76
+# 45f8436d794347d79c5045aea434bd9e
+msgid "When the configured number of maximum clients can not be honored, the condition is logged at startup as in the following example:"
+msgstr ""
+
+#: ../../source/topics/clients.rst:84
+# f16a8c5a2ffd41fc81251a73433fb932
+msgid "When Redis is configured in order to handle a specific number of clients it is a good idea to make sure that the operating system limit to the maximum number of file descriptors per process is also set accordingly."
+msgstr ""
+
+#: ../../source/topics/clients.rst:88
+# aa969b157caf4352af0420b71c937c04
+msgid "Under Linux these limits can be set both in the current session and as a system-wide setting with the following commands:"
+msgstr ""
+
+#: ../../source/topics/clients.rst:91
+# cb61d32f9bc541168ce05d6d3c26b1b6
+msgid "ulimit -Sn 100000 # This will only work if hard limit is big enough."
+msgstr ""
+
+#: ../../source/topics/clients.rst:92
+# f8dd515c215549e088412e3669849167
+msgid "sysctl -w fs.file-max=100000"
+msgstr ""
+
+#: ../../source/topics/clients.rst:95
+# 03bc44fd1c7a41f39a7556e5b021439b
+msgid "Output buffers limits"
+msgstr ""
+
+#: ../../source/topics/clients.rst:97
+# 048ecc5dbf084368beeea4990885eed4
+msgid "Redis needs to handle a variable-length output buffer for every client, since a command can produce a big amount of data that needs to be transfered to the client."
+msgstr ""
+
+#: ../../source/topics/clients.rst:101
+# a41bbec928db4cf5ad8ee8ec681a8274
+msgid "However it is possible that a client sends more commands producing more output to serve at a faster rate at which Redis can send the existing output to the client. This is especially true with Pub/Sub clients in case a client is not able to process new messages fast enough."
+msgstr ""
+
+#: ../../source/topics/clients.rst:106
+# d38aee4e06fd44beb724746a8b718663
+msgid "Both the conditions will cause the client output buffer to grow and consume more and more memory. For this reason by default Redis sets limits to the output buffer size for different kind of clients. When the limit is reached the client connection is closed and the event logged in the Redis log file."
+msgstr ""
+
+#: ../../source/topics/clients.rst:112
+# 7915f4349d72432b99586893b61ce256
+msgid "There are two kind of limits Redis uses:"
+msgstr ""
+
+#: ../../source/topics/clients.rst:114
+# 08f61d0764aa49889e45dfe99a79d46a
+msgid "The **hard limit** is a fixed limit that when reached will make Redis closing the client connection as soon as possible."
+msgstr ""
+
+#: ../../source/topics/clients.rst:116
+# fd7db5e2a64846359b883a80dbd468ff
+msgid "The **soft limit** instead is a limit that depends on the time, for instance a soft limit of 32 megabytes per 10 seconds means that if the client has an output buffer bigger than 32 megabytes for, continuously, 10 seconds, the connection gets closed."
+msgstr ""
+
+#: ../../source/topics/clients.rst:121
+# 9c076569bce64826bf2b4dfa20cabcdb
+msgid "Different kind of clients have different default limits:"
+msgstr ""
+
+#: ../../source/topics/clients.rst:123
+# f09e5847f4934ca0bdfb2202f23206f9
+msgid "**Normal clients** have a default limit of 0, that means, no limit at all, because most normal clients use blocking implementations sending a single command and waiting for the reply to be completely read before sending the next command, so it is always not desirable to close the connection in case of a normal client."
+msgstr ""
+
+#: ../../source/topics/clients.rst:128
+# f31ba26d8a02454e907992b0cc631897
+msgid "**Pub/Sub clients** have a default hard limit of 32 megabytes and a soft limit of 8 megabytes per 60 seconds."
+msgstr ""
+
+#: ../../source/topics/clients.rst:130
+# 97cb39481d6d443aa196fdf7cfa30f47
+msgid "**Slaves** have a default hard limit of 256 megabytes and a soft limit of 64 megabyte per 60 second."
+msgstr ""
+
+#: ../../source/topics/clients.rst:133
+# 6313ffb302c54db29db57bf1b1d22354
+msgid "It is possible to change the limit at runtime using the ``CONFIG SET`` command or in a permanent way using the Redis configuration file ``redis.conf``. See the example ``redis.conf`` in the Redis distribution for more information about how to set the limit."
+msgstr ""
+
+#: ../../source/topics/clients.rst:139
+# a0205bc9b21b43a19521c7ee90a0282c
+msgid "Query buffer hard limit"
+msgstr ""
+
+#: ../../source/topics/clients.rst:141
+# 342b71d56c6046418e117501e46e9b67
+msgid "Every client is also subject to a query buffer limit. This is a non-configurable hard limit that will close the connection when the client query buffer (that is the buffer we use to accumulate commands from the client) reaches 1 GB, and is actually only an extreme limit to avoid a server crash in case of client or server software bugs."
+msgstr ""
+
+#: ../../source/topics/clients.rst:148
+# abd7e2f19c7149e9a3d35538e78b6c8b
+msgid "Client timeouts"
+msgstr ""
+
+#: ../../source/topics/clients.rst:150
+# 7b5aa53e8c414bb39774e5c4273899c1
+msgid "By default recent versions of Redis don't close the connection with the client if the client is idle for many seconds: the connection will remain open forever."
+msgstr ""
+
+#: ../../source/topics/clients.rst:154
+# 9a033fc219814e1586324d335abbdfbc
+msgid "However if you don't like this behavior, you can configure a timeout, so that if the client is idle for more than the specified number of seconds, the client connection will be closed."
+msgstr ""
+
+#: ../../source/topics/clients.rst:158
+# 554f6df81cbb439b9ad5be1fd091cb67
+msgid "You can configure this limit via ``redis.conf`` or simply using ``CONFIG SET timeout <value>``."
+msgstr ""
+
+#: ../../source/topics/clients.rst:161
+# 25d79fb2f484433394961525a523486f
+msgid "Note that the timeout only applies to number clients and it **does not apply to Pub/Sub clients**, since a Pub/Sub connection is a *push style* connection so a client that is idle is the norm."
+msgstr ""
+
+#: ../../source/topics/clients.rst:165
+# 341028f4d9a047f29e7673411da5eabe
+msgid "Even if by default connections are not subject to timeout, there are two conditions when it makes sense to set a timeout:"
+msgstr ""
+
+#: ../../source/topics/clients.rst:168
+# ccda63f8a0774fa585cda07aa3f40ce8
+msgid "Mission critical applications where a bug in the client software may saturate the Redis server with idle connections, causing service disruption."
+msgstr ""
+
+#: ../../source/topics/clients.rst:171
+# 1361c564496d4d90a71f9e54cf6eeb7c
+msgid "As a debugging mechanism in order to be able to connect with the server if a bug in the client software saturates the server with idle connections, making it impossible to interact with the server."
+msgstr ""
+
+#: ../../source/topics/clients.rst:175
+# a82aadcaf36e479f84984b4edc00527c
+msgid "Timeouts are not to be considered very precise: Redis avoids to set timer events or to run O(N) algorithms in order to check idle clients, so the check is performed incrementally from time to time. This means that it is possible that while the timeout is set to 10 seconds, the client connection will be closed, for instance, after 12 seconds if many clients are connected at the same time."
+msgstr ""
+
+#: ../../source/topics/clients.rst:183
+# 3d344d1565bd44c8bd60cf8403dd754f
+msgid "CLIENT command"
+msgstr ""
+
+#: ../../source/topics/clients.rst:185
+# abb022d3449643909efc2b4f16297997
+msgid "The Redis client command allows to inspect the state of every connected client, to kill a specific client, to set names to connections. It is a very powerful debugging tool if you use Redis at scale."
+msgstr ""
+
+#: ../../source/topics/clients.rst:189
+# 5d8824df9f1b47c7aeac1e27f351fe1c
+msgid "``CLIENT LIST`` is used in order to obtain a list of connected clients and their state:"
+msgstr ""
+
+#: ../../source/topics/clients.rst:198
+# 256836693f8e4ddb8b167340e06940d5
+msgid "In the above example session two clients are connected to the Redis server. The meaning of a few of the most interesting fields is the following:"
+msgstr ""
+
+#: ../../source/topics/clients.rst:202
+# 7770248f84474f399858a81f1f66ecff
+msgid "**addr**: The client address, that is, the client IP and the remote port number it used to connect with the Redis server."
+msgstr ""
+
+#: ../../source/topics/clients.rst:204
+# b9ed99b1c5b9489b9762812123248a14
+msgid "**fd**: The client socket file descriptor number."
+msgstr ""
+
+#: ../../source/topics/clients.rst:205
+# 2de2fe5de97d4acca3b745a95771d471
+msgid "**name**: The client name as set by ``CLIENT SETNAME``."
+msgstr ""
+
+#: ../../source/topics/clients.rst:206
+# 1ae2aa3cbaf648859e84bcd0991fc5c3
+msgid "**age**: The number of seconds the connection existed for."
+msgstr ""
+
+#: ../../source/topics/clients.rst:207
+# 45bfd214a18547d9b50f03d978402e29
+msgid "**idle**: The number of seconds the connection is idle."
+msgstr ""
+
+#: ../../source/topics/clients.rst:208
+# bebad15612a649548e15b9e18d47c944
+msgid "**flags**: The kind of client (N means normal client, check the `full list of flags <http://redis.io/commands/client-list>`__)."
+msgstr ""
+
+#: ../../source/topics/clients.rst:210
+# b0bc87bb80064e3780e86417f92267c0
+msgid "**omem**: The amount of memory used by the client for the output buffer."
+msgstr ""
+
+#: ../../source/topics/clients.rst:212
+# dff1439db0e04d60b76d68d9ecafe031
+msgid "**cmd**: The last executed command."
+msgstr ""
+
+#: ../../source/topics/clients.rst:214
+# 0eaf1ade9e2e494ab9df09bc352856ec
+msgid "See the `CLIENT LIST <http://redis.io/commands/client-list>`__ documentation for the full list of fields and their meaning."
+msgstr ""
+
+#: ../../source/topics/clients.rst:217
+# 9297ca7bc2244bbdb7274c7e6732ed1a
+msgid "Once you have the list of clients, you can easily close the connection with a client using the ``CLIENT KILL`` command specifying the client address as argument."
+msgstr ""
+
+#: ../../source/topics/clients.rst:221
+# a0024e41a41746dc9706a31e8ec188a1
+msgid "The commands ``CLIENT SETNAME`` and ``CLIENT GETNAME`` can be used to set and get the connection name."
+msgstr ""
+

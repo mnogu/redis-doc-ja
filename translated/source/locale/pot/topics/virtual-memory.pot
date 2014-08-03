@@ -1,0 +1,343 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/virtual-memory.rst:1
+# c67b20549b3f4e9f8f95b622a349c4bb
+msgid "**IMPORTANT NOTE:** Redis VM is now deprecated. Redis 2.4 will be the latest Redis version featuring Virtual Memory (but it also warns you that Virtual Memory usage is discouraged). We found that using VM has several disadvantages and problems. In the future of Redis we want to simply provide the best in-memory database (but persistent on disk as usual) ever, without considering at least for now the support for databases bigger than RAM. Our future efforts are focused into providing scripting, cluster, and better persistence."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:11
+# 4faec23c2748485f885ea68cf4f0be1f
+msgid "Virtual Memory"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:13
+# c8dd14e0d1fc45c5a95da394ec3594f4
+msgid "Redis Virtual Memory is a feature that will appear for the first time in a stable Redis distribution in Redis 2.0. However Virtual Memory (called VM starting from now) is already available and stable enough to be tests in the unstable branch of Redis available `on Git <http://github.com/antirez/redis>`__."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:20
+# f6b133ae633c48af83e12c858167be4c
+msgid "Virtual Memory explained in simple words"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:22
+# 32f0c06f27624543a69432b8b6b4b997
+msgid "Redis follows a Key-Value model. You have keys associated with some values. Usually Redis takes both Keys and associated Values in memory. Sometimes this is not the best option, and while Keys *must* be taken in memory by design (and in order to ensure fast lookups), Values can be swapped out to disk when they are rarely used."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:28
+# 40e78c9dabfd495a834931318149adb5
+msgid "In practical terms this means that if you have a dataset of 100,000 keys in memory, but only 10% of this keys are often used, Redis with Virtual Memory enabled will try to transfer the values associated to the rarely used keys on disk."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:33
+# de5ff86d814747e6b22b8a710212ffa8
+msgid "When these values are requested, as a result of a command issued by a client, the values are loaded back from the swap file to the main memory."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:38
+# ee72d65c6b584010bedc418cdff166d6
+msgid "When using Virtual Memory is a good idea"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:40
+# 0dc469e9b11c4482af126f9a02b6d48e
+msgid "Before using VM you should ask yourself if you really need it. Redis is a disk backed, in memory database. The right way to use Redis is almost always to have enough RAM to fit all the data in memory. Still there are scenarios where this is not possible:"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:45
+# 6207d256a01a4a2480e94e4d72a92fdb
+msgid "Data access is very biased. Only a small percentage of keys (for instance related to active users in your web site) gets the vast majority of accesses. At the same time there is too much data per key to take everything in memory."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:49
+# b79a489adaca47cab85f17d13420c078
+msgid "There is simply not enough memory available to hold all the data in memory, regardless of the data access pattern, and values are large. In this configuration Redis can be used as an on-disk DB where keys are in memory, so the key lookup is fast, but the access to the actual values require accessing the (slower) disk."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:55
+# b92519f5049f4e2880c881520db14de7
+msgid "An important concept to take in mind is that Redis *is not able to swap the keys*, so if your memory problems are related to the fact you have too much keys with very small values, VM is not the solution."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:59
+# f9a5f21f24fb466eb0513e599fc73022
+msgid "However if a good amount of memory is used because values are pretty large (for example large strings, lists, sets or hashes with many elements), then VM can be a good idea."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:63
+# d45568d11eb841989347e30ac525041f
+msgid "Sometimes you can turn your \"many keys with small values\" problem into a \"few keys but with very large values\" one just using Hashes in order to group related data into fields of a single key. For example, instead of having a key for every attribute of your object you have a single key per object where Hash fields represent the different attributes."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:70
+# bba1fa26dc9347c3bcca4a03126e205d
+msgid "VM Configuration"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:72
+# a53b38ed272140ff9fede0189b3d2f44
+msgid "Configuring the VM is not hard but requires some care to set the best parameters according to the requirements."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:75
+# 7d8523eb74f642bba7a4ccaa4748bbba
+msgid "The VM is enabled and configured by editing redis.conf, the first step is switching it on with:"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:82
+# 5d7ec51ad00349fe8e1d608a93f18e25
+msgid "Many other configuration options are able to change the behavior of VM. The rule is that you don't want to run with the default configuration, as every problem and dataset requires some fine-tuning to get the maximum advantage."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:88
+# 8b0183654f79498eb20640f000a225bc
+msgid "The vm-max-memory setting"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:90
+# defa5639153b4dd8aa431aae96c3957f
+msgid "The ``vm-max-memory`` setting specifies how much memory Redis is free to use before starting swapping values on disk."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:93
+# 46b100f8d2934402bd9d0e661e6e7075
+msgid "Basically if this memory limit is not reached, no object will be swapped, Redis will work with all objects in memory as usual. Once this limit is hit however, enough objects are swapped out to return the memory into just under the limit."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:98
+# 33577171b53b400799435f9bb39adf9a
+msgid "The swapped objects are primarily the ones with the highest \"age\" (that is, the number of seconds since they have not been used), but the \"swappability\" of an object is also proportional to the logarithm of it's size in memory. So although older objects are preferred, bigger objects are swapped out first when they are about the same age."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:104
+# 7db583f371ae43dc99ec2560bdded05c
+msgid "*WARNING:* Because keys can't be swapped out, Redis will not be able to honor the *vm-max-memory* setting if the keys alone are using more space than the limit."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:108
+# 74d706cc30604eab9f165269c9e113bb
+msgid "The best value for this setting is enough RAM to hold the \"working set\" of data. In practical terms, just give Redis as much memory as you can, and swapping will work better."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:113
+# 3b546a90299947d5aa19c7ded8d2530f
+msgid "Configuring the swap file"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:115
+# 028e6b4dc9464ebcaae8991d7bfc23f7
+msgid "In order to transfer data from memory to disk, Redis uses a swap file. The swap file has nothing to do with the durability of data, and can be removed when a Redis instance is terminated. However, the swap file should not be moved, deleted, or altered in any other way while Redis is running."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:121
+# ec024e93009244698c4695467cfe27e8
+msgid "Because the Redis swap file is used mostly in a random access fashion, to put the swap file into a Solid State Disk will lead to better performance."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:125
+# 98a6e2114d9346e5a6ce2fdf80c8b292
+msgid "The swap file is divided into \"pages\". A value can be swapped into one or multiple pages, but a single page can't hold more than a value."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:128
+# 87bfb8671809412f86f51eb6321f08dc
+msgid "There is no direct way to tell Redis how much bytes of swap file it should be using. Instead two different values are configured, that when multiplied together will produce the total number of bytes used. These two values are the number of pages inside the swap file, and the page size. It is possible to configure these two parameters in redis.conf."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:134
+# bd9f0a6728424abe883c294479cfa77c
+msgid "The *vm-pages* configuration directive is used to set the total number of pages in the swap file."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:136
+# cdaacfc19de1414c81071e8e0657747a
+msgid "the *vm-page-size* configuration directive is used in order to set the page size in bytes."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:139
+# 84314157dc2d4cbdab62fd3991819031
+msgid "So for instance if the page size is set to the value of 32 bytes, and the total number of pages is set to 10000000 (10 million), then the swap file can hold a total of 320 MB of data."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:143
+# 9595945c61a84dd4ab5d577422807985
+msgid "Because a single page can't be used to hold more than a value (but a value can be stored into multiple pages), care must be taken in setting these parameters. Usually the best idea is setting the page size so that the majority of the values can be swapped using a few pages."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:149
+# c8ec822641944087a785a28d0d9a01e6
+msgid "Threaded VM vs Blocking VM"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:151
+# 1e319b9aad30427eb8a70cfcdb0ea460
+msgid "Another very important configuration parameter is *vm-max-threads*:"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:158
+# f4345b5d97cf4601ab011303eaa7b1e2
+msgid "This is the maximum number of threads used in order to perform I/O from/to the swap file. A good value is just to match the number of cores in your system."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:162
+# 62c2bbf70ccb485d9b8b7c47e8a79a98
+msgid "However the special value of \"0\" will enable blocking VM. When VM is configured to be blocking it performs the I/O in a synchronous blocking way. This is what you can expect from blocking VM:"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:166
+# 7219342b495e40ff97de5066f0cf2950
+msgid "Clients accessing swapped out keys will block other clients while reading from disk, so the latency experienced by clients can be larger, especially if the disk is slow or busy and/or if there are big values swapped on disk."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:170
+# 202e9ad4a9e148eeabbb55e2a0d57dae
+msgid "The blocking VM performance is better *overall*, as there is no time lost in synchronization, spawning of threads, and resuming blocked clients waiting for values. So if you are willing to accept an higher latency from time to time, blocking VM can be a good pick. Especially if swapping happens rarely and most of your often accessed data happens to fit in your memory."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:177
+# 207641040e2b4a4f924491e83f3e3cc6
+msgid "If instead you have a lot of swap in and swap out operations and you have many cores that you want to exploit, and in general when you don't want that clients dealing with swapped values will block other clients for a few milliseconds (or more if the swapped value is very big), then it's better to use threaded VM."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:183
+# 6023603be2fd4a9ab75dd0058d88fee9
+msgid "To experiment with your dataset and different configurations is warmly encouraged..."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:187
+# 73b8dd61599344ba86a10fb1475644c0
+msgid "Random things to know"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:190
+# d315991fca39415981b39eda595ff6ab
+msgid "A good place for the swap file"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:192
+# ab81c2714a024cd7ba8972c2a84e5f27
+msgid "In many configurations the swap file can be fairly large, amounting to 40GB or more. Not all kinds of file systems are able to deal with large files in a good way, especially the Mac OS X file system which tends to be really lame about it."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:197
+# 0aaeed86e078474a9b5f8f18d55e22a5
+msgid "The recommendation is to use Linux ext3 file system, or any other file system with good support for *sparse files*. What are sparse files?"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:200
+# cd7046f0de6e428881cdfd6e7ab56afd
+msgid "Sparse files are files where a lot of the content happens to be empty. Advanced file systems like ext2, ext3, ext4, RaiserFS, Raiser4, and many others, are able to encode these files in a more efficient way and will allocate more space for the file when needed, that is, when more actual blocks of the file will be used."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:206
+# dc31051362544afba191826828a12e83
+msgid "The swap file is obviously pretty sparse, especially if the server is running since little time or it is much bigger compared to the amount of data swapped out. A file system not supporting sparse files can at some point block the Redis process while creating a very big file at once."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:211
+# 00cacf0849854ea3add564931e08d420
+msgid "For a list of file systems supporting spare files, `check this check this Wikipedia page comparing different files systems <http://en.wikipedia.org/wiki/Comparison_of_file_systems>`__."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:216
+# 286b9f06bc1b4c92b2e6e19c9c2467d9
+msgid "Monitoring the VM"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:218
+# 5904647eb8fe45c39553c90afaa0d722
+msgid "Once you have a Redis system with VM enabled up and running, you may be very interested to know how it's working: how many objects are swapped in total, the number of objects swapped and loaded every second, and so forth."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:223
+# 7c41d78285474720bb51dd54984ed9e2
+msgid "There is an utility that is very handy in checking how the VM is working, that is part of `Redis Tools <http://github.com/antirez/redis-tools>`__. This tool is called redis-stat, and using it is pretty straightforward:"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:247
+# e08b807ff8bb4055ac33784a37318a88
+msgid "The above output is about a redis-server with VM enabled, around 1 million of keys inside, and a lot of simulated load using the redis-load utility."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:251
+# 54d906c51f114c7aaf010528df27205b
+msgid "As you can see from the output a number of load-in and swap-out operations are happening every second. Note that the first line reports the actual values since the server was started, while the next lines are differences compared to the previous reading."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:256
+# c579917100e54ae690cea73228d405c3
+msgid "If you assigned enough memory to hold your working set of data, probably you should see a lot less dramatic swapping happening, so redis-stat can be a really valuable tool in order to understand if you need to shop for RAM ;)"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:262
+# 57eade2dc5d7475080975aee1a023f71
+msgid "Redis with VM enabled: better .rdb files or Append Only File?"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:264
+# 9340e25423474d9c8d19d4032a74a4f9
+msgid "When VM is enabled, saving and loading the database are *much slower* operations. A DB that usually loads in 2 seconds takes 13 seconds with VM enabled if the server is configured to use the smallest memory possible (that is, vm-max-memory set to 0)."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:269
+# 189b117388bb4566bbd4cabd63983a9e
+msgid "So you probably want to switch to a configuration using the Append Only File for persistence, so that you can perform the BGREWRITEAOF from time to time."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:273
+# 82c88885e0b040d384ad35f638b6cb3f
+msgid "It is important to note that while a BGSAVE or BGREWRITEAOF is in progress Redis does *not* swap new values on disk. The VM will be read-only while there is another child accessing it. So if you have a lot of writes while there is a child working, the memory usage may grow."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:279
+# 2248291ebf56452cae7b4ddd863c25fd
+msgid "Using as little memory as possible"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:281
+# 55792091d47b4fd7a4ce4130b65eab84
+msgid "An interesting setup to turn Redis into an on-disk DB with just keys in memory is setting vm-max-memory to 0. If you don't mind some latency more and poorer performance but want to use very little memory for very big values, this is a good setup."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:286
+# b7083327ff854165ab1da0b2a998ef18
+msgid "In this setup you should first try setting the VM as blocking (vm-max-threads 0) as with this configuration and high traffic the number of swap in and swap out operations will be huge, and threading will consume a lot of resources compared to a simple blocking implementation."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:293
+# 543f3c580d59452eba189f27926ed785
+msgid "VM Stability"
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:295
+# 2623477452c544489c1f57dbf519e0a7
+msgid "VM is still experimental code, but over the last few weeks it was tested in many ways in development environments, and even in some production environment. No bugs were noticed during this testing period. Still the more obscure bugs may happen in non-controlled environments where there are setups that we are not able to reproduce for some reason."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:301
+# efd7a3f8c8b04f30b127c825a39d0866
+msgid "In this stage you are encouraged to try VM in your development environment, and even in production if your DB is not mission critical, but for instance just a big persistent cache of data that may go away without too much problems."
+msgstr ""
+
+#: ../../source/topics/virtual-memory.rst:306
+# 4e4eba1bf3514845a71e21e6c9d36fb4
+msgid "Please report any problem you will notice to the Redis Google Group or by IRC joining the #redis IRC channel on freenode."
+msgstr ""
+

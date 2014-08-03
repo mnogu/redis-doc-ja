@@ -1,0 +1,968 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/cluster-tutorial.rst:2
+# 602b0d41eee84466b2efc38ed8f06135
+msgid "Redis cluster tutorial"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:4
+# 5a3fa75bb9724010b19e842705ec245e
+msgid "This document is a gentle introduction to Redis Cluster, that does not use complex to understand distributed systems concepts. It provides instructions about how to setup a cluster, test, and operate it, without going into the details that are covered in the `Redis Cluster specification </topics/cluster-spec>`__ but just describing how the system behaves from the point of view of the user."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:11
+# 2b5e346d5d46469bbd05a77ff7ded7d1
+msgid "Note that if you plan to run a serious Redis Cluster deployment, the more formal specification is an highly suggested reading."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:14
+# c8bf01e649334ec7a78dc6a73f772084
+msgid "**Redis cluster is currently alpha quality code**, please get in touch in the Redis mailing list or open an issue in the Redis Github repository if you find any issue."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:19
+# aadf688240cb4b679a97d1194f7ea7cf
+msgid "Redis Cluster 101"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:21
+# c0d0691eb0d64ae19341caeb37e41178
+msgid "Redis Cluster provides a way to run a Redis installation where data is **automatically sharded across multiple Redis nodes**."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:24
+# 2a27da731cd94c559d57c49f2b713073
+msgid "Commands dealing with multiple keys are not supported by the cluster, because this would require moving data between Redis nodes, making Redis Cluster not able to provide Redis-alike performances and predictable behavior under load."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:29
+# bc29bb1f0afe4918abf9c8b83d59729d
+msgid "Redis Cluster also provides **some degree of availability during partitions**, that is in practical terms the ability to continue the operations when some nodes fail or are not able to communicate."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:33
+# 52de2046c9324e42b745bf64af687066
+msgid "So in practical terms, what you get with Redis Cluster?"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:35
+# 5956cdff55174e3289db0c2c955e9d5f
+msgid "The ability to automatically split your dataset among multiple nodes."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:36
+# 4ff4f57283ab4d60a64be0960797fea5
+msgid "The ability to continue operations when a subset of the nodes are experiencing failures or are unable to communicate with the rest of the cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:41
+# b2e4e19694774f48b65f499ce2132e0e
+msgid "Redis Cluster data sharding"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:43
+# 1857e2c17df2467fa8381611ea71d4a8
+msgid "Redis Cluster does not use consistency hashing, but a different form of sharding where every key is conceptually part of what we call an **hash slot**."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:47
+# e175c03900c1407fa4c06d39f7dabc2a
+msgid "There are 16384 hash slots in Redis Cluster, and to compute what is the hash slot of a given key, we simply take the CRC16 of the key modulo 16384."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:51
+# 62a915f048844d56b00e4cacd9b59f9c
+msgid "Every node in a Redis Cluster is responsible of a subset of the hash slots, so for example you may have a cluster with 3 nodes, where:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:54
+# 97822fb2b44340fa98ccd22931b9ff8c
+msgid "Node A contains hash slots from 0 to 5500."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:55
+# 435db99e7b1b4c3984622894e015145c
+msgid "Node B contains hash slots from 5501 to 11000."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:56
+# 2a9e7b9a4baa4f55a44a5c80d0043d6f
+msgid "Node C contains hash slots from 11001 to 16384."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:58
+# dcc7f17474a64c148278ab0e38dfd64b
+msgid "This allows to add and remove nodes in the cluster easily. For example if I want to add a new node D, I need to move some hash slot from nodes A, B, C to D. Similarly if I want to remove node A from the cluster I can just move the hash slots served by A to B and C. When the node A will be empty I can remove it from the cluster completely."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:64
+# 01b79dbc31384638a215fe32b4b2a119
+msgid "Because moving hash slots from a node to another does not require to stop operations, adding and removing nodes, or changing the percentage of hash slots hold by nodes, does not require any downtime."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:69
+# 2b7fc96a63c94e7fb59f9e768987a317
+msgid "Redis Cluster master-slave model"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:71
+# 1926a471faa44073a0dc03f201be00ab
+msgid "In order to remain available when a subset of nodes are failing or are not able to communicate with the majority of nodes, Redis Cluster uses a master-slave model where every node has from 1 (the master itself) to N replicas (N-1 additional slaves)."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:76
+# 70712bcf84bb4d798d2d7bed555bd0f2
+msgid "In our example cluster with nodes A, B, C, if node B fails the cluster is not able to continue, since we no longer have a way to serve hash slots in the range 5501-11000."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:80
+# ab9a08ed2f474093840c958148af8a7b
+msgid "However if when the cluster is created (or at a latter time) we add a slave node to every master, so that the final cluster is composed of A, B, C that are masters, and A1, B1, C1 that are slaves, the system is able to continue if node B fails."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:85
+# 41db331f846141859ec0f74fc60830c0
+msgid "Node B1 replicates B, so the cluster will elect node B1 as the new master and will continue to operate correctly."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:88
+# ee32ca64bed44161acdc509a5f220d52
+msgid "However note that if nodes B and B1 fail at the same time Redis Cluster is not able to continue to operate."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:92
+# 395a58d6e9c54ca3bdf1bad51ef52698
+msgid "Redis Cluster consistency guarantees"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:94
+# 9ff8f9a2660344028e019d12c48b694c
+msgid "Redis Cluster is not able to guarantee **strong consistency**. In practical terms this means that under certain conditions it is possible that Redis Cluster will forget a write that was acknowledged by the system."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:99
+# bbde0bf9281b43eeaddb92bd6c8c5240
+msgid "The first reason why Redis Cluster can lose writes is because it uses asynchronous replication. This means that during writes the following happens:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:103
+# ec4ef574f01845bfbec613d554e5a637
+msgid "Your client writes to the master B."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:104
+# d150d43be2f54c258ca5167c11998a6f
+msgid "The master B replies OK to your client."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:105
+# 8c7a153cb61244688ee01a02df8b3e92
+msgid "The master B propagates the write to its slaves B1, B2 and B3."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:107
+# efb498839ebf434c8bf5581dbff5fbac
+msgid "As you can see B does not wait for an acknowledge from B1, B2, B3 before replying to the client, since this would be a prohibitive latency penalty for Redis, so if your client writes something, B acknowledges the write, but crashes before being able to send the write to its slaves, one of the slaves can be promoted to master losing the write forever."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:114
+# f805207b74394447b6002db69205e08a
+msgid "This is **very similar to what happens** with most databases that are configured to flush data to disk every second, so it is a scenario you are already able to reason about because of past experiences with traditional database systems not involving distributed systems. Similarly you can improve consistency by forcing the database to flush data on disk before replying to the client, but this usually results into prohibitively low performances."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:122
+# 8803716a06c9411faaed694b91dfdced
+msgid "Basically there is a trade-off to take between performances and consistency."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:125
+# 8ef0a1e6781341bbb842eaf85167288a
+msgid "Note: Redis Cluster in the future will allow users to perform synchronous writes when absolutely needed."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:128
+# 297e9fb34ba4407599cd0f62d3c64cde
+msgid "There is another scenario where Redis Cluster will lose writes, that happens during a network partition where a client is isolated with a minority of instances including at least a master."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:132
+# 7e67a7202c144f36bbf4a44dcaa4d353
+msgid "Take as an example our 6 nodes cluster composed of A, B, C, A1, B1, C1, with 3 masters and 3 slaves. There is also a client, that we will call Z1."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:136
+# a2ac10262ffe4ed5b84ce01ecca635d1
+msgid "After a partition occurs, it is possible that in one side of the partition we have A, C, A1, B1, C1, and in the other side we have B and Z1."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:140
+# 97cd3fc7bc0d4f80a610585423467905
+msgid "Z1 is still able to write to B, that will accept its writes. If the partition heals in a very short time, the cluster will continue normally. However if the partition lasts enough time for B1 to be promoted to master in the majority side of the partition, the writes that Z1 is sending to B will be lost."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:146
+# 54034241f3714efca526daa24bc84286
+msgid "Note that there is a maximum window to the amount of writes Z1 will be able to send to B: if enough time has elapsed for the majority side of the partition to elect a slave as master, every master node in the minority side stops accepting writes."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:151
+# b0c017908cbe421ea6c2838a36a7ae18
+msgid "This amount of time is a very important configuration directive of Redis Cluster, and is called the **node timeout**."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:154
+# aa49703eea5d43d495bce2b454260bdf
+msgid "After node timeout has elapsed, a master node is considered to be failing, and can be replaced by one if its replicas. Similarly after node timeout has elapsed without a master node to be able to sense the majority of the other master nodes, it enters an error state and stops accepting writes."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:161
+# 08cd5dd351a54fd0b4b7a2ee22bf7774
+msgid "Creating and using a Redis Cluster"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:163
+# 388a1bb2aaa240799f170e1e9fdec11e
+msgid "To create a cluster, the first thing we need is to have a few empty Redis instances running in **cluster mode**. This basically means that clusters are not created using normal Redis instances, but a special mode needs to be configured so that the Redis instance will enable the Cluster specific features and commands."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:169
+# 3d8f018567f04086a70d9c4b6cdcb1d2
+msgid "The following is a minimal Redis cluster configuration file:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:179
+# 614a2e54bb734970981812f12e3ec632
+msgid "As you can see what enables the cluster mode is simply the ``cluster-enabled`` directive. Every instance also contains the path of a file where the configuration for this node is stored, that by default is ``nodes.conf``. This file is never touched by humans, it is simply generated at startup by the Redis Cluster instances, and updated every time it is needed."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:186
+# 3ac3f33b4fa64c44b3227e2b708a04f7
+msgid "Note that the **minimal cluster** that works as expected requires to contain at least three master nodes. For your first tests it is strongly suggested to start a six nodes cluster with three masters and three slaves."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:191
+# c914fdcd049440968476c69ce35bf642
+msgid "To do so, enter a new directory, and create the following directories named after the port number of the instance we'll run inside any given directory."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:195
+# 57b1029120954777bb0860be1563172e
+msgid "Something like:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:203
+# 1b92b419ff484746812c0eaec66c02be
+msgid "Create a ``redis.conf`` file inside each of the directories, from 7000 to 7005. As a template for your configuration file just use the small example above, but make sure to replace the port number ``7000`` with the right port number according to the directory name."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:208
+# f4a7812e5950427ab193131601365186
+msgid "Now copy your redis-server executable, **compiled from the latest sources in the unstable branch at Github**, into the ``cluster-test`` directory, and finally open 6 terminal tabs in your favorite terminal application."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:213
+# ec8131b2bb1a495d9ad22f0a40905fa5
+msgid "Start every instance like that, one every tab:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:220
+# 909ba780d5dc4f02b161b6e64552d115
+msgid "As you can see from the logs of every instance, since no ``nodes.conf`` file existed, every node assigns itself a new ID."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:227
+# b69436c065654130951d53892bd3ba94
+msgid "This ID will be used forever by this specific instance in order for the instance to have an unique name in the context of the cluster. Every node remembers every other node using this IDs, and not by IP or port. IP addresses and ports may change, but the unique node identifier will never change for all the life of the node. We call this identifier simply **Node ID**."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:235
+# 834286c0d10d473ea45d6a62be66f07b
+msgid "Creating the cluster"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:237
+# 25a9b469f3a04fd6946370b8af4f07f5
+msgid "Now that we have a number of instances running, we need to create our cluster writing some meaningful configuration to the nodes."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:240
+# 1863bb4b715340b79a1c05e2202fbc11
+msgid "This is very easy to accomplish as we are helped by the Redis Cluster command line utility called ``redis-trib``, that is a Ruby program executing special commands in the instances in order to create new clusters, check or reshard an existing cluster, and so forth."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:245
+# c9dfd9d4e5f4485aad0fe9e0bce1d5f6
+msgid "The ``redis-trib`` utility is in the ``src`` directory of the Redis source code distribution. To create your cluster simply type:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:253
+# b0c54886d1a64bd2a42d4e1a93ffca76
+msgid "The command used here is **create**, since we want to create a new cluster. The option ``--replicas 1`` means that we want a slave for every master created. The other arguments are the list of addresses of the instances I want to use to create the new cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:258
+# 385c04dc870f493f8a43fcc5f6b77e03
+msgid "Obviously the only setup with our requirements is to create a cluster with 3 masters and 3 slaves."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:261
+# 22c05607777847e5b2adf579c5a200fa
+msgid "Redis-trib will propose you a configuration. Accept typing **yes**. The cluster will be configured and *joined*, that means, instances will be bootstrapped into talking with each other. Finally if everything went ok you'll see a message like that:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:270
+# 1b1a1a30a1f147d6962e1b1e76249053
+msgid "This means that there is at least a master instance serving each of the 16384 slots available."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:274
+# 3001af9b7d9f47339e09ee71fe57d22d
+msgid "Playing with the cluster"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:276
+# dd5f9b61990a404d85ae08f48bb2f0ec
+msgid "At this stage one of the problems with Redis Cluster is the lack of client libraries implementations."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:279
+# 1ec7e71fd94f436cbaf021f451034c5a
+msgid "I'm aware of the following implementations:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:281
+# 2421fb18561c445b80d60929c056af6d
+msgid "`redis-rb-cluster <http://github.com/antirez/redis-rb-cluster>`__ is a Ruby implementation written by me (@antirez) as a reference for other languages. It is a simple wrapper around the original redis-rb, implementing the minimal semantics to talk with the cluster efficiently."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:286
+# 9206c23f48054a8d8ca735cc53fc91b3
+msgid "`redis-py-cluster <https://github.com/Grokzen/redis-py-cluster>`__ appears to be a port of redis-rb-cluster to Python. Not recently updated (last commit 6 months ago) however it may be a starting point."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:290
+# 2f0ec37d5bf34144a60a963db51ef435
+msgid "The popular `Predis <https://github.com/nrk/predis>`__ has support for Redis Cluster, the support was recently updated and is in active development."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:293
+# bbda8686531f41458baf41d53c9a12f1
+msgid "The most used Java client, `Jedis <https://github.com/xetorthio/jedis>`__ recently added support for Redis Cluster, see the *Jedis Cluster* section in the project README."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:297
+# b7b5a0eea8524fb1952ce727835a4719
+msgid "The ``redis-cli`` utility in the unstable branch of the Redis repository at Github implements a very basic cluster support when started with the ``-c`` switch."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:301
+# 2aa81ddb795445c0b6d1a61313d9e4af
+msgid "An easy way to test Redis Cluster is either to try and of the above clients or simply the ``redis-cli`` command line utility. The following is an example of interaction using the latter:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:321
+# 1f98bdcfb7f2474b8b82a810546bd1bc
+msgid "The redis-cli cluster support is very basic so it always uses the fact that Redis Cluster nodes are able to redirect a client to the right node. A serious client is able to do better than that, and cache the map between hash slots and nodes addresses, to directly use the right connection to the right node. The map is refreshed only when something changed in the cluster configuration, for example after a failover or after the system administrator changed the cluster layout by adding or removing nodes."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:331
+# 44fc3234bd5145eda435eab877e5d86a
+msgid "Writing an example app with redis-rb-cluster"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:333
+# 52df8374c2ac446d8e66662c9a4efc80
+msgid "Before goign forward showing how to operate the Redis Cluster, doing things like a failover, or a resharding, we need to create some example application or at least to be able to understand the semantics of a simple Redis Cluster client interaction."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:338
+# fc8e78a8d61347198b1898bdf1565520
+msgid "In this way we can run an example and at the same time try to make nodes failing, or start a resharding, to see how Redis Cluster behaves under real world conditions. It is not very helpful to see what happens while nobody is writing to the cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:343
+# 23f3504f38f845f6b004e45e2acb4657
+msgid "This section explains some basic usage of redis-rb-cluster showing two examples. The first is the following, and is the ``example.rb`` file inside the redis-rb-cluster distribution:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:380
+# 952b868912104ea1a577bd487743a6e8
+msgid "The application does a very simple thing, it sets keys in the form ``foo<number>`` to ``number``, one after the other. So if you run the program the result is the following stream of commands:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:384
+# 8539e96611cd485e868cea1bd7d16a59
+msgid "SET foo0 0"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:385
+# 999b10a73e874a3f81cf1c946b0fb645
+msgid "SET foo1 1"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:386
+# 19cdd2f122eb4b96afe224b99a73cf99
+msgid "SET foo2 2"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:387
+# 828e7a09751a4d708ed4cdd80ec259d6
+msgid "And so forth..."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:389
+# ce58e457f760451dbd2c797107b55879
+msgid "The program looks more complex than it should usually as it is designed to show errors on the screen instead of exiting with an exception, so every operation performed with the cluster is wrapped by ``begin`` ``rescue`` blocks."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:394
+# ad4b20c3f4394d6db8389e39df11f44a
+msgid "The **line 7** is the first interesting line in the program. It creates the Redis Cluster object, using as argument a list of *startup nodes*, the maximum number of connections this object is allowed to take against different nodes, and finally the timeout after a given operation is considered to be failed."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:400
+# 583cf8de669f4abb93d4ec6ef108d5b9
+msgid "The startup nodes don't need to be all the nodes of the cluster. The important thing is that at least one node is reachable. Also note that redis-rb-cluster updates this list of startup nodes as soon as it is able to connect with the first node. You should expect such a behavior with any other serious client."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:406
+# 665757815c5747b1bf4061e908833c8a
+msgid "Now that we have the Redis Cluster object instance stored in the **rc** variable we are ready to use the object like if it was a normal Redis object instance."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:410
+# bcce7647911440cda589bac9b9221423
+msgid "This is exactly what happens in **line 11 to 19**: when we restart the example we don't want to start again with ``foo0``, so we store the counter inside Redis itself. The code above is designed to read this counter, or if the counter does not exist, to assign it the value of zero."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:416
+# 2b881082651e435e8a4b1b62441df38c
+msgid "However note how it is a while loop, as we want to try again and again even if the cluster is down and is returning errors. Normal applications don't need to be so careful."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:420
+# 127ce5d9d1a34b9b9137132ecaa62c10
+msgid "**Lines between 21 and 30** start the main loop where the keys are set or an error is displayed."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:423
+# 1d9fa50dc2214fd0866ee0cbb1eebeaf
+msgid "Note the ``sleep`` call at the end of the loop. In your tests you can remove the sleep if you want to write to the cluster as fast as possible (relatively to the fact that this is a busy loop without real parallelism of course, so you'll get the usually 10k ops/second in the best of the conditions)."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:429
+# 8e3135f402c24a439c364bcd6f994138
+msgid "Normally writes are slowed down in order for the example application to be easier to follow by humans."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:432
+# 22c24cdbfe674feeab77adb8a364f6da
+msgid "Starting the application produces the following output:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:448
+# 2fc9bcf0d7cb4b7fa5129d86a522b2b1
+msgid "This is not a very interesting program and we'll use a better one in a moment but we can already try what happens during a resharding when the program is running."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:453
+# 4966f12355794f9ea4eedd603c7b4176
+msgid "Resharding the cluster"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:455
+# 6d944890a97c42bbbe196fdb200b6a6e
+msgid "Now we are ready to try a cluster resharding. To do this please keep the example.rb program running, so that you can see if there is some impact on the program running. Also you may want to comment the ``sleep`` call in order to have some more serious write load during resharding."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:460
+# 56ccaf22753749ada189a87ee58d0be9
+msgid "Resharding basically means to move hash slots from a set of nodes to another set of nodes, and like cluster creation it is accomplished using the redis-trib utility."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:464
+# fa65953681a64d589916fdd43f5f80f3
+msgid "To start a resharding just type:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:470
+# c09c9760f36742bdbf28c984699cdc15
+msgid "You only need to specify a single node, redis-trib will find the other nodes automatically."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:473
+# b4e8e142c5fe410e89f508a6c4aaf8e2
+msgid "Currently redis-trib is only able to reshard with the administrator support, you can't just say move 5% of slots from this node to the other one (but this is pretty trivial to implement). So it starts with questions. The first is how much a big resharding do you want to do:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:482
+# e54b3e86e01e4d4fbd4b6b5e834626ba
+msgid "We can try to reshard 1000 hash slots, that should already contain a non trivial amount of keys if the example is still running without the sleep call."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:486
+# 927bccd4085d42b7905fb5b47f18d220
+msgid "Then redis-trib needs to know what is the target of the resharding, that is, the node that will receive the hash slots. I'll use the first master node, that is, 127.0.0.1:7000, but I need to specify the Node ID of the instance. This was already printed in a list by redis-trib, but I can always find the ID of a node with the following command if I need:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:497
+# 3f049c4eca1e47158cf4dbe83221d958
+msgid "Ok so my target node is 97a3a64667477371c4479320d683e4c8db5858b1."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:499
+# 745f6ed99e9e4e09915dd192e80c8b80
+msgid "Now you'll get asked from what nodes you want to take those keys. I'll just type ``all`` in order to take a bit of hash slots from all the other master nodes."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:503
+# 6871cfa2b48443a0b7687e86a925401a
+msgid "After the final confirmation you'll see a message for every slot that redis-trib is going to move from a node to another, and a dot will be printed for every actual key moved from one side to the other."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:507
+# d2a5c2df7341424c8c835f282a954513
+msgid "While the resharding is in progress you should be able to see your example program running unaffected. You can stop and restart it multiple times during the resharding if you want."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:511
+# 8c0db0f16153445daeb8e22948957c52
+msgid "At the end of the resharding, you can test the health of the cluster with the following command:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:518
+# e958c580401d46849073a4c9c684b127
+msgid "All the slots will be covered as usually, but this time the master at 127.0.0.1:7000 will have more hash slots, something around 6461."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:522
+# e456ade69deb4c96a8e15ec6597c5c67
+msgid "A more interesting example application"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:524
+# ffc1fed6f56a4dae868ae212f173b5e4
+msgid "So far so good, but the example application we used is not very good. It writes acritically to the cluster without ever checking if what was written is the right thing."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:528
+# 125c20b1f6cd4162873ffa0c2ed79cfc
+msgid "From our point of view the cluster receiving the writes could just always write the key ``foo`` to ``42`` to every operation, and we would not notice at all."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:532
+# 07b3368fb3b74e1b8c5b11f349e98e39
+msgid "So in the reids-rb-cluster repository, there is a more interesting application that is called ``consistency-test.rb``. It is a much more interesting application as it uses a set of counters, by default 1000, and sends ``INCR`` commands in order to increment the counters."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:537
+# 5aef846bc9834e73b2f0c7b1d615b6ae
+msgid "However instead of just writing, the application does two additional things:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:540
+# 7aac7cae96e54371955771a5685cd260
+msgid "When a counter is updated using ``INCR``, the application remembers the write."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:542
+# 7615f6bf73c2449d82b1010504ced8bb
+msgid "It also reads a random counter before every write, and check if the value is what it expected it to be, comparing it with the value it has in memory."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:546
+# 2af20572174b42e7a6c18292039e58f6
+msgid "What this means is that this application is a simple **consistency checker**, and is able to tell you if the cluster lost some write, or if it accepted a write that we did not received acknowledgement for. In the first case we'll see a counter having a value that is smaller than the one we remember, while in the second case the value will be greater."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:552
+# fc9465dcc22745c0a35fbaf747829ab9
+msgid "Running the consistency-test application produces a line of output every second:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:566
+# f1f2a186492740c2ae975dc96ddbe4f2
+msgid "The line shows the number of **R**\\ eads and **W**\\ rites performed, and the number of errors (query not accepted because of errors since the system was not available)."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:570
+# 40630402ce924ab6a5e9ac79bec318e4
+msgid "If some inconsistency is found, new lines are added to the output. This is what happens, for example, if I reset a counter manually while the program is running:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:586
+# 15c5fcf14b984025b27c05c64c208329
+msgid "When I set the counter to 0 the real value was 144, so the program reports 144 lost writes (``INCR`` commands that are not remembered by the cluster)."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:590
+# 619d6f16bff741fcb6217472cbc9ec89
+msgid "This program is much more interesting as a test case, so we'll use it to test the Redis Cluster failover."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:594
+# 943e50b5231d4570b34ff4dba3ed57f1
+msgid "Testing the failover"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:596
+# 9cffbc3205b04b50a111df6bd26e5766
+msgid "Note: during this test, you should take a tab open with the consistency test application running."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:599
+# 400958e077ed4589b071341ccacca2dc
+msgid "In order to trigger the failover, the simplest thing we can do (that is also the semantically simplest failure that can occur in a distributed system) is to crash a single process, in our case a single master."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:603
+# 01e77264983d472b9e1dabb6ae613f17
+msgid "We can identify a cluster and crash it with the following command:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:612
+# 3da1c19350da4f2d89d1f15e3a2e2c04
+msgid "Ok, so 7000, 7001, and 7002 are masters. Let's crash node 7002 with the **DEBUG SEGFAULT** command:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:620
+# ebfecd54c1e84a8daf9acadf74682eec
+msgid "Now we can look at the output of the consistency test to see what it reported."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:636
+# 0ba51fc1080a4bf59e38aeffdb4a074a
+msgid "As you can see during the failover the system was not able to accept 578 reads and 577 writes, however no inconsistency was created in the database. This may sound unexpected as in the first part of this tutorial we stated that Redis Cluster can lost writes during the failover because it uses asynchronous replication. What we did not said is that this is not very likely to happen because Redis sends the reply to the client, and the commands to replicate to the slaves, about at the same time, so there is a very small window to lose data. However the fact that it is hard to trigger does not mean that it is impossible, so this does not change the consistency guarantees provided by Redis cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:648
+# 6dc475fce8d64e2985c3ef1a5c54520c
+msgid "We can now check what is the cluster setup after the failover (note that in the meantime I restarted the crashed instance so that it rejoins the cluster as a slave):"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:662
+# 822c5bee0a094b89ab51204118897700
+msgid "Now the masters are running on ports 7000, 7001 and 7005. What was previously a master, that is the Redis instance running on port 7002, is now a slave of 7005."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:666
+# c2368be10334468cb19bd9bedfdb65c7
+msgid "The output of the ``CLUSTER NODES`` command may look intimidating, but it is actually pretty simple, and is composed of the following tokens:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:669
+# 59b265b496e5419c84a605b0a43d75f4
+msgid "Node ID"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:670
+# 1f76c29afcfb43d181347201d8ad8f10
+msgid "ip:port"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:671
+# d3324f93d7cd452190500be1ed609a20
+msgid "flags: master, slave, myself, fail, ..."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:672
+# 62d3f085cc9c4f628134fc6340a31d1a
+msgid "if it is a slave, the Node ID of the master"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:673
+# cd229e8dce3044e59472259ac631bbed
+msgid "Time of the last pending PING still waiting for a reply."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:674
+# ec57b6a0aae04bb7b201377fa93c8b11
+msgid "Time of the last PONG received."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:675
+# 3087b18e35754b24adb0336a1e47ff20
+msgid "Configuration epoch for this node (see the Cluster specification)."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:676
+# aa723859356b47f59af64d7f3a41a6a7
+msgid "Status of the link to this node."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:677
+# 589c35801b9b45479fcc9a9e1fb1f670
+msgid "Slots served..."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:680
+# 31d36302871547fdb072eaa7e3f0bd09
+msgid "Manual failover"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:682
+# 94d314dcf837464b8274ba34995d6a05
+msgid "Sometimes it is useful to force a failover without actually causing any problem on a master. For example in order to upgrade the Redis process of one of the master nodes it is a good idea to failover it in order to turn it into a slave with minimal impact on availability."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:687
+# 9db1d98ba0f54df4ad97dc53911dca18
+msgid "Manual failovers are supported by Redis Cluster using the ``CLUSTER FAILOVER`` command, that must be executed in one of the **slaves** of the master you want to failover."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:691
+# ebe9a8cdfb03447cb0dfd31d6a6b7f7d
+msgid "Manual failovers are special and are safer compared to failovers resulting from actual master failures, since they occur in a way that avoid data loss in the process, by switching clients from the original master to the new master only when the system is sure that the new master processed all the replication stream from the old one."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:697
+# b4179cdad7ba439491e92091b4539d64
+msgid "This is what you see in the slave log when you perform a manual failover:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:709
+# 9001d5ede2f54b41b12f94eb4add2ffd
+msgid "Basically clients connected to the master we are failing over are stopped. At the same time the master sends its replication offset to the slave, that waits to reach the offset on its side. When the replication offset is reached, the failover starts, and the old master is informed about the configuration switch. When the clients are unblocked on the old master, they are redirected to the new master."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:717
+# fbcf3f351f8a484f9f636e37780e5612
+msgid "Adding a new node"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:719
+# f7ff5111f3b2421097e2361bb5314845
+msgid "Adding a new node is basically the process of adding an empty node and then moving some data into it, in case it is a new master, or telling it to setup as a replica of a known node, in case it is a slave."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:723
+# 08c38a026cf14598bf359b432e02fbba
+msgid "We'll show both, starting with the addition of a new master instance."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:725
+# c0ddb6d6ed4d410c9eab8ff670b3aac5
+msgid "In both cases the first step to perform is **adding an empty node**."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:727
+# d15f3139bb274ee688fd558cb77fd2d9
+msgid "This is as simple as to start a new node in port 7006 (we already used from 7000 to 7005 for our existing 6 nodes) with the same configuration used for the other nodes, except for the port number, so what you should do in order to conform with the setup we used for the previous nodes:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:732
+# efa6a5f6d1704c288f4e61183c456a26
+msgid "Create a new tab in your terminal application."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:733
+# c4eb36fe7c5549a393e4e108ce67b39e
+msgid "Enter the ``cluster-test`` directory."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:734
+# 36ee892ae3804937842312578dc91e38
+msgid "Create a directory named ``7006``."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:735
+# d75c5b46e5dc4e70806628a1e6e96f9f
+msgid "Create a redis.conf file inside, similar to the one used for the other nodes but using 7006 as port number."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:737
+# b6556691fa3341ff92695efe99760f75
+msgid "Finally start the server with ``../redis-server ./redis.conf``"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:739
+# 739d495d5d184818ae7978f8d64d60e7
+msgid "At this point the server should be running."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:741
+# 07ab0c0e73c8467284a04120e7dbc88b
+msgid "Now we can use **redis-trib** as usually in order to add the node to the existing cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:748
+# 659f2639570b4f37955dc18cc37461ee
+msgid "As you can see I used the **addnode** command specifying the address of the new node as first argument, and the address of a random existing node in the cluster as second argument."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:752
+# cc5b1d7769ca43f898c39d6818bd1176
+msgid "In practical terms redis-trib here did very little to help us, it just sent a ``CLUSTER MEET`` message to the node, something that is also possible to accomplish manually. However redis-trib also checks the state of the cluster before to operate, so it is a good idea to perform cluster operations always via redis-trib even when you know how the internals work."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:759
+# c6d681a3ab1d479d8dc47747666dc4b6
+msgid "Now we can connect to the new node to see if it really joined the cluster:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:773
+# 4e1dd99ce2744c18b11fda18bda8123b
+msgid "Note that since this node is already connected to the cluster it is already able to redirect client queries correctly and is generally speaking part of the cluster. However it has two peculiarities compared to the other masters:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:778
+# b36386be9b6847f1ba5713868f8bbcdb
+msgid "It holds no data as it has no assigned hash slots."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:779
+# 53a3fbd5d4ef4875903fc4d45c8bc1ba
+msgid "Because it is a master without assigned slots, it does not participate in the election process when a slave wants to become a master."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:783
+# 1798ee31d6654d1ba305818ff4e14d2c
+msgid "Now it is possible to assign hash slots to this node using the resharding feature of ``redis-trib``. It is basically useless to show this as we already did in a previous section, there is no difference, it is just a resharding having as a target the empty node."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:789
+# 4460c264ee814d749687a5e271448b3f
+msgid "Adding a new node as a replica"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:791
+# 164d5da5c74e4bb89b69553a726a2e21
+msgid "Adding a new Replica can be performed in two ways. The obivous one is to use redis-trib again, but with the --slave option, like this:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:798
+# 6fefedb7465c4ffa8f818df58d843272
+msgid "Note that the command line here is exactly like the one we used to add a new master, so we are not specifiying to which master we want to add the replica. In this case what happens is that redis-trib will add the new node as replica of a random master among the masters with less replicas."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:803
+# b7f09900eacb44d4b2b2eae83b419fd6
+msgid "However you can specifiy exactly what master you want to target with your new replica with the following command line:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:810
+# 14d48e342d1e4bbda5a7de7779f29d1f
+msgid "This way we assign the new replica to a specific master."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:812
+# 0c845921d6444e04b818470169bb0985
+msgid "A more manual way to add a replica to a specific master is to add the new node as an empty master, and then turn it into a replica using the ``CLUSTER REPLICATE`` command. This also works if the node was added as a slave but you want to move it as a replica of a different master."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:817
+# c46f8a784cfd414ba5e4a3956086e20d
+msgid "For example in order to add a replica for the node 127.0.0.1:7005 that is currently serving hash slots in the range 11423-16383, that has a Node ID 3c3a0c74aae0b56170ccb03a76b60cfe7dc1912e, all I need to do is to connect with the new node (already added as empty master) and send the command:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:827
+# c528dd71aed5461c8ba8a109901e9aa3
+msgid "That's it. Now we have a new replica for this set of hash slots, and all the other nodes in the cluster already know (after a few seconds needed to update their config). We can verify with the following command:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:837
+# b40fd9af10c64119939d16c3887f3b58
+msgid "The node 3c3a0c... now has two slaves, running on ports 7002 (the existing one) and 7006 (the new one)."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:841
+# dd3a1f0da3554627a8b7d905ce4ce1f7
+msgid "Removing a node"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:843
+# 4eab9f53923e4f1d889bb88818444cc5
+msgid "To remove a slave node just use the ``del-node`` command of redis-trib:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:849
+# 315d18f4dbd6462ca497e85db395be30
+msgid "The first argument is just a random node in the cluster, the second argument is the ID of the node you want to remove."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:852
+# a3278a785dbe4fada8124018d852f08b
+msgid "You can remove a master node in the same way as well, **however in order to remove a master node it must be empty**. If the master is not empty you need to reshard data away from it to all the other master nodes before."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:857
+# 53948be29ad04581b517353087e9556d
+msgid "An alternative to remove a master node is to perform a manual failover of it over one of its slaves and remove the node after it turned into a slave of the new master. Obviously this does not help when you want to reduce the actual number of masters in your cluster, in that case, a resharding is needed."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:864
+# 990b56de42034e8e91fec3cc2605db80
+msgid "Replicas migration"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:866
+# 392ecc3503f94c00886707d3eca5e201
+msgid "In Redis Cluster it is possible to reconfigure a slave to replicate with a different master at any time just using the following command:"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:873
+# da8b8ed08227407b9aef7e83bd4b0a27
+msgid "However there is a special scenario where you want replicas to move from one master to another one automatically, without the help of the system administrator. The automatic reconfiguration of replicas is called *replicas migration* and is able to improve the reliability of a Redis Cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:879
+# 2fdf3d0548804e88895be4b8650fa1b3
+msgid "Note: you can read the details of replicas migration in the (Redis Cluster Specification)[/topics/cluster-spec], here we'll only provide some information about the general idea and what you should do in order to benefit from it."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:884
+# 084ae05348914c61959a123600868dbc
+msgid "The reason why you may want to let your cluster replicas to move from one master to another under certain condition, is that usually the Redis Cluster is as resistant to failures as the number of replicas attached to a given slave."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:889
+# 38696f01468e4968a2361829f854db3b
+msgid "For example a cluster where every master has a single replica can't continue operations if the master and its replica fail at the same time, simply because there is no other instance to have a copy of the hash slots the master was serving. However while netsplits are likely to isolate a number of nodes at the same time, many other kind of failures, like hardware or software failures local to a single node, are a very notable class of failures that are unlikely to happen at the same time, so it is possible that in your cluster where every master has a slave, the slave is killed at 4am, and the master is killed at 6am. This still will result in a cluster that can no longer operate."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:900
+# f1a1f9dc0ca04bc8b09f1065a9e15709
+msgid "To improve reliability of the system we have the option to add additional replicas to every master, but this is expensive. Replica migration allows to add more slaves to just a few masters. So you have 10 masters with 1 slave each, for a total of 20 instances. However you add, for example, 3 instances more as slaves of some of your masters, so certain masters will have more than a single slave."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:907
+# 5d032053247b4b6cae104263a1efc281
+msgid "With replicas migration what happens is that if a master is left without slaves, a replica from a master that has multiple slaves will migrate to the *orphaned* master. So after your slave goes down at 4am as in the example we made above, another slave will take its place, and when the master will fail as well at 5am, there is still a slave that can be elected so that the cluster can continue to operate."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:914
+# ee0cac2bde7041fd9fda4979df7b1df0
+msgid "So what you should know about replicas migration in short?"
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:916
+# 99c897e38c3649b5b1753f7e1158bd00
+msgid "The cluster will try to migrate a replica from the master that has the greatest number of replicas in a given moment."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:918
+# 82d7915326df41ebb9d6063f00dd9cc5
+msgid "To benefit from replica migration you have just to add a few more replicas to a single master in your cluster, it does not matter what master."
+msgstr ""
+
+#: ../../source/topics/cluster-tutorial.rst:921
+# 83338e5698ed417a8d2070449c137af3
+msgid "There is a configuration parameter that controls the replica migration feature that is called ``replica-migration-barrier``: you can read more about it in the example ``redis.conf`` file provided with Redis Cluster."
+msgstr ""
+

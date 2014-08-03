@@ -1,0 +1,243 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/replication.rst:2
+# 37a2778a5937413a8716da77d7dace9b
+msgid "Replication"
+msgstr ""
+
+#: ../../source/topics/replication.rst:4
+# 6a893f7f373b4cdd90140844ce6b6c88
+msgid "Redis replication is a very simple to use and configure master-slave replication that allows slave Redis servers to be exact copies of master servers. The following are some very important facts about Redis replication:"
+msgstr ""
+
+#: ../../source/topics/replication.rst:9
+# 1167254b45c2429591e91d6a73038336
+msgid "Redis uses asynchronous replication. Starting with Redis 2.8, however, slaves will periodically acknowledge the amount of data processed from the replication stream."
+msgstr ""
+
+#: ../../source/topics/replication.rst:13
+# c276e3c863ca4259a678409dbf4762f5
+msgid "A master can have multiple slaves."
+msgstr ""
+
+#: ../../source/topics/replication.rst:15
+# 86e809730f68437fad74fb5de6ed2da1
+msgid "Slaves are able to accept connections from other slaves. Aside from connecting a number of slaves to the same master, slaves can also be connected to other slaves in a graph-like structure."
+msgstr ""
+
+#: ../../source/topics/replication.rst:19
+# 7fe6c9b09d8749969cd590e39882ef60
+msgid "Redis replication is non-blocking on the master side. This means that the master will continue to handle queries when one or more slaves perform the initial synchronization."
+msgstr ""
+
+#: ../../source/topics/replication.rst:23
+# f1778be6864f419da7d76789b3bceed1
+msgid "Replication is also non-blocking on the slave side. While the slave is performing the initial synchronization, it can handle queries using the old version of the dataset, assuming you configured Redis to do so in redis.conf. Otherwise, you can configure Redis slaves to return an error to clients if the replication stream is down. However, after the initial sync, the old dataset must be deleted and the new one must be loaded. The slave will block incoming connections during this brief window."
+msgstr ""
+
+#: ../../source/topics/replication.rst:32
+# 63ef99b18cb747e7a1c7edb422bdfdd7
+msgid "Replication can be used both for scalability, in order to have multiple slaves for read-only queries (for example, heavy ``SORT`` operations can be offloaded to slaves), or simply for data redundancy."
+msgstr ""
+
+#: ../../source/topics/replication.rst:37
+# 492fee94008146a1baac328ce8249f24
+msgid "It is possible to use replication to avoid the cost of writing the master write the full dataset to disk: just configure your master redis.conf to avoid saving (just comment all the \"save\" directives), then connect a slave configured to save from time to time."
+msgstr ""
+
+#: ../../source/topics/replication.rst:43
+# 40a2a8934a8740228725536da4c3d7e4
+msgid "How Redis replication works"
+msgstr ""
+
+#: ../../source/topics/replication.rst:45
+# 810b67f642b94329ab22183fdb72c3c4
+msgid "If you set up a slave, upon connection it sends a SYNC command. It doesn't matter if it's the first time it has connected or if it's a reconnection."
+msgstr ""
+
+#: ../../source/topics/replication.rst:49
+# e112274cf50a471fad6dccef439104a8
+msgid "The master then starts background saving, and starts to buffer all new commands received that will modify the dataset. When the background saving is complete, the master transfers the database file to the slave, which saves it on disk, and then loads it into memory. The master will then send to the slave all buffered commands. This is done as a stream of commands and is in the same format of the Redis protocol itself."
+msgstr ""
+
+#: ../../source/topics/replication.rst:56
+# cfc560ccdde9418e8909bf31409a30a7
+msgid "You can try it yourself via telnet. Connect to the Redis port while the server is doing some work and issue the ``SYNC`` command. You'll see a bulk transfer and then every command received by the master will be re-issued in the telnet session."
+msgstr ""
+
+#: ../../source/topics/replication.rst:61
+# 9657e8109b1f48cf9554e659b5bcd26f
+msgid "Slaves are able to automatically reconnect when the master <-> slave link goes down for some reason. If the master receives multiple concurrent slave synchronization requests, it performs a single background save in order to serve all of them."
+msgstr ""
+
+#: ../../source/topics/replication.rst:66
+# 6f8a8d9aa1c44fd9bbbea716e52e2349
+msgid "When a master and a slave reconnects after the link went down, a full resync is always performed. However, starting with Redis 2.8, a partial resynchronization is also possible."
+msgstr ""
+
+#: ../../source/topics/replication.rst:71
+# 42d7680ff0b54df295442162e94ce866
+msgid "Partial resynchronization"
+msgstr ""
+
+#: ../../source/topics/replication.rst:73
+# 649fc441df294dcca198507f8706a606
+msgid "Starting with Redis 2.8, master and slave are usually able to continue the replication process without requiring a full resynchronization after the replication link went down."
+msgstr ""
+
+#: ../../source/topics/replication.rst:77
+# a9de684d45dc42e3b5d39e5a6d310d79
+msgid "This works by creating an in-memory backlog of the replication stream on the master side. The master and all the slaves agree on a *replication offset* and a *master run id*, so when the link goes down, the slave will reconnect and ask the master to continue the replication. Assuming the master run id is still the same, and that the offset specified is available in the replication backlog, replication will resume from the point where it left off. If either of these conditions are unmet, a full resynchronization is performed (which is the normal pre-2.8 behavior)."
+msgstr ""
+
+#: ../../source/topics/replication.rst:86
+# 62bf792d884e4d019843060d11ceaedb
+msgid "The new partial resynchronization feature uses the ``PSYNC`` command internally, while the old implementation uses the ``SYNC`` command. Note that a Redis 2.8 slave is able to detect if the server it is talking with does not support ``PSYNC``, and will use ``SYNC`` instead."
+msgstr ""
+
+#: ../../source/topics/replication.rst:92
+# 10cf719c9c37417f86ed78b152edff07
+msgid "Configuration"
+msgstr ""
+
+#: ../../source/topics/replication.rst:94
+# dc444fd0580b4d77ba51a4061aba3408
+msgid "To configure replication is trivial: just add the following line to the slave configuration file:"
+msgstr ""
+
+#: ../../source/topics/replication.rst:101
+# b2675053fc824412910e6199e84cba1a
+msgid "Of course you need to replace 192.168.1.1 6379 with your master IP address (or hostname) and port. Alternatively, you can call the ``SLAVEOF`` command and the master host will start a sync with the slave."
+msgstr ""
+
+#: ../../source/topics/replication.rst:106
+# 676cf81850ea4f2caa03267fcfcfc764
+msgid "There are also a few parameters for tuning the replication backlog taken in memory by the master to perform the partial resynchronization. See the example ``redis.conf`` shipped with the Redis distribution for more information."
+msgstr ""
+
+#: ../../source/topics/replication.rst:112
+# 17905e22c9a2458abe732e54ea17f50c
+msgid "Read-only slave"
+msgstr ""
+
+#: ../../source/topics/replication.rst:114
+# 44d83f637e5845ff8fb600e060001b8d
+msgid "Since Redis 2.6, slaves support a read-only mode that is enabled by default. This behavior is controlled by the ``slave-read-only`` option in the redis.conf file, and can be enabled and disabled at runtime using ``CONFIG SET``."
+msgstr ""
+
+#: ../../source/topics/replication.rst:119
+# 92b2864b09ed4f81a9067816cfadbd3d
+msgid "Read-only slaves will reject all write commands, so that it is not possible to write to a slave because of a mistake. This does not mean that the feature is intended to expose a slave instance to the internet or more generally to a network where untrusted clients exist, because administrative commands like ``DEBUG`` or ``CONFIG`` are still enabled. However, security of read-only instances can be improved by disabling commands in redis.conf using the ``rename-command`` directive."
+msgstr ""
+
+#: ../../source/topics/replication.rst:127
+# 00885ca347f5407f8eb28fbf14709ab9
+msgid "You may wonder why it is possible to revert the read-only setting and have slave instances that can be target of write operations. While those writes will be discarded if the slave and the master resynchronize or if the slave is restarted, there's a legitimate use case for storing ephemeral data in writable slaves. For instance, clients may take information about master reachability to coordinate a failover strategy."
+msgstr ""
+
+#: ../../source/topics/replication.rst:135
+# 3e15f05be2ee43339bae71c899090f42
+msgid "Setting a slave to authenticate to a master"
+msgstr ""
+
+#: ../../source/topics/replication.rst:137
+# b3295ceadb7d477ea2dfcf84c8cd8a29
+msgid "If your master has a password via ``requirepass``, it's trivial to configure the slave to use that password in all sync operations."
+msgstr ""
+
+#: ../../source/topics/replication.rst:140
+# 8564943cdb1d43699e8383985bd9b43b
+msgid "To do it on a running instance, use ``redis-cli`` and type:"
+msgstr ""
+
+#: ../../source/topics/replication.rst:146
+# 4cea0b7da69a4c5b86693ebc5def5be3
+msgid "To set it permanently, add this to your config file:"
+msgstr ""
+
+#: ../../source/topics/replication.rst:153
+# 2503ad9e409e4d1298df2f9c9f8fa752
+msgid "Allow writes only with N attached replicas"
+msgstr ""
+
+#: ../../source/topics/replication.rst:155
+# f3027a25275f46258b3bfe91e633522c
+msgid "Starting with Redis 2.8, it is possible to configure a Redis master to accept write queries only if at least N slaves are currently connected to the master."
+msgstr ""
+
+#: ../../source/topics/replication.rst:159
+# 60410528615c41b0bd9dc872039eca0b
+msgid "However, because Redis uses asynchronous replication it is not possible to ensure the slave actually received a given write, so there is always a window for data loss."
+msgstr ""
+
+#: ../../source/topics/replication.rst:163
+# 9c162d5f6afc4728a5185e8c7698f15c
+msgid "This is how the feature works:"
+msgstr ""
+
+#: ../../source/topics/replication.rst:165
+# 5806e2f531cb436eb680166a446aa79e
+msgid "Redis slaves ping the master every second, acknowledging the amount of replication stream processed."
+msgstr ""
+
+#: ../../source/topics/replication.rst:167
+# 3d44680d5c78470f8d9ce74994d38726
+msgid "Redis masters will remember the last time it received a ping from every slave."
+msgstr ""
+
+#: ../../source/topics/replication.rst:169
+# c933cfb71f104853a833e11f65f18eb5
+msgid "The user can configure a minimum number of slaves that have a lag not greater than a maximum number of seconds."
+msgstr ""
+
+#: ../../source/topics/replication.rst:172
+# 790a692095cb4eaeba87e82e43e59a22
+msgid "If there are at least N slaves, with a lag less than M seconds, then the write will be accepted."
+msgstr ""
+
+#: ../../source/topics/replication.rst:175
+# 194af95ca2284456ace96eb9d378ea63
+msgid "You may think at it as a relaxed version of the \"C\" in the CAP theorem, where consistency is not ensured for a given write, but at least the time window for data loss is restricted to a given number of seconds."
+msgstr ""
+
+#: ../../source/topics/replication.rst:179
+# 79516a92571d47b98c416c6e0b85bfb6
+msgid "If the conditions are not met, the master will instead reply with an error and the write will not be accepted."
+msgstr ""
+
+#: ../../source/topics/replication.rst:182
+# a323b02801e442dda7fc42ecb8f5efe2
+msgid "There are two configuration parameters for this feature:"
+msgstr ""
+
+#: ../../source/topics/replication.rst:184
+# ac49da2c3b1444a596edd8fbc72138a1
+msgid "min-slaves-to-write ``<number of slaves>``"
+msgstr ""
+
+#: ../../source/topics/replication.rst:185
+# 83a5309662324a4d98badae4ad91b407
+msgid "min-slaves-max-lag ``<number of seconds>``"
+msgstr ""
+
+#: ../../source/topics/replication.rst:187
+# 02e32e699a4d4cb3843819138bcbeb20
+msgid "For more information, please check the example ``redis.conf`` file shipped with the Redis source distribution."
+msgstr ""
+

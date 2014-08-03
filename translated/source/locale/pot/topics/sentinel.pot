@@ -1,0 +1,913 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/sentinel.rst:2
+# f21c98c2378042aebfe8c38184bca605
+msgid "Redis Sentinel Documentation"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:4
+# d2a6fd7abbf445e4a3d5242f81b8c0e4
+msgid "Redis Sentinel is a system designed to help managing Redis instances. It performs the following four tasks:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:7
+# 8313cedb9d05460ebbaf245585480093
+msgid "**Monitoring**. Sentinel constantly checks if your master and slave instances are working as expected."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:9
+# 2cc3fa21ed5c4ef2bb70e8de5aa98140
+msgid "**Notification**. Sentinel can notify the system administrator, or another computer program, via an API, that something is wrong with one of the monitored Redis instances."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:12
+# 33b477bcd16043c8adaa45ca90d74036
+msgid "**Automatic failover**. If a master is not working as expected, Sentinel can start a failover process where a slave is promoted to master, the other additional slaves are reconfigured to use the new master, and the applications using the Redis server informed about the new address to use when connecting."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:17
+# 5f2529e98cb349b9a883e9fee1e4dffa
+msgid "**Configuration provider**. Sentinel acts as a source of authority for clients service discovery: clients connect to Sentinels in order to ask for the address of the current Redis master responsible for a given service. If a failover occurs, Sentinels will report the new address."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:24
+# c7392c0c15d244cdb0a355b361d1f322
+msgid "Distributed nature of Sentinel"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:26
+# 9391bb97a0a94ae19a070e6f959e53b8
+msgid "Redis Sentinel is a distributed system, this means that usually you want to run multiple Sentinel processes across your infrastructure, and this processes will use gossip protocols in order to understand if a master is down and agreement protocols in order to get authorized to perform the failover and assign a new version to the new configuration."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:32
+# 955a12d9335b40608990f901236fa618
+msgid "Distributed systems have given *safety* and *liveness* properties, in order to use Redis Sentinel well you are supposed to understand, at least at higher level, how Sentinel works as a distributed system. This makes Sentinel more complex but also better compared to a system using a single process, for example:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:38
+# 0f4617c679434df6a23958b366c76f09
+msgid "A cluster of Sentinels can failover a master even if some Sentinels are failing."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:40
+# 4f71fc0d2320404089a756256b772ba3
+msgid "A single Sentinel not working well, or not well connected, can't failover a master without authorization from other Sentinels."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:42
+# eef562af5e3744bb86cab69dd07f4aff
+msgid "Clients can connect to any random Sentinel to fetch the configuration of a master."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:46
+# 9aeedc7716c94e588e9f7fb52b64554e
+msgid "Obtaining Sentinel"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:48
+# c6429bcf76e24fc7aa10f28c8079ebf0
+msgid "The current version of Sentinel is called **Sentinel 2**. It is a rewrite of the initial Sentinel implementation using stronger and simpler to predict algorithms (that are explained in this documentation)."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:53
+# 71354602352c4a038c68c19c5a2b940a
+msgid "A stable release of Redis Sentinel is shipped with Redis 2.8, which is the latest stable release of Redis."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:56
+# f124428a388146f488ecec0aeb11e5b5
+msgid "New developments are performed in the *unstable* branch, and new features are backported into the 2.8 branch as soon as they are considered to be stable."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:60
+# 98cbcc0abc674e32b3b4a4da7527b20e
+msgid "IMPORTANT: **Even if you are using Redis 2.6, you should use Sentinel shipped with Redis 2.8**. Redis Sentinel shipped with Redis 2.6, that is, \"Sentinel 1\", is deprecated and has many bugs. In general you should migrate all your Redis and Sentinel instances to Redis 2.8 ASAP to get a better overall experience."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:67
+# 1059142edbb545a28cb9fe1e716d126a
+msgid "Running Sentinel"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:69
+# 06ec2f3a4ee34d9380aefb53a039a116
+msgid "If you are using the ``redis-sentinel`` executable (or if you have a symbolic link with that name to the ``redis-server`` executable) you can run Sentinel with the following command line:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:77
+# 440944fdc8904edc95aad83ce9b2fbbe
+msgid "Otherwise you can use directly the ``redis-server`` executable starting it in Sentinel mode:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:84
+# c04197498cf64109b1a7ce8343907301
+msgid "Both ways work the same."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:86
+# bb5132046be9455bb9b53813f287b984
+msgid "However **it is mandatory** to use a configuration file when running Sentinel, as this file will be used by the system in order to save the current state that will be reloaded in case of restarts. Sentinel will simply refuse to start if no configuration file is given or if the configuration file path is not writable."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:92
+# fd932d33a5504a64af84fef48a263956
+msgid "Sentinels by default run **listening for connections to TCP port 26379**, so for Sentinels to work, port 26379 of your servers **must be open** to receive connections from the IP addresses of the other Sentinel instances. Otherwise Sentinels can't talk and can't agree about what to do, so failover will never be performed."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:99
+# 8ede209bf89542cf9ac09bc4b598c1d9
+msgid "Configuring Sentinel"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:101
+# 82546a25aeb34cf1a0b8bf6a03b51121
+msgid "The Redis source distribution contains a file called ``sentinel.conf`` that is a self-documented example configuration file you can use to configure Sentinel, however a typical minimal configuration file looks like the following:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:118
+# 8a2891a9fc8d45f3ba63d95fc6a461aa
+msgid "You only need to specify the masters to monitor, giving to each separated master (that may have any number of slaves) a different name. There is no need to specify slaves, which are auto-discovered. Sentinel will update the configuration automatically with additional informations about slaves (in order to retain the information in case of restart). The configuration is also rewritten every time a slave is promoted to master during a failover."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:126
+# ba856e9c6c5841ca8a1ae6199c40136b
+msgid "The example configuration above, basically monitor two sets of Redis instances, each composed of a master and an undefined number of slaves. One set of instances is called ``mymaster``, and the other ``resque``."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:130
+# 0568f7d7dc4e4e6c91c67ec1617686ff
+msgid "For the sake of clarity, let's check line by line what the configuration options mean:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:133
+# 17f36ce35e9140d2b66a285a5827f90a
+msgid "The first line is used to tell Redis to monitor a master called *mymaster*, that is at address 127.0.0.1 and port 6379, with a level of agreement needed to detect this master as failing of 2 sentinels (if the agreement is not reached the automatic failover does not start)."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:138
+# f9f886cac18d4406b50d1a02f6d75180
+msgid "However note that whatever the agreement you specify to detect an instance as not working, a Sentinel requires **the vote from the majority** of the known Sentinels in the system in order to start a failover and obtain a new *configuration Epoch* to assign to the new configuration after the failover."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:144
+# 109463380fee4d80acc9a27ed816d948
+msgid "In the example the quorum is set to to 2, so it takes 2 sentinels that agree that a given master is not reachable or in an error condition for a failover to be triggered (however as you'll see in the next section to trigger a failover is not enough to start a successful failover, authorization is required)."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:150
+# b6c3dc1a5dc5443c805a2f474c8c74d4
+msgid "The other options are almost always in the form:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:156
+# 7d037ecc6e924b87b2c3207d6ae2ba9b
+msgid "And are used for the following purposes:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:158
+# 3692d8bb27fa4f17b7df47ae1e98076b
+msgid "``down-after-milliseconds`` is the time in milliseconds an instance should not be reachable (either does not reply to our PINGs or it is replying with an error) for a Sentinel starting to think it is down. After this time has elapsed the Sentinel will mark an instance as **subjectively down** (also known as ``SDOWN``), that is not enough to start the automatic failover. However if enough instances will think that there is a subjectively down condition, then the instance is marked as **objectively down**. The number of sentinels that needs to agree depends on the configured agreement for this master."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:167
+# cb27fbd62a7f4d58b5c7e7a442049893
+msgid "``parallel-syncs`` sets the number of slaves that can be reconfigured to use the new master after a failover at the same time. The lower the number, the more time it will take for the failover process to complete, however if the slaves are configured to serve old data, you may not want all the slaves to resync at the same time with the new master, as while the replication process is mostly non blocking for a slave, there is a moment when it stops to load the bulk data from the master during a resync. You may make sure only one slave at a time is not reachable by setting this option to the value of 1."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:177
+# 1a2540e60067493ebde8748a81983d8d
+msgid "Additional options are described in the rest of this document and documented in the example ``sentinel.conf`` file shipped with the Redis distribution."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:181
+# 37210ee3d81a41579373455da1dbe9a3
+msgid "All the configuration parameters can be modified at runtime using the ``SENTINEL SET`` command. See the **Reconfiguring Sentinel at runtime** section for more information."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:186
+# 2075ca8e474f4f6591ab6f345c458203
+msgid "Quorum"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:188
+# 85074252cb194fbca8762ee52ed3f0c2
+msgid "The previous section showed that every master monitored by Sentinel is associated to a configured **quorum**. It specifies the number of Sentinel processes that need to agree about the unreachability or error condition of the master in order to trigger a failover."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:193
+# 04982f7ab59f49c9b06c67dafb666f84
+msgid "However, after the failover is triggered, in order for the failover to actually be performed, **at least a majority of Sentinels must authorized the Sentinel to failover**."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:197
+# afb43b4f99b443e6b3df092cd4c03bd8
+msgid "Let's try to make things a bit more clear:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:199
+# beef792776e94176a213794196527056
+msgid "Quorum: the number of Sentinel processes that need to detect an error condition in order for a master to be flagged as **ODOWN**."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:201
+# d7b9dd4c51d840ffbfed34cc2294b19a
+msgid "The failover is triggered by the **ODOWN** state."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:202
+# f65a1085a23a4c03be83e3333addf1b2
+msgid "Once the failover is triggered, the Sentinel trying to failover is required to ask for authorization to a majority of Sentinels (or more than the majority if the quorum is set to a number greater than the majority)."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:207
+# b6c4a4144c474636b6a82b63f4eec3a5
+msgid "The difference may seem subtle but is actually quite simple to understand and use. For example if you have 5 Sentinel instances, and the quorum is set to 2, a failover will be triggered as soon as 2 Sentinels believe that the master is not reachable, however one of the two Sentinels will be able to failover only if it gets authorization at least from 3 Sentinels."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:214
+# 8776ff1def28437fa80b4057ccf1282f
+msgid "If instead the quorum is configured to 5, all the Sentinels must agree about the master error condition, and the authorization from all Sentinels is required in order to failover."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:219
+# d6423b38046f496f9558b2903a0b87d1
+msgid "Configuration epochs"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:221
+# a4665db7579d480495c39fb2fd051532
+msgid "Sentinels require to get authorizations from a majority in order to start a failover for a few important reasons:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:224
+# 58c060a6c37548be82845686e4dda383
+msgid "When a Sentinel is authorized, it gets an unique **configuration epoch** for the master it is failing over. This is a number that will be used to version the new configuration after the failover is completed. Because a majority agreed that a given version was assigned to a given Sentinel, no other Sentinel will be able to use it. This means that every configuration of every failover is versioned with an unique version. We'll see why this is so important."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:232
+# 79a5e7adef54497aaf37b0b5712782c4
+msgid "Moreover Sentinels have a rule: if a Sentinel voted another Sentinel for the failover of a given master, it will wait some time to try to failover the same master again. This delay is the ``failover-timeout`` you can configure in ``sentinel.conf``. This means that Sentinels will not try to failover the same master at the same time, the first to ask to be authorized will try, if it fails another will try after some time, and so forth."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:240
+# 55bd97f15563486992d92bca997d0c24
+msgid "Redis Sentinel guarantees the *liveness* property that if a majority of Sentinels are able to talk, eventually one will be authorized to failover if the master is down."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:244
+# 3395a3ebc7c94f4bbec02c69db5c80da
+msgid "Redis Sentinel also guarantees the *safety* property that every Sentinel will failover the same master using a different *configuration epoch*."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:248
+# d5a572dfea04415fb3b47f262a59339b
+msgid "Configuration propagation"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:250
+# 5ee736c410974e658b3429554cd6bfd4
+msgid "Once a Sentinel is able to failover a master successfully, it will start to broadcast the new configuration so that the other Sentinels will update their information about a given master."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:254
+# bc327f3a844742ec919621ce1bbd1892
+msgid "For a failover to be considered successful, it requires that the Sentinel was able to send the ``SLAVEOF NO ONE`` command to the selected slave, and that the switch to master was later observed in the ``INFO`` output of the master."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:259
+# 0efa6624b6be47d9bb7685ebe815ccae
+msgid "At this point, even if the reconfiguration of the slaves is in progress, the failover is considered to be successful, and all the Sentinels are required to start reporting the new configuration."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:263
+# 2b03a1c8d601490fbcbcb3e5782b5595
+msgid "The way a new configuration is propagated is the reason why we need that every Sentinel failover is authorized with a different version number (configuration epoch)."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:267
+# 11ecab8b565241689fb301e7d13834f1
+msgid "Every Sentinel continuously broadcast its version of the configuration of a master using Redis Pub/Sub messages, both in the master and all the slaves. At the same time all the Sentinels wait for messages to see what is the configuration advertised by the other Sentinels."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:272
+# d56fd5771505406dbb0245735a1cf908
+msgid "Configurations are broadcasted in the ``__sentinel__:hello`` Pub/Sub channel."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:275
+# 8eb6a70e15c3491fad185f54398b5676
+msgid "Because every configuration has a different version number, the greater version always wins over smaller versions."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:278
+# baaa9cfd45cd4557a22d827b59c7796a
+msgid "So for example the configuration for the master ``mymaster`` start with all the Sentinels believing the master is at 192.168.1.50:6379. This configuration has version 1. After some time a Sentinel is authorized to failover with version 2. If the failover is successful, it will start to broadcast a new configuration, let's say 192.168.50:9000, with version 2. All the other instances will see this configuration and will update their configuration accordingly, since the new configuration has a greater version."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:287
+# 13cbffe809d642a5bf4ca4b6c1dbec3d
+msgid "This means that Sentinel guarantees a second liveness property: a set of Sentinels that are able to communicate will all converge to the same configuration with the higher version number."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:291
+# b9802b94047b48d68c2f34195bfe182b
+msgid "Basically if the net is partitioned, every partition will converge to the higher local configuration. In the special case of no partitions, there is a single partition and every Sentinel will agree about the configuration."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:297
+# 7c86fb1b0cad4e2b8b81e217eb388756
+msgid "More details about SDOWN and ODOWN"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:299
+# b3a8a78187474e8a82d9a4792a809ad5
+msgid "As already briefly mentioned in this document Redis Sentinel has two different concepts of *being down*, one is called a *Subjectively Down* condition (SDOWN) and is a down condition that is local to a given Sentinel instance. Another is called *Objectively Down* condition (ODOWN) and is reached when enough Sentinels (at least the number configured as the ``quorum`` parameter of the monitored master) have an SDOWN condition, and get feedbacks from other Sentinels using the ``SENTINEL is-master-down-by-addr`` command."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:308
+# dad7a00739e94dda80e205e927b67a31
+msgid "From the point of view of a Sentinel an SDOWN condition is reached if we don't receive a valid reply to PING requests for the number of seconds specified in the configuration as ``is-master-down-after-milliseconds`` parameter."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:313
+# fbad94ad382848a19fef7fbbef0be592
+msgid "An acceptable reply to PING is one of the following:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:315
+# 694ac70bfadf4f62bd4098db925f39dc
+msgid "PING replied with +PONG."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:316
+# e6fd9c910d8948c199cbffc8c09a9d2a
+msgid "PING replied with -LOADING error."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:317
+# e6ae45a6b7a84226841f1370f46a0b61
+msgid "PING replied with -MASTERDOWN error."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:319
+# b43c8b6f921f4207973eebfba25113d3
+msgid "Any other reply (or no reply) is considered non valid."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:321
+# d42ec7334b6144b997f4955ccc9fd54d
+msgid "Note that SDOWN requires that no acceptable reply is received for the whole interval configured, so for instance if the interval is 30000 milliseconds (30 seconds) and we receive an acceptable ping reply every 29 seconds, the instance is considered to be working."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:326
+# 668670344d8049feb7f8529d2fbe6b39
+msgid "To switch from SDOWN to ODOWN no strong consensus algorithm is used, but just a form of gossip: if a given Sentinel gets reports that the master is not working from enough Sentinels in a given time range, the SDOWN is promoted to ODOWN. If this acknowledge is later missing, the flag is cleared."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:332
+# 21bd7f22dc2c40f19b8108ccf2edd9a8
+msgid "As already explained, a more strict authorization is required in order to really start the failover, but no failover can be triggered without reaching the ODOWN state."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:336
+# 807747899a70437e862f9b704be2be5b
+msgid "The ODOWN condition **only applies to masters**. For other kind of instances Sentinel don't require any agreement, so the ODOWN state is never reached for slaves and other sentinels."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:341
+# bddd8d89d57543479704e801d870d4d5
+msgid "Sentinels and Slaves auto discovery"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:343
+# 3a76bd311f7f415eb9153141fb85846d
+msgid "While Sentinels stay connected with other Sentinels in order to reciprocally check the availability of each other, and to exchange messages, you don't need to configure the other Sentinel addresses in every Sentinel instance you run, as Sentinel uses the Redis master Pub/Sub capabilities in order to discover the other Sentinels that are monitoring the same master."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:350
+# 74dc67c472ea4a9c9b51506c7513e16c
+msgid "This is obtained by sending *Hello Messages* into the channel named ``__sentinel__:hello``."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:353
+# f93cef07e5554b68933bd15a73751c45
+msgid "Similarly you don't need to configure what is the list of the slaves attached to a master, as Sentinel will auto discover this list querying Redis."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:357
+# b1695d9e6778429aa6bfcfce4fe52916
+msgid "Every Sentinel publishes a message to every monitored master and slave Pub/Sub channel ``__sentinel__:hello``, every two seconds, announcing its presence with ip, port, runid."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:360
+# e788e33a05e54e0c8bd3ea51ca358343
+msgid "Every Sentinel is subscribed to the Pub/Sub channel ``__sentinel__:hello`` of every master and slave, looking for unknown sentinels. When new sentinels are detected, they are added as sentinels of this master."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:364
+# 989255c0bafa43d58315e15ecc2e8d85
+msgid "Hello messages also include the full current configuration of the master. If another Sentinel has a configuration for a given master that is older than the one received, it updates to the new configuration immediately."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:368
+# 7e383b03dbcc4f2b8b08d58492c1ebb8
+msgid "Before adding a new sentinel to a master a Sentinel always checks if there is already a sentinel with the same runid or the same address (ip and port pair). In that case all the matching sentinels are removed, and the new added."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:374
+# c66689b444f140bea4b9130c3b37be7c
+msgid "Consistency under partitions"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:376
+# 2f2533ff50594a4ebe874bd1beb86983
+msgid "Redis Sentinel configurations are eventually consistent, so every partition will converge to the higher configuration available. However in a real-world system using Sentinel there are three different players:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:380
+# 2726922badb947388c78844fd171808c
+msgid "Redis instances."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:381
+# 155d31be0b834a579a54a8e315e96d81
+msgid "Sentinel instances."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:382
+# b99f3b4871a34387a452ab1b366689f4
+msgid "Clients."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:384
+# 5c64c3b7b4294e68bf9f8cd6532bb2bf
+msgid "In order to define the behavior of the system we have to consider all three."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:387
+# 2ad8fe454a8b48a6a8bf4dd8563f65e1
+msgid "The following is a simple network where there are there nodes, each running a Redis instance, and a Sentinel instance:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:403
+# 38a1b4401fea4902957b9798f30096df
+msgid "In this system the original state was that Redis 3 was the master, while Redis 1 and 2 were slaves. A partition occurred isolting the old master. Sentinels 1 and 2 started a failover promoting Sentinel 1 as the new master."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:408
+# 9377606902ad44a089f46a135fd86082
+msgid "The Sentinel properties guarantee that Sentinel 1 and 2 now have the new configuration for the master. However Sentinel 3 has still the old configuration since it lives in a different partition."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:412
+# 8d6663fe479642ac97af79162c85eb7b
+msgid "When know that Sentinel 3 will get its configuration updated when the network partition will heal, however what happens during the partition if there are clients partitioned with the old master?"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:416
+# 9f882864687446e98d15ef0d7f63c6e3
+msgid "Clients will be still able to write to Redis 3, the old master. When the partition will rejoin, Redis 3 will be turned into a slave of Redis 1, and all the data written during the partition will be lost."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:420
+# e4fe5ad2b933417facc0ea3e33d3b707
+msgid "Depending on your configuration you may want or not that this scenario happens:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:423
+# dff5302ee12d446a9ba301bf4f98719e
+msgid "If you are using Redis as a cache, it could be handy that Client B is still able to write to the old master, even if its data will be lost."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:425
+# 009e167729c844df91bc6453d5527b49
+msgid "If you are using Redis as a store, this is not good and you need to configure the system in order to partially prevent this problem."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:428
+# 14d5802978ae40139e2da6a2c7baa194
+msgid "Since Redis is asynchronously replicated, there is no way to totally prevent data loss in this scenario, however you can bound the divergence between Redis 3 and Redis 1 using the following Redis configuration option:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:438
+# 9deddfa3b6da46a4b3f58377e328e2de
+msgid "With the above configuration (please see the self-commented ``redis.conf`` example in the Redis distribution for more information) a Redis instance, when acting as a master, will stop accepting writes if it can't write to at least 1 slave. Since replication is asynchronous *not being able to write* actually means that the slave is either disconnected, or is not sending us asynchronous acknowledges for more than the specified ``max-lag`` number of seconds."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:446
+# 40e51c177b124051899a85980d4b2fe9
+msgid "Using this configuration the Redis 3 in the above example will become unavailable after 10 seconds. When the partition heals, the Sentinel 3 configuration will converge to the new one, and Client B will be able to fetch a valid configuration and continue."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:452
+# 6a162f5a1e254243b54560f0c84cfd44
+msgid "Sentinel persistent state"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:454
+# 7285e25683024115bbc00536e15426c6
+msgid "Sentinel state is persisted in the sentinel configuration file. For example every time a new configuration is received, or created (leader Sentinels), for a master, the configuration is persisted on disk together with the configuration epoch. This means that it is safe to stop and restart Sentinel processes."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:461
+# a150a6d7a5eb40b9b2d22dbf5b06ff57
+msgid "Sentinel reconfiguration of instances outside the failover procedure."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:463
+# 90c670220b8e46e88e6d486be2c3cb53
+msgid "Even when no failover is in progress, Sentinels will always try to set the current configuration on monitored instances. Specifically:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:466
+# 98d72623e27d4c76bf343549528f920b
+msgid "Slaves (according to the current configuration) that claim to be masters, will be configured as slaves to replicate with the current master."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:469
+# 2373512a039544aaad9eabad646e2322
+msgid "Slaves connected to a wrong master, will be reconfigured to replicate with the right master."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:472
+# 3be053316263406e887fc3adf41be355
+msgid "For Sentinels to reconfigure slaves, the wrong configuration must be observed for some time, that is greater than the period used to broadcast new configurations."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:476
+# d33e62109e6d4d38aea2011764107500
+msgid "This prevents that Sentinels with a stale configuration (for example because they just rejoined from a partition) will try to change the slaves configuration before receiving an update."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:480
+# 8fb2c71d4e444681b639482d62df55b7
+msgid "Also note how the semantics of always trying to impose the current configuration makes the failover more resistant to partitions:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:483
+# 4a67b1c402604af380d514617d9b41c2
+msgid "Masters failed over are reconfigured as slaves when they return available."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:485
+# a26b4dfa86ac4da28dc1c89391b0a922
+msgid "Slaves partitioned away during a partition are reconfigured once reachable."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:489
+# 6e583b3980114261ae26bd44e1f7de60
+msgid "Sentinel API"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:491
+# 823e5bd416ed4f0cbdedfc557eb209be
+msgid "By default Sentinel runs using TCP port 26379 (note that 6379 is the normal Redis port). Sentinels accept commands using the Redis protocol, so you can use ``redis-cli`` or any other unmodified Redis client in order to talk with Sentinel."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:496
+# e70c48f38a5d4444a682a52fd4455fe8
+msgid "There are two ways to talk with Sentinel: it is possible to directly query it to check what is the state of the monitored Redis instances from its point of view, to see what other Sentinels it knows, and so forth."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:501
+# dfd6fa4ae038496b8b3d3efc1df2f859
+msgid "An alternative is to use Pub/Sub to receive *push style* notifications from Sentinels, every time some event happens, like a failover, or an instance entering an error condition, and so forth."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:506
+# d05ce7b1850a4fd3baf7e70e5e08dc7f
+msgid "Sentinel commands"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:508
+# a8d862cbf34942db96b18f629ab45b30
+msgid "The following is a list of accepted commands:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:510
+# 67b37cd0a23847edbc1fb02004fd4225
+msgid "**PING** This command simply returns PONG."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:511
+# ff90c8120f7141cb90a5a18a5482a8f1
+msgid "**SENTINEL masters** Show a list of monitored masters and their state."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:513
+# 1c810aa1c8d54ab7abe23bf6475d8c3a
+msgid "**SENTINEL master ``<master name>``** Show the state and info of the specified master."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:515
+# 931ebf09fe42487aaa037e2f86c2fd3b
+msgid "**SENTINEL slaves ``<master name>``** Show a list of slaves for this master, and their state."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:517
+# b7680b8a346e4830b938a39e3ee9a65e
+msgid "**SENTINEL get-master-addr-by-name ``<master name>``** Return the ip and port number of the master with that name. If a failover is in progress or terminated successfully for this master it returns the address and port of the promoted slave."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:521
+# 93f03307425e4942a5d5ddab13f080a4
+msgid "**SENTINEL reset ``<pattern>``** This command will reset all the masters with matching name. The pattern argument is a glob-style pattern. The reset process clears any previous state in a master (including a failover in progress), and removes every slave and sentinel already discovered and associated with the master."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:526
+# e2bf7f41042a4fd8ad6de711f45205df
+msgid "**SENTINEL failover ``<master name>``** Force a failover as if the master was not reachable, and without asking for agreement to other Sentinels (however a new version of the configuration will be published so that the other Sentinels will update their configurations)."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:533
+# 5494f6ac4a504e24bb1b15fa3ed2c0a5
+msgid "Reconfiguring Sentinel at Runtime"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:535
+# c27139970753423294aec8a3c79a3919
+msgid "Starting with Redis version 2.8.4, Sentinel provides an API in order to add, remove, or change the configuration of a given master. Note that if you have multiple sentinels you should apply the changes to all to your instances for Redis Sentinel to work properly. This means that changing the configuration of a single Sentinel does not automatically propagates the changes to the other Sentinels in the network."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:542
+# 966575934f8543de8c5834bb1ce0723d
+msgid "The following is a list of ``SENTINEL`` sub commands used in order to update the configuration of a Sentinel instance."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:545
+# ffe36e5194d5469d9df8edad289b70c8
+msgid "**SENTINEL MONITOR ``<name>`` ``<ip>`` ``<port>`` ``<quorum>``** This command tells the Sentinel to start monitoring a new master with the specified name, ip, port, and quorum. It is identical to the ``sentinel monitor`` configuration directive in ``sentinel.conf`` configuration file, with the difference that you can't use an hostname in as ``ip``, but you need to provide an IPv4 or IPv6 address."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:552
+# c4cd097e281b43d1bb97b37bd12bff52
+msgid "**SENTINEL REMOVE ``<name>``** is used in order to remove the specified master: the master will no longer be monitored, and will totally be removed from the internal state of the Sentinel, so it will no longer listed by ``SENTINEL masters`` and so forth."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:556
+# 7b9de9dad60a4085b8d6ad011f0327ed
+msgid "**SENTINEL SET ``<name>`` ``<option>`` ``<value>``** The SET command is very similar to the ``CONFIG SET`` command of Redis, and is used in order to change configuration parameters of a specific master. Multiple option / value pairs can be specified (or none at all). All the configuration parameters that can be configured via ``sentinel.conf`` are also configurable using the SET command."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:563
+# c238d3138d0c4786995e550b4eb84214
+msgid "The following is an example of ``SENTINEL SET`` command in order to modify the ``down-after-milliseconds`` configuration of a master called ``objects-cache``:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:571
+# a545951b3fe4402facbd2818161fc8d8
+msgid "As already stated, ``SENTINEL SET`` can be used to set all the configuration parameters that are settable in the startup configuration file. Moreover it is possible to change just the master quorum configuration without removing and re-adding the master with ``SENTINEL REMOVE`` followed by ``SENTINEL MONITOR``, but simply using:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:581
+# 2a7c2c031e374da986f20047a139ca17
+msgid "Note that there is no equivalent GET command since ``SENTINEL MASTER`` provides all the configuration parameters in a simple to parse format (as a field/value pairs array)."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:586
+# eaa0061ee72f45ffaea3d197f05805fb
+msgid "Pub/Sub Messages"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:588
+# 2eeaf6cfa7d449aaa974a7481effab08
+msgid "A client can use a Sentinel as it was a Redis compatible Pub/Sub server (but you can't use ``PUBLISH``) in order to ``SUBSCRIBE`` or ``PSUBSCRIBE`` to channels and get notified about specific events."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:592
+# ba7971e1b8c74bd0b2ef06f1f8cd3410
+msgid "The channel name is the same as the name of the event. For instance the channel named ``+sdown`` will receive all the notifications related to instances entering an ``SDOWN`` condition."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:596
+# b2b6a1ab7644448ba483826c60ea90f5
+msgid "To get all the messages simply subscribe using ``PSUBSCRIBE *``."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:598
+# 4867c42a92da464ab6db32fe249229fb
+msgid "The following is a list of channels and message formats you can receive using this API. The first word is the channel / event name, the rest is the format of the data."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:602
+# 5e27cd2a058c4a32a5c57705c31357fa
+msgid "Note: where *instance details* is specified it means that the following arguments are provided to identify the target instance:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:609
+# bba5a5308a624976b0de696afe4f485a
+msgid "The part identifying the master (from the @ argument to the end) is optional and is only specified if the instance is not a master itself."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:612
+# 6767ddae01f040ef9f9acbc273b44525
+msgid "**+reset-master** ``<instance details>`` -- The master was reset."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:613
+# 467e8d366c284cc4b44f3e87214178ad
+msgid "**+slave** ``<instance details>`` -- A new slave was detected and attached."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:615
+# 035ab93092374603b746d7d07e6b87d6
+msgid "**+failover-state-reconf-slaves** ``<instance details>`` -- Failover state changed to ``reconf-slaves`` state."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:617
+# 66b249c2964e431eae2b422ebece3515
+msgid "**+failover-detected** ``<instance details>`` -- A failover started by another Sentinel or any other external entity was detected (An attached slave turned into a master)."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:620
+# 4ea2a4dbe25e46a089cb308db737c813
+msgid "**+slave-reconf-sent** ``<instance details>`` -- The leader sentinel sent the ``SLAVEOF`` command to this instance in order to reconfigure it for the new slave."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:623
+# 189864500c3b4b339d76ae970daf104c
+msgid "**+slave-reconf-inprog** ``<instance details>`` -- The slave being reconfigured showed to be a slave of the new master ip:port pair, but the synchronization process is not yet complete."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:626
+# 6e6dff4be5a440e6b98373fbfe77205c
+msgid "**+slave-reconf-done** ``<instance details>`` -- The slave is now synchronized with the new master."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:628
+# 597c5a6b775f4608977ea0b01b9fa40d
+msgid "**-dup-sentinel** ``<instance details>`` -- One or more sentinels for the specified master were removed as duplicated (this happens for instance when a Sentinel instance is restarted)."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:631
+# dac7efeb478741d8afd5db59775d99a0
+msgid "**+sentinel** ``<instance details>`` -- A new sentinel for this master was detected and attached."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:633
+# c339f33a499d471dbb07a882dba07855
+msgid "**+sdown** ``<instance details>`` -- The specified instance is now in Subjectively Down state."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:635
+# da11dedccd3c4a96b39edd519cd8457e
+msgid "**-sdown** ``<instance details>`` -- The specified instance is no longer in Subjectively Down state."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:637
+# baeeb4ea62c6434bb320656a26b5fb03
+msgid "**+odown** ``<instance details>`` -- The specified instance is now in Objectively Down state."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:639
+# 4d80b81dc96b4b69bcd8fa91c3a32467
+msgid "**-odown** ``<instance details>`` -- The specified instance is no longer in Objectively Down state."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:641
+# a034136ea6ed440dac69a7f751bc4392
+msgid "**+new-epoch** ``<instance details>`` -- The current epoch was updated."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:643
+# d46e8e7ef61c461e8c4ccf750380bdfe
+msgid "**+try-failover** ``<instance details>`` -- New failover in progress, waiting to be elected by the majority."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:645
+# 01ab4aac8a9f45c39944439cb08532fe
+msgid "**+elected-leader** ``<instance details>`` -- Won the election for the specified epoch, can do the failover."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:647
+# 7fac2d06b708407083ae7baf86957137
+msgid "**+failover-state-select-slave** ``<instance details>`` -- New failover state is ``select-slave``: we are trying to find a suitable slave for promotion."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:650
+# e49b1d1df3ee4238a87bb3a42ba7dc41
+msgid "**no-good-slave** ``<instance details>`` -- There is no good slave to promote. Currently we'll try after some time, but probably this will change and the state machine will abort the failover at all in this case."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:654
+# 6e3cbcb4a69f4f2e93ca362557816c99
+msgid "**selected-slave** ``<instance details>`` -- We found the specified good slave to promote."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:656
+# 162b6e607f5b4c8b8475e5d17d9d5618
+msgid "**failover-state-send-slaveof-noone** ``<instance details>`` -- We are trynig to reconfigure the promoted slave as master, waiting for it to switch."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:659
+# 88cb776506fb43cfb1383ca63198b5e9
+msgid "**failover-end-for-timeout** ``<instance details>`` -- The failover terminated for timeout, slaves will eventually be configured to replicate with the new master anyway."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:662
+# be48c8d10e3a4490bb5fd3fb7072591a
+msgid "**failover-end** ``<instance details>`` -- The failover terminated with success. All the slaves appears to be reconfigured to replicate with the new master."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:665
+# ce05d00148714539bda2a7628c58b577
+msgid "**switch-master** ``<master name> <oldip> <oldport> <newip> <newport>`` -- The master new IP and address is the specified one after a configuration change. This is **the message most external users are interested in**."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:669
+# c522fff212f448c1b0ab9b2c023d1060
+msgid "**+tilt** -- Tilt mode entered."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:670
+# d9960697c3924270b224ae2c0404b898
+msgid "**-tilt** -- Tilt mode exited."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:673
+# 9100af96960a41a4b67f5c0375c22eff
+msgid "TILT mode"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:675
+# 35c700f99f334c0eb0687b1d6dbc799d
+msgid "Redis Sentinel is heavily dependent on the computer time: for instance in order to understand if an instance is available it remembers the time of the latest successful reply to the PING command, and compares it with the current time to understand how old it is."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:680
+# ddb14fa905dc4479977086d2ea834000
+msgid "However if the computer time changes in an unexpected way, or if the computer is very busy, or the process blocked for some reason, Sentinel may start to behave in an unexpected way."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:684
+# 52ecd22dab834d04b3806a6afb056655
+msgid "The TILT mode is a special \"protection\" mode that a Sentinel can enter when something odd is detected that can lower the reliability of the system. The Sentinel timer interrupt is normally called 10 times per second, so we expect that more or less 100 milliseconds will elapse between two calls to the timer interrupt."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:690
+# 551fc677b13a45ee9723fed6559ca6df
+msgid "What a Sentinel does is to register the previous time the timer interrupt was called, and compare it with the current call: if the time difference is negative or unexpectedly big (2 seconds or more) the TILT mode is entered (or if it was already entered the exit from the TILT mode postponed)."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:696
+# 5f2eacce08094a238da0d9804f87c71c
+msgid "When in TILT mode the Sentinel will continue to monitor everything, but:"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:698
+# 9a0453553fe34a6f9d72b25ec3b5fc58
+msgid "It stops acting at all."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:699
+# 40da1e20e42c489f9cb4a990e58bf0eb
+msgid "It starts to reply negatively to ``SENTINEL is-master-down-by-addr`` requests as the ability to detect a failure is no longer trusted."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:702
+# e1c98437d3784da891d52edaf111c148
+msgid "If everything appears to be normal for 30 second, the TILT mode is exited."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:706
+# cb672cfb499b4d73bae93e3218aa1f73
+msgid "Handling of -BUSY state"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:708
+# 69b3430fa5064365ac1ed1fd65d4f9a0
+msgid "(Warning: Yet not implemented)"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:710
+# 6b5874943c9f45bc8779f6d8601a54d3
+msgid "The -BUSY error is returned when a script is running for more time than the configured script time limit. When this happens before triggering a fail over Redis Sentinel will try to send a \"SCRIPT KILL\" command, that will only succeed if the script was read-only."
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:716
+# c483511e285245dfa76276422826b9fd
+msgid "Sentinel clients implementation"
+msgstr ""
+
+#: ../../source/topics/sentinel.rst:718
+# 34b0961bc50844e9b6905a1a04ce6946
+msgid "Sentinel requires explicit client support, unless the system is configured to execute a script that performs a transparent redirection of all the requests to the new master instance (virtual IP or other similar systems). The topic of client libraries implementation is covered in the document `Sentinel clients guidelines </topics/sentinel-clients>`__."
+msgstr ""
+

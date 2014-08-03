@@ -1,0 +1,138 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/internals-sds.rst:2
+# 2bb4dfcd9b0c4dffa74afbf2b8f1bf77
+msgid "Hacking Strings"
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:4
+# b510c454f10241c6bc8cea44bc707309
+msgid "The implementation of Redis strings is contained in ``sds.c`` (``sds`` stands for Simple Dynamic Strings)."
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:7
+# 99c77812da604970bf11238206960807
+msgid "The C structure ``sdshdr`` declared in ``sds.h`` represents a Redis string:"
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:18
+# c312f1400aac471684ce8276ae5cdb91
+msgid "The ``buf`` character array stores the actual string."
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:20
+# 7d383c08a3354f97941ec9b0d5aec74c
+msgid "The ``len`` field stores the length of ``buf``. This makes obtaining the length of a Redis string an O(1) operation."
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:23
+# f3fbea9163a140e4ae48906416954930
+msgid "The ``free`` field stores the number of additional bytes available for use."
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:26
+# 4acc46ccadd548f9933579ee731fd10f
+msgid "Together the ``len`` and ``free`` field can be thought of as holding the metadata of the ``buf`` character array."
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:30
+# 301bec17adbb4901b4bf110b43f59400
+msgid "Creating Redis Strings"
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:32
+# d4a6325fe7fc46d7bd658012a361463b
+msgid "A new data type named ``sds`` is defined in ``sds.h`` to be a synonym for a character pointer:"
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:39
+# df3f4f1570884dbfad76539410cbe3e1
+msgid "``sdsnewlen`` function defined in ``sds.c`` creates a new Redis String:"
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:62
+# c23547e0ca08425c9c2ba1b6eb30ff15
+msgid "Remember a Redis string is a variable of type ``struct sdshdr``. But ``sdsnewlen`` returns a character pointer!!"
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:65
+# 1f37cfd6c54041fab0262ee81b7fe69a
+msgid "That's a trick and needs some explanation."
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:67
+# 87bb48ea4d934f068c127a959fba65ea
+msgid "Suppose I create a Redis string using ``sdsnewlen`` like below:"
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:73
+# 50c918ba85324ac694c39cf1ab0f8651
+msgid "This creates a new variable of type ``struct sdshdr`` allocating memory for ``len`` and ``free`` fields as well as for the ``buf`` character array."
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:81
+# 88a62e1eb63049159084067c213442a2
+msgid "After ``sdsnewlen`` successfully creates a Redis string the result is something like:"
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:92
+# d597644b56a448afb7e2e10a9d346b41
+msgid "``sdsnewlen`` returns ``sh->buf`` to the caller."
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:94
+# e8a390a372db4e0da5368064c51f2994
+msgid "What do you do if you need to free the Redis string pointed by ``sh``?"
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:96
+# a6b4b95024d4426b8b79601eea2a1c96
+msgid "You want the pointer ``sh`` but you only have the pointer ``sh->buf``."
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:98
+# 23cc687d016240e99046a49631106c7c
+msgid "Can you get the pointer ``sh`` from ``sh->buf``?"
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:100
+# f58226b17c6f423fbeb2c601af7cf792
+msgid "Yes. Pointer arithmetic. Notice from the above ASCII art that if you subtract the size of two longs from ``sh->buf`` you get the pointer ``sh``."
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:104
+# 687987f5ee7e415cb86b7c9737a5a8b8
+msgid "The ``sizeof`` two longs happens to be the size of ``struct sdshdr``."
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:106
+# 6279750b47cc462788b6b408b41d1f27
+msgid "Look at ``sdslen`` function and see this trick at work:"
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:115
+# 15af6bac2e234a3db6e207de8f20bd96
+msgid "Knowing this trick you could easily go through the rest of the functions in ``sds.c``."
+msgstr ""
+
+#: ../../source/topics/internals-sds.rst:118
+# 927626546e2c4604b4aba351df41c756
+msgid "The Redis string implementation is hidden behind an interface that accepts only character pointers. The users of Redis strings need not care about how its implemented and treat Redis strings as a character pointer."
+msgstr ""
+

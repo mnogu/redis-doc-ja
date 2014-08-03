@@ -1,0 +1,238 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/security.rst:2
+# 7b466bdb5f25483a8016ad041de0863d
+msgid "Redis Security"
+msgstr ""
+
+#: ../../source/topics/security.rst:4
+# 1a3903151a54420b82d25c7749223af2
+msgid "This document provides an introduction to the topic of security from the point of view of Redis: the access control provided by Redis, code security concerns, attacks that can be triggered from the outside by selecting malicious inputs and other similar topics are covered."
+msgstr ""
+
+#: ../../source/topics/security.rst:9
+# 4e8528230b7041c4933a359f064f631c
+msgid "For security related contacts please open an issue on Github, or when you feel it is really important that the security of the communication is preserved, use the GPG key at the end of this document."
+msgstr ""
+
+#: ../../source/topics/security.rst:14
+# fbad1d7e91c941f3bd2b3175f46c38a7
+msgid "Redis general security model"
+msgstr ""
+
+#: ../../source/topics/security.rst:16
+# 38ce1cdc670d4045b6cfdd6f95785685
+msgid "Redis is designed to be accessed by trusted clients inside trusted environments. This means that usually it is not a good idea to expose the Redis instance directly to the internet or, in general, to an environment where untrusted clients can directly access the Redis TCP port or UNIX socket."
+msgstr ""
+
+#: ../../source/topics/security.rst:22
+# 596eea4f8478440da44d5257d61cfa99
+msgid "For instance, in the common context of a web application implemented using Redis as a database, cache, or messaging system, the clients inside the front-end (web side) of the application will query Redis to generate pages or to perform operations requested or triggered by the web application user."
+msgstr ""
+
+#: ../../source/topics/security.rst:28
+# da36462bebce4b8eac10963898b6a3d2
+msgid "In this case, the web application mediates access between Redis and untrusted clients (the user browsers accessing the web application)."
+msgstr ""
+
+#: ../../source/topics/security.rst:31
+# d94c8d91ef204972b9eae348ef9dc1c3
+msgid "This is a specific example, but, in general, untrusted access to Redis should always be mediated by a layer implementing ACLs, validating user input, and deciding what operations to perform against the Redis instance."
+msgstr ""
+
+#: ../../source/topics/security.rst:36
+# e0447ed9ef8b48779e7ec6f107e25368
+msgid "In general, Redis is not optimized for maximum security but for maximum performance and simplicity."
+msgstr ""
+
+#: ../../source/topics/security.rst:40
+# 1656b506c5e748e88e8c7e9f6e81721d
+msgid "Network security"
+msgstr ""
+
+#: ../../source/topics/security.rst:42
+# fe4d01a5124049b59609eb3f8e4195da
+msgid "Access to the Redis port should be denied to everybody but trusted clients in the network, so the servers running Redis should be directly accessible only by the computers implementing the application using Redis."
+msgstr ""
+
+#: ../../source/topics/security.rst:47
+# f5458838c3bf4d3998461bcee4897d33
+msgid "In the common case of a single computer directly exposed to the internet, such as a virtualized Linux instance (Linode, EC2, ...), the Redis port should be firewalled to prevent access from the outside. Clients will still be able to access Redis using the loopback interface."
+msgstr ""
+
+#: ../../source/topics/security.rst:52
+# ea0ef9d95472439996a743d7d6609a8c
+msgid "Note that it is possible to bind Redis to a single interface by adding a line like the following to the **redis.conf** file:"
+msgstr ""
+
+#: ../../source/topics/security.rst:59
+# 964e0be9d12343219e2c6cc9cc1556f1
+msgid "Failing to protect the Redis port from the outside can have a big security impact because of the nature of Redis. For instance, a single **FLUSHALL** command can be used by an external attacker to delete the whole data set."
+msgstr ""
+
+#: ../../source/topics/security.rst:65
+# 28b272937ed24d5e9fea762be3ba2210
+msgid "Authentication feature"
+msgstr ""
+
+#: ../../source/topics/security.rst:67
+# 36cfbb41478b433aab850f7dec9b2477
+msgid "While Redis does not try to implement Access Control, it provides a tiny layer of authentication that is optionally turned on editing the **redis.conf** file."
+msgstr ""
+
+#: ../../source/topics/security.rst:71
+# 0615feca224a430b9d9c4286031a25a8
+msgid "When the authorization layer is enabled, Redis will refuse any query by unauthenticated clients. A client can authenticate itself by sending the **AUTH** command followed by the password."
+msgstr ""
+
+#: ../../source/topics/security.rst:75
+# 995266dafc4442c6ad6521d4f80a0e7c
+msgid "The password is set by the system administrator in clear text inside the redis.conf file. It should be long enough to prevent brute force attacks for two reasons:"
+msgstr ""
+
+#: ../../source/topics/security.rst:79
+# 1a80a580e4d74f52b1ad67ddcf2632c2
+msgid "Redis is very fast at serving queries. Many passwords per second can be tested by an external client."
+msgstr ""
+
+#: ../../source/topics/security.rst:81
+# ec6b3e38ec7a4a928e135ab5c5652437
+msgid "The Redis password is stored inside the **redis.conf** file and inside the client configuration, so it does not need to be remembered by the system administrator, and thus it can be very long."
+msgstr ""
+
+#: ../../source/topics/security.rst:85
+# 5f934ec9b15c4416bfce6439e744d3bf
+msgid "The goal of the authentication layer is to optionally provide a layer of redundancy. If firewalling or any other system implemented to protect Redis from external attackers fail, an external client will still not be able to access the Redis instance without knowledge of the authentication password."
+msgstr ""
+
+#: ../../source/topics/security.rst:91
+# f1bdc7f9eab04047a991878b78b4fb48
+msgid "The AUTH command, like every other Redis command, is sent unencrypted, so it does not protect against an attacker that has enough access to the network to perform eavesdropping."
+msgstr ""
+
+#: ../../source/topics/security.rst:96
+# 97af5b62191e41dcba657846f032ab87
+msgid "Data encryption support"
+msgstr ""
+
+#: ../../source/topics/security.rst:98
+# e1f61e42b4164c10b0f8a32018a7488c
+msgid "Redis does not support encryption. In order to implement setups where trusted parties can access a Redis instance over the internet or other untrusted networks, an additional layer of protection should be implemented, such as an SSL proxy."
+msgstr ""
+
+#: ../../source/topics/security.rst:104
+# fe9207a9ce3c47498e6e321ea9d87187
+msgid "Disabling of specific commands"
+msgstr ""
+
+#: ../../source/topics/security.rst:106
+# e9a6fef162ba40588a4a7611774f01cf
+msgid "It is possible to disable commands in Redis or to rename them into an unguessable name, so that normal clients are limited to a specified set of commands."
+msgstr ""
+
+#: ../../source/topics/security.rst:110
+# e2e43cbfc7974de7a5ff471b460092da
+msgid "For instance, a virtualized server provider may offer a managed Redis instance service. In this context, normal users should probably not be able to call the Redis **CONFIG** command to alter the configuration of the instance, but the systems that provide and remove instances should be able to do so."
+msgstr ""
+
+#: ../../source/topics/security.rst:116
+# 0821a38ddaa34e2fb3646a3f9011b978
+msgid "In this case, it is possible to either rename or completely shadow commands from the command table. This feature is available as a statement that can be used inside the redis.conf configuration file. For example:"
+msgstr ""
+
+#: ../../source/topics/security.rst:125
+# bb335783a5d04f8cb2db4ec2dc9a9db1
+msgid "In the above example, the **CONFIG** command was renamed into an unguessable name. It is also possible to completely disable it (or any other command) by renaming it to the empty string, like in the following example:"
+msgstr ""
+
+#: ../../source/topics/security.rst:135
+# e4e1078a2ad2420a90f2ba2c37760db9
+msgid "Attacks triggered by carefully selected inputs from external clients"
+msgstr ""
+
+#: ../../source/topics/security.rst:137
+# 259948e549e1493187fabbef9ab4f585
+msgid "There is a class of attacks that an attacker can trigger from the outside even without external access to the instance. An example of such attacks are the ability to insert data into Redis that triggers pathological (worst case) algorithm complexity on data structures implemented inside Redis internals."
+msgstr ""
+
+#: ../../source/topics/security.rst:143
+# 21979c54c2974b019b24d07fa7675745
+msgid "For instance an attacker could supply, via a web form, a set of strings that is known to hash to the same bucket into an hash table in order to turn the O(1) expected time (the average time) to the O(N) worst case, consuming more CPU than expected, and ultimately causing a Denial of Service."
+msgstr ""
+
+#: ../../source/topics/security.rst:149
+# a7bb0b74dcc74b399a6c2bcc9605a1cb
+msgid "To prevent this specific attack, Redis uses a per-execution pseudo-random seed to the hash function."
+msgstr ""
+
+#: ../../source/topics/security.rst:152
+# e647df11eb4f4913af1694fbfa263977
+msgid "Redis implements the SORT command using the qsort algorithm. Currently, the algorithm is not randomized, so it is possible to trigger a quadratic worst-case behavior by carefully selecting the right set of inputs."
+msgstr ""
+
+#: ../../source/topics/security.rst:158
+# 27af4ff92a1246ec8144f17f55e3c0b8
+msgid "String escaping and NoSQL injection"
+msgstr ""
+
+#: ../../source/topics/security.rst:160
+# 50bd8df425f841e780e77c439126ae82
+msgid "The Redis protocol has no concept of string escaping, so injection is impossible under normal circumstances using a normal client library. The protocol uses prefixed-length strings and is completely binary safe."
+msgstr ""
+
+#: ../../source/topics/security.rst:164
+# ba40ca0e756f4a8cbf2a6d8cc6c32408
+msgid "Lua scripts executed by the **EVAL** and **EVALSHA** commands follow the same rules, and thus those commands are also safe."
+msgstr ""
+
+#: ../../source/topics/security.rst:167
+# 5281ebfa7f8447a3a6c415e3291b53d4
+msgid "While it would be a very strange use case, the application should avoid composing the body of the Lua script using strings obtained from untrusted sources."
+msgstr ""
+
+#: ../../source/topics/security.rst:172
+# b099b67cbc70440087c347d404da626e
+msgid "Code security"
+msgstr ""
+
+#: ../../source/topics/security.rst:174
+# 9d91e7b833074c01b74319771a7f637a
+msgid "In a classical Redis setup, clients are allowed full access to the command set, but accessing the instance should never result in the ability to control the system where Redis is running."
+msgstr ""
+
+#: ../../source/topics/security.rst:178
+# dcfd2f2869e9498284041b2ee66a4d6d
+msgid "Internally, Redis uses all the well known practices for writing secure code, to prevent buffer overflows, format bugs and other memory corruption issues. However, the ability to control the server configuration using the **CONFIG** command makes the client able to change the working dir of the program and the name of the dump file. This allows clients to write RDB Redis files at random paths, that is a security issue that may easily lead to the ability to run untrusted code as the same user as Redis is running."
+msgstr ""
+
+#: ../../source/topics/security.rst:187
+# d8b7498f09f849109022cbfa142f0727
+msgid "Redis does not requires root privileges to run. It is recommended to run it as an unprivileged *redis* user that is only used for this purpose. The Redis authors are currently investigating the possibility of adding a new configuration parameter to prevent **CONFIG SET/GET dir** and other similar run-time configuration directives. This would prevent clients from forcing the server to write Redis dump files at arbitrary locations."
+msgstr ""
+
+#: ../../source/topics/security.rst:196
+# c691445bbf3a4409b70ef795d4b13a74
+msgid "GPG key"
+msgstr ""
+
+#: ../../source/topics/security.rst:251
+# e712046c77e5409196edba362dc0cc33
+msgid "**Key fingerprint**"
+msgstr ""
+

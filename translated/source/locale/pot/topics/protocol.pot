@@ -1,0 +1,548 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/protocol.rst:2
+# 5399ab644b7c4d6696f153c3ba1606b1
+msgid "Redis Protocol specification"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:4
+# c758b309eb1f4e5baeb33a19a2b4406b
+msgid "Redis clients communicate with the Redis server using a protocol called **RESP** (REdis Serialization Protocol). While the protocol was designed specifically for Redis, it can be used for other client-server software projects."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:9
+# e137d5f1cbef4ea6a641771216a693e6
+msgid "RESP is a compromise between the following things:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:11
+# d25d6afd06094d39bec7355673be1f45
+msgid "Simple to implement."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:12
+# 42ca6465455b49aba9a09f89c6c1e57e
+msgid "Fast to parse."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:13
+# b46d53bdb39f44f8a02e2e442d0b6c6c
+msgid "Human readable."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:15
+# 50a6f6da5adf45e09d2fecd9f9d359ee
+msgid "RESP can serialize different data types like integers, strings, arrays. There is also a specific type for errors. Requests are sent from the client to the Redis server as arrays of strings representing the arguments of the command to execute. Redis replies with a command-specific data type."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:21
+# 4bf1f8d8f67b4d7193e05a08920fc0da
+msgid "RESP is binary-safe and does not require processing of bulk data transferred from one process to another, because it uses prefixed-length to transfer bulk data."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:25
+# e695e3fa56d14329afd3a61770923144
+msgid "Note: the protocol outlined here is only used for client-server communication. Redis Cluster uses a different binary protocol in order to exchange messages between nodes."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:30
+# 40be92f242c4496599006cca862cc43f
+msgid "Networking layer"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:32
+# bcaf16bdd4374ff18b9d4bc0110e96ec
+msgid "A client connects to a Redis server creating a TCP connection to the port 6379."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:35
+# f2dfecd7f8e84fadacc8d3455f5a6259
+msgid "While RESP is technically non-TCP specific, in the context of Redis the protocol is only used with TCP connections (or equivalent stream oriented connections like Unix sockets)."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:40
+# 4bd834dc230b4bbfb0773a3cdd36442e
+msgid "Request-Response model"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:42
+# 08e20174924a43d7810c42a50ce3f68c
+msgid "Redis accepts commands composed of different arguments. Once a command is received, it is processed and a reply is sent back to the client."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:45
+# de42d6a0bf9245478e4c49f082b0ea24
+msgid "This is the simplest model possible, however there are two exceptions:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:47
+# 45cf210882504c559f89caa27cd23d30
+msgid "Redis supports pipelining (covered later in this document). So it is possible for clients to send multiple commands at once, and wait for replies later."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:50
+# 9e817183687445c3ac5e72ec13c0c6bf
+msgid "When a Redis client subscribes to a Pub/Sub channel, the protocol changes semantics and becomes a *push* protocol, that is, the client no longer requires to send commands, because the server will automatically send to the client new messages (for the channels the client is subscribed to) as soon as they are received."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:56
+# ae386a4f65714e71a5644df7922924d1
+msgid "Excluding the above two exceptions, the Redis protocol is a simple request-response protocol."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:60
+# 09da2799e67e4ef2b561f6447aa80957
+msgid "RESP protocol description"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:62
+# 6bb97ec3b2a24f0f897d570eb5bd0a52
+msgid "The RESP protocol was introduced in Redis 1.2, but it became the standard way for talking with the Redis server in Redis 2.0. This is the protocol you should implement in your Redis client."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:66
+# 561b658251204cf49a5af0e361c7802e
+msgid "RESP is actually a serialization protocol that supports the following data types: Simple Strings, Errors, Integers, Bulk Strings and Arrays."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:69
+# 62516d94085947f3b2c4247a58085760
+msgid "The way RESP is used in Redis as a request-response protocol is the following:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:72
+# 9622c257e77d4082af56984f2579577e
+msgid "Clients send commands to a Redis server as a RESP Array of Bulk Strings."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:74
+# 68ce592c0fbf4ac88a2796626cebace3
+msgid "The server replies with one of the RESP types according to the command implementation."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:77
+# d92b1fa47f7943fbbc678801bce47d89
+msgid "In RESP, the type of some data depends on the first byte:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:79
+# e43402acee2941fc9248029d345be064
+msgid "For **Simple Strings** the first byte of the reply is \"+\""
+msgstr ""
+
+#: ../../source/topics/protocol.rst:80
+# 6bcf270495f74b47a9468a694ecdf1bc
+msgid "For **Errors** the first byte of the reply is \"-\""
+msgstr ""
+
+#: ../../source/topics/protocol.rst:81
+# fd73be758d1442509bb0b551121c1d1e
+msgid "For **Integers** the first byte of the reply is \":\""
+msgstr ""
+
+#: ../../source/topics/protocol.rst:82
+# 276bf1aedc434d7ba0c745f2a1053422
+msgid "For **Bulk Strings** the first byte of the reply is \"$\""
+msgstr ""
+
+#: ../../source/topics/protocol.rst:83
+# 0d06ddffeb9342a784f185788f82b05e
+msgid "For **Arrays** the first byte of the reply is \"``*``\\ \""
+msgstr ""
+
+#: ../../source/topics/protocol.rst:85
+# 5f5eddfc545d4530b3b1d42bd1a8f917
+msgid "Additionally RESP is able to represent a Null value using a special variation of Bulk Strings or Array as specified later."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:88
+# 8edbb05795934b688343af00db789ab8
+msgid "In RESP different parts of the protocol are always terminated with \"\" (CRLF)."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:92
+# 1abe8da5a8ae4c0f9fd8355d1c916a3e
+msgid "RESP Simple Strings"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:94
+# 9882002407e24fcd943106f4583ad07a
+msgid "Simple Strings are encoded in the following way: a plus character, followed by a string that cannot contain a CR or LF character (no newlines are allowed), terminated by CRLF (that is \"\")."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:98
+# a1c4874fd4c14ffaa559d2479f7566ea
+msgid "Simple Strings are used to transmit non binary safe strings with minimal overhead. For example many Redis commands reply with just \"OK\" on success, that as a RESP Simple String is encoded with the following 5 bytes:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:107
+# bf6d982af95e4cdf80da2aa4ce9027a9
+msgid "In order to send binary-safe strings, RESP Bulk Strings are used instead."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:110
+# 5e3df2296ac24e668d5dcf7c281320b4
+msgid "When Redis replies with a Simple String, a client library should return to the caller a string composed of the first character after the '+' up to the end of the string, excluding the final CRLF bytes."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:115
+# df96a7a2d2314d05939a97e3602fef7d
+msgid "RESP Errors"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:117
+# 53fa4cdf386849999abe7e5671b34d60
+msgid "RESP has a specific data type for errors. Actually errors are exactly like RESP Simple Strings, but the first character is a minus '-' character instead of a plus. The real difference between Simple Strings and Errors in RESP is that errors are treated by clients as exceptions, and the string that composes the Error type is the error message itself."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:123
+# 3f6702e57b5744e2b5000024882215e6
+msgid "The basic format is:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:129
+# 84dc1b95e8334883b4f75e18c1fb2c45
+msgid "Error replies are only sent when something wrong happens, for instance if you try to perform an operation against the wrong data type, or if the command does not exist and so forth. An exception should be raised by the library client when an Error Reply is received."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:134
+# 2f7df798b5d44b05a876ffdf4a30c16f
+msgid "The following are examples of error replies:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:141
+# e286a487d76c49c7b47059b0ccb164b1
+msgid "The first word after the \"-\", up to the first space or newline, represents the kind of error returned. This is just a convention used by Redis and is not part of the RESP Error format."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:145
+# d9b20c82a71f49ca89435ddbb9b251e2
+msgid "For example, ``ERR`` is the generic error, while ``WRONGTYPE`` is a more specific error that implies that the client tried to perform an operation against the wrong data type. This is called an **Error Prefix** and is a way to allow the client to understand the kind of error returned by the server without to rely on the exact message given, that may change over the time."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:152
+# bac2a329d9b54e2b9454f415568c7549
+msgid "A client implementation may return different kind of exceptions for different errors, or may provide a generic way to trap errors by directly providing the error name to the caller as a string."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:156
+# e163d62d50104caba647824276e06c6d
+msgid "However, such a feature should not be considered vital as it is rarely useful, and a limited client implementation may simply return a generic error condition, such as ``false``."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:161
+# fc24844c52c842a7971bc6d0c7f5fbba
+msgid "RESP Integers"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:163
+# 7c4a527695fc49509275a0aa896ccb5d
+msgid "This type is just a CRLF terminated string representing an integer, prefixed by a \":\" byte. For example \":0\", or \":1000\" are integer replies."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:167
+# ed3b40c2e4d646c889b30fa3cfbe34de
+msgid "Many Redis commands return RESP Integers, like ``INCR``, ``LLEN`` and ``LASTSAVE``."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:170
+# b7bfdae2dc9b490ea0ba7b20f3789eaa
+msgid "There is no special meaning for the returned integer, it is just an incremental number for ``INCR``, a UNIX time for ``LASTSAVE`` and so forth. However, the returned integer is guaranteed to be in the range of a signed 64 bit integer."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:175
+# ccd66617d5274d649e9c313f441d8d83
+msgid "Integer replies are also extensively used in order to return true or false. For instance commands like ``EXISTS`` or ``SISMEMBER`` will return 1 for true and 0 for false."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:179
+# 27fea8e55207437cae9736af74067b5b
+msgid "Other commands like ``SADD``, ``SREM`` and ``SETNX`` will return 1 if the operation was actually performed, 0 otherwise."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:182
+# 786d0f91974e4847b1f6afa1f0127709
+msgid "The following commands will reply with an integer reply: ``SETNX``, ``DEL``, ``EXISTS``, ``INCR``, ``INCRBY``, ``DECR``, ``DECRBY``, ``DBSIZE``, ``LASTSAVE``, ``RENAMENX``, ``MOVE``, ``LLEN``, ``SADD``, ``SREM``, ``SISMEMBER``, ``SCARD``."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:188
+# dfd4946a429f4eb1a5a79a165b167450
+msgid "RESP Bulk Strings"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:190
+# d0c7bb7eed9c4a91bcca48d971e0fd09
+msgid "Bulk Strings are used in order to represent a single binary safe string up to 512 MB in length."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:193
+# ef02ff5a05aa4f85a5866bff1a2b7897
+msgid "Bulk Strings are encoded in the following way:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:195
+# c1575df0b1984fd29b7594ed136e7f69
+msgid "A \"$\" byte followed by the number of bytes composing the string (a prefixed length), terminated by CRLF."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:197
+# 4e8c0f2a2fbd4da69951b6d082aa10e8
+msgid "The actual string data."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:198
+# d96251af38d2477faaaa4c455d297a1f
+msgid "A final CRLF."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:200
+# bab74af4b06c4ef694fbed68d8a55394
+msgid "So the string \"foobar\" is encoded as follows:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:206
+# 10d76eb8f2c14dba9742ff53dfdfd44f
+msgid "When an empty string is just:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:212
+# f2beb170ba064f6c88ad657bc37af3ba
+msgid "RESP Bulk Strings can also be used in order to signal non-existence of a value using a special format that is used to represent a Null value. In this special format the length is -1, and there is no data, so a Null is represented as:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:221
+# d2e6c1801f7e443e82626fb2b97556c8
+msgid "This is called a **Null Bulk String**."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:223
+# 7eaa69d6d2c4423390b67bc9c6f0c51b
+msgid "The client library API should not return an empty string, but a nil object, when the server replies with a Null Bulk String. For example a Ruby library should return 'nil' while a C library should return NULL (or set a special flag in the reply object), and so forth."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:229
+# b42a0e5059124f2194d940667c3625a0
+msgid "RESP Arrays"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:231
+# aa6f1f03cbed42a3a3413027561c94aa
+msgid "Clients send commands to the Redis server using RESP Arrays. Similarly certain Redis commands returning collections of elements to the client use RESP Arrays are reply type. An example is the ``LRANGE`` command that returns elements of a list."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:236
+# 20db8853edb94ceeab750d2d20669b81
+msgid "RESP Arrays are sent using the following format:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:238
+# 41c30431b63544bfb623dedaf22b1e42
+msgid "A ``*`` character as the first byte, followed by the number of elements in the array as a decimal number, followed by CRLF."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:240
+# f0f74ecb07cf42788c416eeb1f6ea549
+msgid "An additional RESP type for every element of the Array."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:242
+# 9335a30e4b334d2cacf17c29cc699ac6
+msgid "So an empty Array is just the following:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:248
+# 8bf3bc10e38d49b88fafcdc3387144c0
+msgid "While an array of two RESP Bulk Strings \"foo\" and \"bar\" is encoded as:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:254
+# 7299b096b17643d497c144870f3c59b0
+msgid "As you can see after the ``*<count>CRLF`` part prefixing the array, the other data types composing the array are just concatenated one after the other. For example an Array of three integers is encoded as follows:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:262
+# 989ce71d009a459db3e1168bcc663f30
+msgid "Arrays can contain mixed types, it's not necessary for the elements to be of the same type. For instance, a list of four integers and a bulk string can be encoded as the follows:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:276
+# e1b55656fea0403d8f717ab475d954d9
+msgid "(The reply was split into multiple lines for clarity)."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:278
+# fa17b87ca1a74bbd833cb60a8ac1e3f2
+msgid "The first line the server sent is ``*5\\r\\n`` in order to specify that five replies will follow. Then every reply constituting the items of the Multi Bulk reply are transmitted."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:282
+# 4f61df02f0cc41fe83cf3d62236fc46b
+msgid "The concept of Null Array exists as well, and is an alternative way to specify a Null value (usually the Null Bulk String is used, but for historical reasons we have two formats)."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:286
+# 583eeabf66e74266b131831579c8a98b
+msgid "For instance when the ``BLPOP`` command times out, it returns a Null Array that has a count of ``-1`` as in the following example:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:293
+# ef33d0e4e908437791d63daf8264b917
+msgid "A client library API should return a null object and not an empty Array when Redis replies with a Null Array. This is necessary to distinguish between an empty list and a different condition (for instance the timeout condition of the ``BLPOP`` command)."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:298
+# cb5c7c5e3dcb48c7aacd58bfcfbae201
+msgid "Arrays of arrays are possible in RESP. For example an array of two arrays is encoded as follows:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:312
+# 15158d8aea1740c080b09f89a6b0be1d
+msgid "(The format was split into multiple lines to make it easier to read)."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:314
+# ea131e10a3ea44e5b4a58bff9037d185
+msgid "The above RESP data type encodes a two elements Array consisting of an Array that contains three Integers 1, 2, 3 and an array of a Simple String and an Error."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:319
+# 1aa797b311d94d228c1b53d18e86f3d1
+msgid "Null elements in Arrays"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:321
+# 489c6c78d49e41f796c9048d1fdf32d3
+msgid "Single elements of an Array may be Null. This is used in Redis replies in order to signal that this elements are missing and not empty strings. This can happen with the SORT command when used with the GET *pattern* option when the specified key is missing. Example of an Array reply containing a Null element:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:336
+# 0f0df315b881480e8389959b67000003
+msgid "The second element is a Null. The client library should return something like this:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:343
+# 975a4642d93e4d658f43cd2014e4161d
+msgid "Note that this is not an exception to what said in the previous sections, but just an example to further specify the protocol."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:347
+# 22422d432b9545c8bde975f6aee0739a
+msgid "Sending commands to a Redis Server"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:349
+# 4dc682e5e16a4d568d9242b331f94a0c
+msgid "Now that you are familiar with the RESP serialization format, writing an implementation of a Redis client library will be easy. We can further specify how the interaction between the client and the server works:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:353
+# f542784e40d5470e98c1bf08a47d2b88
+msgid "A client sends to the Redis server a RESP Array consisting of just Bulk Strings."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:355
+# 4c1fb9b083b44c7688eb42847dfb6dab
+msgid "A Redis server replies to clients sending any valid RESP data type as reply."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:358
+# f8439f5ef8d449e2a070ec96b29a2054
+msgid "So for example a typical interaction could be the following."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:360
+# 62a43394a1f742f2acde8b9ca7bb2dea
+msgid "The client sends the command **LLEN mylist** in order to get the length of the list stored at key *mylist*, and the server replies with an Integer reply as in the following example (C: is the client, S: the server)."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:375
+# 194069c3169d4731875b4a6d469d8b70
+msgid "As usually we separate different parts of the protocol with newlines for simplicity, but the actual interaction is the client sending ``*2\\r\\n$4\\r\\nLLEN\\r\\n$6\\r\\nmylist\\r\\n`` as a whole."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:380
+# c6671714708c422c883a8fe07c380977
+msgid "Multiple commands and pipelining"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:382
+# 3098b9359d1345adadfa85c1ceb034c9
+msgid "A client can use the same connection in order to issue multiple commands. Pipelining is supported so multiple commands can be sent with a single write operation by the client, without the need to read the server reply of the previous command before issuing the next one. All the replies can be read at the end."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:388
+# ab69e56e96fb4490ab02673088574db8
+msgid "For more information please check our `page about Pipelining </topics/pipelining>`__."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:392
+# 545bf9dcc878478182e25125aea830be
+msgid "Inline Commands"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:394
+# 96778b32fc6e443dbe6f24aabf36c78a
+msgid "Sometimes you have only ``telnet`` in your hands and you need to send a command to the Redis server. While the Redis protocol is simple to implement it is not ideal to use in interactive sessions, and ``redis-cli`` may not always be available. For this reason Redis also accepts commands in a special way that is designed for humans, and is called the **inline command** format."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:401
+# 9e3a2865f03240d2a545b126b4ce6b91
+msgid "The following is an example of a server/client chat using an inline command (the server chat starts with S:, the client chat with C:)"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:409
+# 7402aa88148b4683bd243c192237d23d
+msgid "The following is another example of an inline command returning an integer:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:417
+# daaf4225180b4426b8bfc7b6c8e42945
+msgid "Basically you simply write space-separated arguments in a telnet session. Since no command starts with ``*`` that is instead used in the unified request protocol, Redis is able to detect this condition and parse your command."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:423
+# e52c016f73214f6f9457f00076a67e0d
+msgid "High performance parser for the Redis protocol"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:425
+# 9cb4b567f47c462ebe861cd58ef1f00c
+msgid "While the Redis protocol is very human readable and easy to implement it can be implemented with a performance similar to that of a binary protocol."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:429
+# bda8d400072941718ea8f063e63a7675
+msgid "RESP uses prefixed lengths to transfer bulk data, so there is never need to scan the payload for special characters like it happens for instance with JSON, nor to quote the payload that needs to be sent to the server."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:433
+# c7dc2f5fb5ac4d77b8c8db599b054921
+msgid "The Bulk and Multi Bulk lengths can be be processed with code that performs a single operation per character while at the same time scanning for the CR character, like the following C code:"
+msgstr ""
+
+#: ../../source/topics/protocol.rst:456
+# 9ed0b8ea57444289823836a0dcf85ae8
+msgid "After the first CR is identified, it can be skipped along with the following LF without any processing. Then the bulk data can be read using a single read operation that does not inspect the payload in any way. Finally the remaining the CR and LF character are discarded without any processing."
+msgstr ""
+
+#: ../../source/topics/protocol.rst:462
+# 6ca4fe3936b049c6b430538f60fd3d60
+msgid "While comparable in performance to a binary protocol the Redis protocol is significantly simpler to implement in most very high level languages, reducing the number of bugs in client software."
+msgstr ""
+

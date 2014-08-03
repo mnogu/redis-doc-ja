@@ -1,0 +1,78 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/whos-using-redis.rst:2
+# 167063de837f4ae2b8c1bbbf0c6d7ebd
+msgid "Who's using Redis?"
+msgstr ""
+
+#: ../../source/topics/whos-using-redis.rst:4
+# 63b228c234ed4f26959fc9deacdc512f
+msgid "A list of well known companies using Redis:"
+msgstr ""
+
+#: ../../source/topics/whos-using-redis.rst:12
+# 36d163b3fee04a97ac4f02894d5a30bd
+msgid "Twitter"
+msgstr ""
+
+#: ../../source/topics/whos-using-redis.rst:23
+# f6550e474a06494890de73aeca4f606a
+msgid "Github"
+msgstr ""
+
+#: ../../source/topics/whos-using-redis.rst:34
+# 7fdf8b069a674a2098b96b069be33bb5
+msgid "Weibo"
+msgstr ""
+
+#: ../../source/topics/whos-using-redis.rst:45
+# cfc3b730a3844119b65c323805050dc3
+msgid "Pinterest"
+msgstr ""
+
+#: ../../source/topics/whos-using-redis.rst:56
+# 943deed693d94442a5a49153e24323e2
+msgid "Snapchat"
+msgstr ""
+
+#: ../../source/topics/whos-using-redis.rst:67
+# b700a7c424874bbaba8118666ac12261
+msgid "Craigslist"
+msgstr ""
+
+#: ../../source/topics/whos-using-redis.rst:78
+# 3727a0cda5bb4231bde860d7f6cc5d56
+msgid "Digg"
+msgstr ""
+
+#: ../../source/topics/whos-using-redis.rst:89
+# fa800e06b78647b8a750d102ed9cc44b
+msgid "StackOverflow"
+msgstr ""
+
+#: ../../source/topics/whos-using-redis.rst:100
+# 43eb9f0adf684932a0eede0dd303e36b
+msgid "Flickr"
+msgstr ""
+
+#: ../../source/topics/whos-using-redis.rst:107
+# 8dbb95e961aa4303820fb371a7acfb8b
+msgid "And many others! link policy: we only link major sites, we used to also link to small companies and services but this rapidly became impossible to maintain."
+msgstr ""
+

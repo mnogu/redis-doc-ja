@@ -1,0 +1,323 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/sentinel-clients.rst:1
+# f26c7f1ffb3c40418f43e72b1d7f1571
+msgid "**WARNING:** This document is a draft and the guidelines that it contains may change in the future as the Sentinel project evolves."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:5
+# 60fd560feea74aaba8155824701c2132
+msgid "Guidelines for Redis clients with support for Redis Sentinel"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:7
+# e9bf5b585c154f959c48a75ae9ce2343
+msgid "Redis Sentinel is a monitoring solution for Redis instances that handles automatic failover of Redis masters and service discovery (who is the current master for a given group of instances?). Since Sentinel is both responsible to reconfigure instances during failovers, and to provide configurations to clients connecting to Redis masters or slaves, clients require to have explicit support for Redis Sentinel."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:14
+# eadcd9ea7dc841a397743d4c9f8cafa6
+msgid "This document is targeted at Redis clients developers that want to support Sentinel in their clients implementation with the following goals:"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:18
+# 2ffa6858c190487c9a220f1dc821742b
+msgid "Automatic configuration of clients via Sentinel."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:19
+# b231fd4715fa4d7ea9e35bfbc657944b
+msgid "Improved safety of Redis Sentinel automatic failover."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:21
+# 33f024b639424363bb24689d4546a953
+msgid "For details about how Redis Sentinel works, please check the `Redis Documentation </topics/sentinel>`__, as this document only contains informations needed for Redis client developers, and it is expected that readers are familiar with the way Redis Sentinel works."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:27
+# d3d7b44f9acc4c438400bb7bc6997a40
+msgid "Redis service discovery via Sentinel"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:29
+# 847c24edd0f549ebb2e3907689b38c3f
+msgid "Redis Sentinel identify every master with a name like \"stats\" or \"cache\". Every name actually identifies a *group of intances*, composed of a master and a variable number of slaves."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:33
+# 7d778509ad8d4321b263e5c26abb2ec0
+msgid "The address of the Redis master that is used for a specific purpose inside a network may change after events like an automatic failover, a manually triggered failover (for instance in order to upgrade a Redis instance), and other reasons."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:38
+# 40d8ee0a19dd4c1191dcfd037a2d90ac
+msgid "Normally Redis clients have some kind of hard-coded configuraiton that specifies the address of a Redis master instance within a network as IP address and port number. However if the master address changes, manual intervention in every client is needed."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:43
+# b925b0fae1884867855697ef2de6d313
+msgid "A Redis client supporting Sentinel can automatically discover the address of a Redis master from the master name using Redis Sentinel. So instead of an hard coded IP address and port, a client supporting Sentinel should optionally be able to take as input:"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:48
+# 1f1ac5102a69406297f2bdb937610039
+msgid "A list of ip:port pairs pointing to known Sentinel instances."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:49
+# 1331d125202e41f4b983c1ee5b277aa6
+msgid "The name of the service, like \"cache\" or \"timelines\"."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:51
+# 9f23a6cfd1c94f13b9aa69604daedd77
+msgid "This is the procedure a client should follow in order to obtain the master address starting from the list of Sentinels and the service name."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:55
+# 08aa95bf462c4534b16725cc47b3f054
+msgid "Step 1: connecting to the first Sentinel"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:57
+# 6d951de7865e4e9fb4096d5ffb38a5c3
+msgid "The client should iterate the list of Sentinel addresses. For every address it should try to connect to the Sentinel, using a short timeout (in the order of a few hundreds of milliseconds). On errors or timeouts the next Sentinel address should be tried."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:62
+# a71c14051d7648aab1cbf28f64758374
+msgid "If all the Sentinel addresses were tried without success, an error should be returned to the client."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:65
+# a5c0d519e0f6423783cf1b04c90ca830
+msgid "The first Sentinel replying to the client request should be put at the start of the list, so that at the next reconnection, we'll try first the Sentinel that was reachable in the previous connection attempt, minimizing latency."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:71
+# f29e19aaa6594bf8a18112a2bc6afb6e
+msgid "Step 2: ask for master address"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:73
+# aa837235a63243359851e584d4c32db6
+msgid "Once a connection with a Sentinel is established, the client should retry to execute the following command on the Sentinel:"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:80
+# 224315daad9a4a6f88b76045df92ff5d
+msgid "Where *master-name* should be replaced with the actual service name specified by the user."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:83
+# 006f029f66be4a28837bfe7267ec8f31
+msgid "The result from this call can be one of the following two replies:"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:85
+# 3deca2bd32874f349dd712c0dcd8d18d
+msgid "An ip:port pair."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:86
+# 00b2816ef1024f8abea4969873ce59d5
+msgid "A null reply. This means Sentinel does not know this master."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:88
+# 82e2f39ab3c145ec9dacfcf491659a2e
+msgid "If an ip:port pair is received, this address should be used to connect to the Redis master. Otherwise if a null reply is received, the client should try the next Sentinel in the list."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:93
+# fa6d70545e4849b19331ecc2b43cfd20
+msgid "Step 3: call the ROLE command in the target instance"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:95
+# ee8022d71da8487a832d5f42d8f4b981
+msgid "Once the client discovered the address of the master instance, it should attempt a connection with the master, and call the ``ROLE`` command in order to verify the role of the instance is actually a master."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:99
+# d0c4874188e04ff78000ee41fde45bff
+msgid "If the ``ROLE`` commands is not available (it was introduced in Redis 2.8.12), a client may resort to the ``INFO replication`` command parsing the ``role:`` field of the output."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:103
+# 3133e24eaa8441a79797eeff151b4844
+msgid "If the instance is not a master as expected, the client should wait a short amount of time (a few hundreds of milliseconds) and should try again starting from Step 1."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:108
+# 4dfd04fc93b64012a5c74d543e4d3cfa
+msgid "Handling reconnections"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:110
+# 5e27e357231a4451aa0bfdfb2cb4b60d
+msgid "Once the service name is resoled into the master address and a connection is established with the Redis master instance, every time a reconnection is needed, the client should resolve again the address using Sentinels restarting from Step 1. For instance Sentinel should contacted again the following cases:"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:116
+# ec4fa5f58a504134a70ccceca432f7a7
+msgid "If the client reconnects after a timeout or socket error."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:117
+# da0dce9c5e8a45e9afc2df8dfe3391ce
+msgid "If the client reconnects because it was explicitly closed or reconnected by the user."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:120
+# 97577dc74c4a428090e132ecf17b4a9b
+msgid "In the above cases and any other case where the client lost the connection with the Redis server, the client should resolve the master address again."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:125
+# 4b89ddad2ede4dcf858165223a6f293b
+msgid "Sentinel failover disconnection"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:127
+# aaff8fb484a445a2a9e9f6f4d5bb18fd
+msgid "Starting with Redis 2.8.12, when Redis Sentinel changes the configuration of an instance, for example promoting a slave to a master, demoting a master to replicate to the new master after a failover, or simply changing the master address of a stale slave instance, it sends a ``CLIENT KILL type normal`` command to the instance in order to make sure all the clients are disconnected from the reconfigured instance. This will force clients to resolve the master address again."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:135
+# 9b14a4355fdf4bed934e63d612a31dc6
+msgid "If the client will contact a Sentinel with yet not updated information, the verification of the Redis instance role via the ``ROLE`` command will fail, allowing the client to detect that the contacted Sentinel provided stale information, and will try again."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:140
+# 6b32ad95a5554c08b94b8da23840528d
+msgid "Note: it is possible that a stale master returns online at the same time a client contacts a stale Sentinel instance, so the client may connect with a stale master, and yet the ROLE output will match. However when the master is back again Sentinel will try to demote it to slave, triggering a new disconnection. The same reasoning applies to connecting to stale slaves that will get reconfigured to replicate with a differnt master."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:149
+# 73c1eee5fb9d4efb9573af4c7447151a
+msgid "Connecting to slaves"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:151
+# cfc4794018fc4517995a3bad2f86659f
+msgid "Sometimes clients are interested to connect to slaves, for example in order to scale read requests. This protocol supports connecting to slaves by modifying step 2 slightly. Instead of calling the following command:"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:160
+# d11735cfd6344b7da88141f8eb7f2728
+msgid "The clients should call instead:"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:166
+# 08cf2a824cc64e888455d833b19a0d3e
+msgid "In order to retrieve a list of slave instances."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:168
+# e617ee1cfc424024b18a1200f30d1d5f
+msgid "Symmetrically the client should verify with the ``ROLE`` command that the instance is actually a slave, in order to avoid scaling read queries with the master."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:173
+# 1445d90395a74bd4ac3c2b0a42d58f0d
+msgid "Connection pools"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:175
+# 44b4a3c841de457bbc96f2c6d7a3bd9e
+msgid "For clients implementing connection pools, on reconnection of a single connection, the Sentinel should be contacted again, and in case of a master address change all the existing connections should be closed and connected to the new address."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:181
+# e292a3863a9a4c8180379dcd7590710d
+msgid "Error reporting"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:183
+# 081a95b5b12b45389d9b94ae4affb3ea
+msgid "The client should correctly return the information to the user in case of errors. Specifically:"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:186
+# 9e97f4ff54a64d06bc6c30d9a98c6565
+msgid "If no Sentinel can be contacted (so that the client was never able to get the reply to ``SENTINEL get-master-addr-by-name``), an error that clearly states that Redis Sentinel is unreachable should be returned."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:189
+# 91a666e00a8d4a749077bac0a08af9f9
+msgid "If all the Sentinels in the pool replied with a null reply, the user should be informed with an error that Sentinels don't know this master name."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:194
+# e97bfc547a324c338125fd97a3be3e62
+msgid "Sentinels list automatic refresh"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:196
+# 5cefe24e623542f78e5ff7b8f6c29293
+msgid "Optionally once a successful reply to ``get-master-addr-by-name`` is received, a client may update its internal list of Sentinel nodes following this procedure:"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:200
+# 097d9431a4d0462d8f7d731b18a2c8d0
+msgid "Obtain a list of other Sentinels for this master using the command ``SENTINEL sentinels <master-name>``."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:202
+# f762f300eb0640e789c01241c98a1184
+msgid "Add every ip:port pair not already existing in our list at the end of the list."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:205
+# 426afc55f5514d78b57975780c969949
+msgid "It is not needed for a client to be able to make the list persistent updating its own configuration. The ability to upgrade the in-memory representation of the list of Sentinels can be already useful to improve reliability."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:211
+# 7dbe7fe699374b95aa54bd73e1efc88d
+msgid "Subscribe to Sentinel events to improve responsiveness"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:213
+# 995f450451d0492fa042a6d63c37df24
+msgid "The `Sentinel documentation </topics/sentinel>`__ shows how clients can connect to Sentinel instances using Pub/Sub in order to subscribe to changes in the Redis instances configurations."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:217
+# cb32cb0fbcc8432dbbb403cca9cbbd65
+msgid "This mechanism can be used in order to speedup the reconfiguration of clients, that is, clients may listent to Pub/Sub in order to know when a configuration change happened in order to run the three steps protocol explained in this document in order to resolve the new Redis master (or slave) address."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:223
+# 1737eb9e330743f2ac566285c7744130
+msgid "However update messages received via Pub/Sub should not substitute the above procedure, since there is no guarantee that a client is able to receive all the update messages."
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:228
+# 4e5a977df0ae4528a598b46178f4e783
+msgid "Additional information"
+msgstr ""
+
+#: ../../source/topics/sentinel-clients.rst:230
+# 2847cb1ca5354a389aa35dd58e84d72a
+msgid "For additional information or to discuss specific aspects of this guidelines, please drop a message to the `Redis Google Group <https://groups.google.com/group/redis-db>`__."
+msgstr ""
+

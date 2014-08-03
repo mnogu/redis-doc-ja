@@ -1,0 +1,68 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/internals-eventlib.rst:2
+# f1d3ab9304714ac6b552c4ecf26608ed
+msgid "Event Library"
+msgstr ""
+
+#: ../../source/topics/internals-eventlib.rst:5
+# c1c72cd95cf44a96a94fe06512c5a8a5
+msgid "Why is an Event Library needed at all?"
+msgstr ""
+
+#: ../../source/topics/internals-eventlib.rst:7
+# 81b81782a0a24cbdaae8b6ab78209766
+msgid "Let us figure it out through a series of Q&As."
+msgstr ""
+
+#: ../../source/topics/internals-eventlib.rst:9
+# f78260c6e55c4defa8f9d4e12dedd489
+msgid "Q: What do you expect a network server to be doing all the time? A: Watch for inbound connections on the port its listening and accept them."
+msgstr ""
+
+#: ../../source/topics/internals-eventlib.rst:12
+# 686b9a5233bf4178a80f7cdb03c166c4
+msgid "Q: Calling `accept <http://man.cx/accept%282%29%20accept>`__ yields a descriptor. What do I do with it? A: Save the descriptor and do a non-blocking read/write operation on it."
+msgstr ""
+
+#: ../../source/topics/internals-eventlib.rst:16
+# cef0598b3fc147718fa1bd789850a92f
+msgid "Q: Why does the read/write have to be non-blocking? A: If the file operation ( even a socket in Unix is a file ) is blocking how could the server for example accept other connection requests when its blocked in a file I/O operation."
+msgstr ""
+
+#: ../../source/topics/internals-eventlib.rst:21
+# 32565cf0510c4e5fa6e6d6c894b89c15
+msgid "Q: I guess I have to do many such non-blocking operations on the socket to see when it's ready. Am I right? A: Yes. That is what an event library does for you. Now you get it."
+msgstr ""
+
+#: ../../source/topics/internals-eventlib.rst:25
+# eeda7339be3545a9a86715898c5fb9ff
+msgid "Q: How do Event Libraries do what they do? A: They use the operating system's `polling <http://www.devshed.com/c/a/BrainDump/Linux-Files-and-the-Event-Poll-Interface/>`__ facility along with timers."
+msgstr ""
+
+#: ../../source/topics/internals-eventlib.rst:30
+# f33c8be21a1042e0a25e8163614c1c84
+msgid "Q: So are there any open source event libraries that do what you just described? A: Yes. ``libevent`` and ``libev`` are two such event libraries that I can recall off the top of my head."
+msgstr ""
+
+#: ../../source/topics/internals-eventlib.rst:34
+# 97c3c6c7489e43eb8b070186b6294654
+msgid "Q: Does Redis use such open source event libraries for handling socket I/O? A: No. For various `reasons <http://groups.google.com/group/redis-db/browse_thread/thread/b52814e9ef15b8d0/>`__ Redis uses its own event library."
+msgstr ""
+

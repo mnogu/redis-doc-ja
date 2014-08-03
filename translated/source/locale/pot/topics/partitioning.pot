@@ -1,0 +1,328 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2009 - 2014, antirez
+# This file is distributed under the same license as the Redis Documentation (ja) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (ja) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-08-03 15:55+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/partitioning.rst:3
+# 064d863488df4e4a8ee5112bbb18bfad
+msgid "Partitioning"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:6
+# 00a74fffa7e94a8ab4d726c5a9125f48
+msgid "Partitioning: how to split data among multiple Redis instances."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:8
+# 4bdd078d224944389fc05797fe1a6670
+msgid "Partitioning is the process of splitting your data into multiple Redis instances, so that every instance will only contain a subset of your keys. The first part of this document will introduce you to the concept of partitioning, the second part will show you the alternatives for Redis partitioning."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:15
+# 311bd8c80fd040148087d902f00726d7
+msgid "Why partitioning is useful"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:17
+# ba1816ece4164393a33f0d105466408e
+msgid "Partitioning in Redis serves two main goals:"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:19
+# 5f0be95e49624a549f5dc9a30e6b5cb9
+msgid "It allows for much larger databases, using the sum of the memory of many computers. Without partitioning you are limited to the amount of memory a single computer can support."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:22
+# 05fc2f78d2e842ae8c6bf81c3306cba2
+msgid "It allows to scale the computational power to multiple cores and multiple computers, and the network bandwidth to multiple computers and network adapters."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:27
+# d8f562f4290b4d65ba05548b229cc418
+msgid "Partitioning basics"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:29
+# 1b865336b47645e7a0a3d184fab9f374
+msgid "There are different partitioning criteria. Imagine we have four Redis instances **R0**, **R1**, **R2**, **R3**, and many keys representing users like ``user:1``, ``user:2``, ... and so forth, we can find different ways to select in which instance we store a given key. In other words there are *different systems to map* a given key to a given Redis server."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:36
+# af4f5a6196144fc5ad287e8a8041c24b
+msgid "One of the simplest way to perform partitioning is called **range partitioning**, and is accomplished by mapping ranges of objects into specific Redis instances. For example I could say, users from ID 0 to ID 10000 will go into instance **R0**, while users form ID 10001 to ID 20000 will go into instance **R1** and so forth."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:42
+# 83b3fc66c3cb49629c3c0b8968def5b8
+msgid "This systems works and is actually used in practice, however it has the disadvantage that there is to take a table mapping ranges to instances. This table needs to be managed and we need a table for every kind of object we have. Usually with Redis it is not a good idea."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:47
+# e5fb7e63123241cd8f7f55437b598e5a
+msgid "An alternative to to range partitioning is **hash partitioning**. This scheme works with any key, no need for a key in the form ``object_name:<id>`` as is as simple as this:"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:51
+# ccc8150fd07e4e299ee87d9e39090771
+msgid "Take the key name and use an hash function to turn it into a number. For instance I could use the ``crc32`` hash function. So if the key is ``foobar`` I do ``crc32(foobar)`` that will output something like 93024922."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:55
+# 4fe369ca89b14b529953bd83aff55ce6
+msgid "I use a modulo operation with this number in order to turn it into a number between 0 and 3, so that I can map this number to one of the four Redis instances I've. So ``93024922 modulo 4`` equals 2, so I know my key ``foobar`` should be stored into the **R2** instance. *Note: the modulo operation is just the rest of the division, usually it is implemented by the ``%`` operator in many programming languages.*"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:63
+# 789f801317ad4269a024dca639cf15b2
+msgid "There are many other ways to perform partitioning, but with this two examples you should get the idea. One advanced form of hash partitioning is called **consistent hashing** and is implemented by a few Redis clients and proxies."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:69
+# 543d653deb9341b3839c52d28395c99d
+msgid "Different implementations of partitioning"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:71
+# 6d77488ad0b54970a756a081ddd93d1b
+msgid "Partitioning can be responsibility of different parts of a software stack."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:74
+# aff42602e99e4f009c10cbd0139bf81b
+msgid "**Client side partitioning** means that the clients directly select the right node where to write or read a given key. Many Redis clients implement client side partitioning."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:77
+# d8395f1b7e9d4416af1e51e75240dc64
+msgid "**Proxy assisted partitioning** means that our clients send requests to a proxy that is able to speak the Redis protocol, instead of sending requests directly to the right Redis instance. The proxy will make sure to forward our request to the right Redis instance accordingly to the configured partitioning schema, and will send the replies back to the client. The Redis and Memcached proxy `Twemproxy <https://github.com/twitter/twemproxy>`__ implements proxy assisted partitioning."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:85
+# c31ba7c1fac84e8ba94f5f5235c34d5a
+msgid "**Query routing** means that you can send your query to a random instance, and the instance will make sure to forward your query to the right node. Redis Cluster implements an hybrid form of query routing, with the help of the client (the request is not directly forwarded from a Redis instance to another, but the client gets *redirected* to the right node)."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:93
+# 43bc99ca6be2421893e4cb21cae9f666
+msgid "Disadvantages of partitioning"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:95
+# 40cef15dd1464ca49fb2beabca3c3828
+msgid "Some features of Redis don't play very well with partitioning:"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:97
+# a5cf4f22465a4f74b3686437a60356ef
+msgid "Operations involving multiple keys are usually not supported. For instance you can't perform the intersection between two sets if they are stored in keys that are mapped to different Redis instances (actually there are ways to do this, but not directly)."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:101
+# 62dd2fad413b4989856ff196ab742080
+msgid "Redis transactions involving multiple keys can not be used."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:102
+# ccf22eed5aae45ef973c5c3b4127511a
+msgid "The partitioning granuliary is the key, so it is not possible to shard a dataset with a single huge key like a very big sorted set."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:104
+# 56949795ae4c463486d7b79ba58b5ea6
+msgid "When partitioning is used, data handling is more complex, for instance you have to handle multiple RDB / AOF files, and to make a backup of your data you need to aggregate the persistence files from multiple instances and hosts."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:108
+# dc5897650aad420bb45f6b649ea23a57
+msgid "Adding and removing capacity can be complex. For instance Redis Cluster supports mostly transparent rebalancing of data with the ability to add and remove nodes at runtime, but other systems like client side partitioning and proxies don't support this feature. However a technique called *Presharding* helps in this regard."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:115
+# 87ef91b4148244ad85075ccb9797a999
+msgid "Data store or cache?"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:117
+# 08c7c4ac57704b5ab3f4a4f6587a4fdc
+msgid "Partitioning when using Redis as a data store or cache is conceptually the same, however there is a huge difference. While when Redis is used as a data store you need to be sure that a given key always maps to the same instance, when Redis is used as a cache if a given node is unavailable it is not a big problem if we start using a different node, altering the key-instance map as we wish to improve the *availability* of the system (that is, the ability of the system to reply to our queries)."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:126
+# 69c2e243bb234edb833b7b9771a9f728
+msgid "Consistent hashing implementations are often able to switch to other nodes if the preferred node for a given key is not available. Similarly if you add a new node, part of the new keys will start to be stored on the new node."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:131
+# a774c16061ad4ed383c86cc7d6b63811
+msgid "The main concept here is the following:"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:133
+# 102a182b74f948c0b78564a6a3db3eba
+msgid "If Redis is used as a cache **scaling up and down** using consistent hashing is easy."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:135
+# 70a73386c9e04350b06d8b4cf960f53b
+msgid "If Redis is used as a store, **we need to take the map between keys and nodes fixed, and a fixed number of nodes**. Otherwise we need a system that is able to rebalance keys between nodes when we add or remove nodes, and currently only Redis Cluster is able to do this, but Redis Cluster is currently in beta, and not yet considered production ready."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:143
+# a50d8f697df741b8b8faf528a7feb04d
+msgid "Presharding"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:145
+# a856e2ce52b54d84b762e5e84f95b33e
+msgid "We learned that a problem with partitioning is that, unless we are using Redis as a cache, to add and remove nodes can be tricky, and it is much simpler to use a fixed keys-instances map."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:149
+# 1be5bc1733974450a4172dcac9229d9c
+msgid "However the data storage needs may vary over the time. Today I can live with 10 Redis nodes (instances), but tomorrow I may need 50 nodes."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:152
+# 3fada46f261e4da59d22ba8b6a54126f
+msgid "Since Redis is extremely small footprint and lightweight (a spare instance uses 1 MB of memory), a simple approach to this problem is to start with a lot of instances since the start. Even if you start with just one server, you can decide to live in a distributed world since your first day, and run multiple Redis instances in your single server, using partitioning."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:159
+# 9cb7659e63a544fd883a8b60c620c64d
+msgid "And you can select this number of instances to be quite big since the start. For example, 32 or 64 instances could do the trick for most users, and will provide enough room for growth."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:163
+# 7c2fd0d83daf452ba48cff4079b95d4b
+msgid "In this way as your data storage needs increase and you need more Redis servers, what to do is to simply move instances from one server to another. Once you add the first additional server, you will need to move half of the Redis instances from the first server to the second, and so forth."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:169
+# 6cb448797aef41ed87191b4a2750fcc3
+msgid "Using Redis replication you will likely be able to do the move with minimal or no downtime for your users:"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:172
+# 94c03b81f78b4867945bc969b95e004b
+msgid "Start empty instances in your new server."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:173
+# 352947c0957b4648b307801a2abe3a90
+msgid "Move data configuring these new instances as slaves for your source instances."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:175
+# babc05290e2a4b34b0a0e1ac65509a40
+msgid "Stop your clients."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:176
+# 8664bc8cb354401ba70a391feccc75a8
+msgid "Update the configuration of the moved instances with the new server IP address."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:178
+# 1851af3f8429493ea660a1a6030f8b67
+msgid "Send the ``SLAVEOF NO ONE`` command to the slaves in the new server."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:179
+# c3f1449828124454ae83badf9f0c318e
+msgid "Restart your clients with the new updated configuration."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:180
+# 164514b2d439410ea53e559638943bd8
+msgid "Finally shut down the no longer used instances in the old server."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:183
+# b8d071afdd9d42da9916e5b4c4eab5de
+msgid "Implementations of Redis partitioning"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:185
+# 182a801f22f549549bff264c43f371c5
+msgid "So far we covered Redis partitioning in theory, but what about practice? What system should you use?"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:189
+# 5fd9829765fe4ecbafa74fd0edc15574
+msgid "Redis Cluster"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:191
+# 251d24d06efe4bb499c1590c8ded041a
+msgid "Redis Cluster is the preferred way to get automatic sharding and high availability. It is currently not production ready, but finally entered beta stage, so we recommend you to start experimenting with it. You can get more information about Redis Cluster in the `Cluster tutorial </topics/cluster-tutorial>`__."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:197
+# 091082502be846f6a1629a4f8abc5a93
+msgid "Once Redis Cluster will be available, and if a Redis Cluster complaint client is available for your language, Redis Cluster will be the de facto standard for Redis partitioning."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:201
+# 53da6b5325e44601a4f3553b6cb20db2
+msgid "Redis Cluster is a mix between *query routing* and *client side partitioning*."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:205
+# 3e16e89966174838bdaf41011bea02d5
+msgid "Twemproxy"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:207
+# 9c8a5a3b43ff4d3b85c4dcb6aebae4af
+msgid "`Twemproxy is a proxy developed at Twitter <https://github.com/twitter/twemproxy>`__ for the Memcached ASCII and the Redis protocol. It is single threaded, it is written in C, and is extremely fast. It is open source software released under the terms of the Apache 2.0 license."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:213
+# 6b1ea64dfaf147929002aa9a45244116
+msgid "Twemproxy supports automatic partitioning among multiple Redis instances, with optional node ejection if a node is not available (this will change the keys-instances map, so you should use this feature only if you are using Redis as a cache)."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:218
+# 6a001a79d3774b78a846075f68608a09
+msgid "It is *not* a single point of failure since you can start multiple proxies and instruct your clients to connect to the first that accepts the connection."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:222
+# bef803e0dec941969658e18da81daefc
+msgid "Basically Twemproxy is an intermediate layer between clients and Redis instances, that will reliably handle partitioning for us with minimal additional complexities. Currently it is the **suggested way to handle partitioning with Redis**."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:227
+# 8d24506edb5d4052a6023f0c3b36cbd6
+msgid "You can read more about Twemproxy `in this antirez blog post <http://antirez.com/news/44>`__."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:231
+# 948a889393a64bb6a759f271353f608f
+msgid "Clients supporting consistent hashing"
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:233
+# 3e3c1588168e45b783081bc2504b93f0
+msgid "An alternative to Twemproxy is to use a client that implements client side partitioning via consistent hashing or other similar algorithms. There are multiple Redis clients with support for consistent hashing, notably `Redis-rb <https://github.com/redis/redis-rb>`__ and `Predis <https://github.com/nrk/predis>`__."
+msgstr ""
+
+#: ../../source/topics/partitioning.rst:239
+# 812ee34b39a04253857e55566690d590
+msgid "Please check the `full list of Redis clients <http://redis.io/clients>`__ to check if there is a mature client with consistent hashing implementation for your language."
+msgstr ""
+

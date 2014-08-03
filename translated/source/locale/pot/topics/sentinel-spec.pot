@@ -1,0 +1,877 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/sentinel-spec.rst:1
+# 8982b65b748840a6af774e33d2df5277
+msgid "**WARNING:** this document is no longer in sync with the implementation of Redis Sentinel and will be removed in the next weeks."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:5
+# b1f2fcdb89d8496aa8963014d1e34fdf
+msgid "Redis Sentinel design draft 1.3"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:7
+# 515e399053a84596948840077c50b091
+msgid "Changelog:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:9
+# f7fac98a10d9423c9a246cf017c60447
+msgid "1.0 first version."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:10
+# dbc6fd16f09b4a7d9c6975ffaa30e669
+msgid "1.1 fail over steps modified: slaves are pointed to new master one after the other and not simultaneously. New section about monitoring slaves to ensure they are replicating correctly."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:13
+# 96b3b3664b5e4986957a42cdced993a7
+msgid "1.2 Fixed a typo in the fail over section about: critical error is in step 5 and not 6. Added TODO section."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:15
+# ccb06e7c490646b1a24acf9948c335e6
+msgid "1.3 Document updated to reflect the actual implementation of the monitoring and leader election."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:19
+# 1b18942d402c42f5b69e50710149a543
+msgid "Introduction"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:21
+# ac47319469ba47069a92b9566c3647f1
+msgid "Redis Sentinel is the name of the Redis high availability solution that's currently under development. It has nothing to do with Redis Cluster and is intended to be used by people that don't need Redis Cluster, but simply a way to perform automatic fail over when a master instance is not functioning correctly."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:27
+# ab0a972f2c514b249ecb4e7b0dbecc85
+msgid "The plan is to provide an usable beta implementaiton of Redis Sentinel in a short time, preferrably in mid July 2012."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:30
+# 445d3339a9aa48e68d76e31badfe483b
+msgid "In short this is what Redis Sentinel will be able to do:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:32
+# 828af7d6665d40c3a4c0db6789123596
+msgid "Monitor master and slave instances to see if they are available."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:33
+# 14a6a190ca834e5eac96cdf8b494bce5
+msgid "Promote a slave to master when the master fails."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:34
+# 5737f64a283746c285dbb9f101d9a979
+msgid "Modify clients configurations when a slave is elected."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:35
+# a27892fa68a54bf990a8207b3115cdbc
+msgid "Inform the system administrator about incidents using notifications."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:37
+# 56c524f4bd9a4d3ca58a54138ca7b080
+msgid "So the three different roles of Redis Sentinel can be summarized in the following three big aspects:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:40
+# 9eb248f549194e158612802f96cfee22
+msgid "Monitoring."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:41
+# f610c6e80d4e4f3996f38e6d06e556b0
+msgid "Notification."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:42
+# 5ce94281b45a4451b1f9cd6466645731
+msgid "Automatic failover."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:44
+# 74bd8723e3244bd59c71c1a9c565b722
+msgid "The following document explains what is the design of Redis Sentinel in order to accomplish this goals."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:48
+# 61b6a8e62f644358a78d2bc2ee4a09c4
+msgid "Redis Sentinel idea"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:50
+# 3b395ba0e593429294d4745367d32b9d
+msgid "The idea of Redis Sentinel is to have multiple \"monitoring devices\" in different places of your network, monitoring the Redis master instance."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:53
+# 0c3c0b2b1bf2436d92366c8a728972fe
+msgid "However this independent devices can't act without agreement with other sentinels."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:56
+# fc26890280904f21b901dffb3d28ab80
+msgid "Once a Redis master instance is detected as failing, for the failover process to start, the sentinel must verify that there is a given level of agreement."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:60
+# 41d68e77aabb44c3a7f90acdedab6558
+msgid "The amount of sentinels, their location in the network, and the configured quorum, select the desired behavior among many possibilities."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:63
+# cbc8f737ff0c482e906f78485a27f296
+msgid "Redis Sentinel does not use any proxy: clients reconfiguration is performed running user-provided executables (for instance a shell script or a Python program) in a user setup specific way."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:68
+# 802776fa0f8a4f87ad14596199a7706f
+msgid "In what form it will be shipped"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:70
+# 39b811c09b454100bbdb35300d4faecc
+msgid "Redis Sentinel is just a special mode of the redis-server executable."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:72
+# 3abe3f1a1826457aa636dff517ec81f6
+msgid "If the redis-server is called with \"redis-sentinel\" as ``argv[0]`` (for instance using a symbolic link or copying the file), or if --sentinel option is passed, the Redis instance starts in sentinel mode and will only understand sentinel related commands. All the other commands will be refused."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:78
+# df25941020f043768134b690ef695b5b
+msgid "The whole implementation of sentinel will live in a separated file sentinel.c with minimal impact on the rest of the code base. However this solution allows to use all the facilities already implemented inside Redis without any need to reimplement them or to maintain a separated code base for Redis Sentinel."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:85
+# 3da0d06311fa4d1c92b84a0ec4c2802b
+msgid "Sentinels networking"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:87
+# b1e4854619db41b29dc02378fc606a14
+msgid "All the sentinels take persistent connections with:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:89
+# 31b2e12cb2c54543882c538568e16b00
+msgid "The monitored masters."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:90
+# 276be1c133ad4d1ab30fe518251d6289
+msgid "All its slaves, that are discovered using the master's INFO output."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:91
+# c8c6a6505c824daa8b047a8ba5cbc2d4
+msgid "All the other Sentinels connected to this master, discovered via Pub/Sub."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:94
+# 9f3588c2b15b43899ee953fe230d417e
+msgid "Sentinels use the Redis protocol to talk with each other, and to reply to external clients."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:97
+# 4a9adddaea614ed3bcf5cfd891b09785
+msgid "Redis Sentinels export a SENTINEL command. Subcommands of the SENTINEL command are used in order to perform different actions."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:100
+# c13f950da7d94285a499bc64224643eb
+msgid "For instance the ``SENTINEL masters`` command enumerates all the monitored masters and their states. However Sentinels can also reply to the PING command as a normal Redis instance, so that it is possible to monitor a Sentinel considering it a normal Redis instance."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:105
+# 6937b8370f314d57a3ba8b6e0957d03f
+msgid "The list of networking tasks performed by every sentinel is the following:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:108
+# 810c32c060774ca58cca7be174937818
+msgid "A Sentinel PUBLISH its presence using the master Pub/Sub multiple times every five seconds."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:110
+# dc7b5072755449f1a9ebc3f2d42aa997
+msgid "A Sentinel accepts commands using a TCP port. By default the port is 26379."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:112
+# e77851a5055b4788bd396381b63b2138
+msgid "A Sentinel constantly monitors masters, slaves, other sentinels sending PING commands."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:114
+# 4bb324220a2844a581516c8df8391a67
+msgid "A Sentinel sends INFO commands to the masters and slaves every ten seconds in order to take a fresh list of connected slaves, the state of the master, and so forth."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:117
+# b6607af4c57640d391be6ffa599cf1d1
+msgid "A Sentinel monitors the sentinel Pub/Sub \"hello\" channel in order to discover newly connected Sentinels, or to detect no longer connected Sentinels. The channel used is ``__sentinel__:hello``."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:122
+# 462a3098d67b4fe38ed0355802c07531
+msgid "Sentinels discovering"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:124
+# e2bf31ccdcf14ecdabf0f5a32047625e
+msgid "To make the configuration of sentinels as simple as possible every sentinel broadcasts its presence using the Redis master Pub/Sub functionality."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:128
+# 41353e6c84be4bbf91bfa29a74bb6967
+msgid "Every sentinel is subscribed to the same channel, and broadcast information about its existence to the same channel, including the Run ID of the Sentinel, and the IP address and port where it is listening for commands."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:133
+# 59336d79d6634b13a36b1da8713688be
+msgid "Every sentinel maintains a list of other sentinels Run ID, IP and port. A sentinel that does no longer announce its presence using Pub/Sub for too long time is removed from the list, assuming the Master appears to be working well. In that case a notification is delivered to the system administrator."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:140
+# e4e1df692ef74be6b9cab626c248a9ac
+msgid "Detection of failing masters"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:142
+# 402dff4e3f3542498332f5ada7e69a6d
+msgid "An instance is not available from the point of view of Redis Sentinel when it is no longer able to reply to the PING command correctly for longer than the specified number of seconds, consecutively."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:146
+# 739685836da640ffb3cb28361c171d30
+msgid "For a PING reply to be considered valid, one of the following conditions should be true:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:149
+# 0893942435ea4c738229f73d535715a8
+msgid "PING replied with +PONG."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:150
+# 7ca15698fb89480d8e3c0233a5be0f35
+msgid "PING replied with -LOADING error."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:151
+# d4da956dfa374366af38a28c5ebb311c
+msgid "PING replied with -MASTERDOWN error."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:153
+# e4cd68f252af4ee7ae20d3489bdaac72
+msgid "What is not considered an acceptable reply:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:155
+# aed382d390ac4ff98152fc5f24cd938e
+msgid "PING replied with -BUSY error."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:156
+# cefc88bf9fbd4c9dae46fb9e4e21f970
+msgid "PING replied with -MISCONF error."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:157
+# 8f6f3dbd753d489b87191095f46e3cc5
+msgid "PING reply not received after more than a specified number of milliseconds."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:160
+# a9227814e10f494999c31c0c9c732982
+msgid "PING should never reply with a different error code than the ones listed above but any other error code is considered an acceptable reply by Redis Sentinel."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:165
+# 18f20efd99264c3290f434cb04da8072
+msgid "Handling of -BUSY state"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:167
+# c748bc9d942341d79ac9454330df8254
+msgid "The -BUSY error is returned when a script is running for more time than the configured script time limit. When this happens before triggering a fail over Redis Sentinel will try to send a \"SCRIPT KILL\" command, that will only succeed if the script was read-only."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:173
+# 610d4a205cb64d73a07fc778f302b8df
+msgid "Subjectively down and Objectively down"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:175
+# 76693e54caa046e09de3909f0022ba75
+msgid "From the point of view of a Sentinel there are two different error conditions for a master:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:178
+# 06e291ba6aae4d94bf2c4f38d7378382
+msgid "*Subjectively Down* (aka ``S_DOWN``) means that a master is down from the point of view of a Sentinel."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:180
+# f91ab218d9074dca8beeb4566416f24a
+msgid "*Objectively Down* (aka ``O_DOWN``) means that a master is subjectively down from the point of view of enough Sentinels to reach the configured quorum for that master."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:185
+# 524df64a946e4be6a882595de6bb1fa1
+msgid "How Sentinels agree to mark a master ``O_DOWN``."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:187
+# 5313f90979fc491c8060a72e45a458c5
+msgid "Once a Sentinel detects that a master is in ``S_DOWN`` condition it starts to send other sentinels a ``SENTINEL is-master-down-by-addr`` request every second. The reply is stored inside the state that every Sentinel takes in memory."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:192
+# c3fe6316661d48cbbd86df62f25edc54
+msgid "Ten times every second a Sentinel scans the state and checks if there are enough Sentinels thinking that a master is down (this is not specific for this operation, most state checks are performed with this frequency)."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:197
+# 35cb44d1915c42f28a7625c80c257be9
+msgid "If this Sentinel has already an ``S_DOWN`` condition for this master, and there are enough other sentinels that recently reported this condition (the validity time is currently set to 5 seconds), then the master is marked as ``O_DOWN`` (Objectively Down)."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:202
+# aa6e0fa3bf8444ec80c2fbd144f82bef
+msgid "Note that the ``O_DOWN`` state is not propagated among Sentinels. Every single Sentinel can reach independently this state."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:206
+# 51ad1be85fd1424aa9534e73b625e10b
+msgid "The SENTINEL is-master-down-by-addr command"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:208
+# f14c3803dc134c8aa76e654a8410f903
+msgid "Sentinels ask other Sentinels for the state of a master from their local point of view using the ``SENTINEL is-master-down-by-addr`` command. This command replies with a boolean value (in the form of a 0 or 1 integer reply, as a first element of a multi bulk reply)."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:213
+# 1104fe1160c6415ea2909b0a0f09ae05
+msgid "However in order to avoid false positives, the command acts in the following way:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:216
+# 42ff2cd04e3242debb13022a8a842cc1
+msgid "If the specified ip and port is not known, 0 is returned."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:217
+# 53f00651561640fab94dafb604109b44
+msgid "If the specified ip and port are found but don't belong to a Master instance, 0 is returned."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:219
+# ebaa871285154ce79ff46ab71f490dfc
+msgid "If the Sentinel is in TILT mode (see later in this document) 0 is returned."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:221
+# c856d7c021b24351a46532a7f1b53345
+msgid "The value of 1 is returned only if the instance is known, is a master, is flagged ``S_DOWN`` and the Sentinel is in TILT mode."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:225
+# 6637b5d2aa854ea89f511c81f4fda2ed
+msgid "Duplicate Sentinels removal"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:227
+# 5032f59c0d1f4e7595f6e70386ad3198
+msgid "In order to reach the configured quorum we absolutely want to make sure that the quorum is reached by different physical Sentinel instances. Under no circumstance we should get agreement from the same instance that for some reason appears to be two or multiple distinct Sentinel instances."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:233
+# bcb4f83de22d44ba8a5a8e00ba032a45
+msgid "This is enforced by an aggressive removal of duplicated Sentinels: every time a Sentinel sends a message in the Hello Pub/Sub channel with its address and runid, if we can't find a perfect match (same runid and address) inside the Sentinels table for that master, we remove any other Sentinel with the same runid OR the same address. And later add the new Sentinel."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:240
+# fae1102703334282959f3bbe1eabfa50
+msgid "For instance if a Sentinel instance is restarted, the Run ID will be different, and the old Sentinel with the same IP address and port pair will be removed."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:245
+# e0f923b6e47d43b4843afd1303b5b592
+msgid "Starting the failover: Leaders and Observers"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:247
+# f14a9c7cea294da0bcc33f5d272135dd
+msgid "The fact that a master is marked as ``O_DOWN`` is not enough to star the failover process. What Sentinel should start the failover is also to be decided."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:251
+# aa08a8b3a4da49edb7378fee1802aea2
+msgid "Also Sentinels can be configured in two ways: only as monitors that can't perform the fail over, or as Sentinels that can start the failover."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:255
+# 30c359229ffb4a1db6a858e7f8a90f24
+msgid "What is desireable is that only a Sentinel will start the failover process, and this Sentinel should be selected among the Sentinels that are allowed to perform the failover."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:259
+# 9249894125fd4e768882727a6fcc9f10
+msgid "In Sentinel there are two roles during a fail over:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:261
+# d7b2046b834a42c9a1953dc0f26d441a
+msgid "The Leader Sentinel is the one selected to perform the failover."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:262
+# 16903e97584c4cdb8db2527aaffac576
+msgid "The Observers Sentinels are the other sentinels just following the failover process without doing active operations."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:265
+# 97ab68292e80432a885c4fe51500e3c4
+msgid "So the condition to start the failover is:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:267
+# 28c99fa0f5e5423c8276619634a6be33
+msgid "A Master in ``O_DOWN`` condition."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:268
+# a3be53ba6b554518b758e66399512f6b
+msgid "A Sentinel that is elected Leader."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:271
+# 0546639ba68640ac9e41f9ba4baa8128
+msgid "Leader Sentinel election"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:273
+# dba366fc2eef4fbdbc9f0babdc779fca
+msgid "The election process works as follows:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:275
+# ed67e4b1cdec4728990935f8eaf0e46b
+msgid "Every Sentinel with a master in ``O_DOWN`` condition updates its internal state with frequency of 10 HZ to refresh what is the *Subjective Leader* from its point of view."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:279
+# d63f6edd06114a348b0e54b3004d2232
+msgid "A Subjective Leader is selected in this way by every sentinel."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:281
+# 6469a64aca8e407490d59699ee8d3b54
+msgid "Every Sentinel we know about a given master, that is reachable (no ``S_DOWN`` state), that is allowed to perform the failover (this Sentinel-specific configuration is propagated using the Hello channel), is a possible candidate."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:285
+# a4d5900bc92449599127a9ff25907e9b
+msgid "Among all the possible candidates, the one with lexicographically smaller Run ID is selected."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:288
+# 0d9fe994ad884b3a8bd78323e62afd71
+msgid "Every time a Sentinel replies with to the ``MASTER is-sentinel-down-by-addr`` command it also replies with the Run ID of its Subjective Leader."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:292
+# b9ef501b6f0745c793ce289bd1e9ba7b
+msgid "Every Sentinel with a failing master (``O_DOWN``) checks its subjective leader and the subjective leaders of all the other Sentinels with a frequency of 10 HZ, and will flag itself as the Leader if the following conditions happen:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:297
+# be9f23ca943c4cb7af6593c81287582c
+msgid "It is the Subjective Leader of itself."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:298
+# 7fcdc7b2528c4ad0a9a3483749d0198c
+msgid "At least N-1 other Sentinels that see the master as down, and are reachable, also think that it is the Leader. With N being the quorum configured for this master."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:301
+# c609b107a87b4a98a4585b6be4ca3d89
+msgid "At least 50% + 1 of all the Sentinels involved in the voting process (that are reachable and that also see the master as failing) should agree on the Leader."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:305
+# e23aef6083924e438d19ef183e64ef34
+msgid "So for instance if there are a total of three sentinels, the master is failing, and all the three sentinels are able to communicate (no Sentinel is failing) and the configured quorum for this master is 2, a Sentinel will feel itself an Objective Leader if at least it and another Sentinel is agreeing that it is the subjective leader."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:311
+# 1d788425972e49f2bf99a2fc32d34f9c
+msgid "Once a Sentinel detects that it is the objective leader, it flags the master with ``FAILOVER_IN_PROGRESS`` and ``IM_THE_LEADER`` flags, and starts the failover process in ``SENTINEL_FAILOVER_DELAY`` (5 seconds currently) plus a random additional time between 0 milliseconds and 10000 milliseconds."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:317
+# 95bee6525d5744b0bbd40dff6c209887
+msgid "During that time we ask INFO to all the slaves with an increased frequency of one time per second (usually the period is 10 seconds). If a slave is turned into a master in the meantime the failover is suspended and the Leader clears the ``IM_THE_LEADER`` flag to turn itself into an observer."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:324
+# c6731bfef20240b9a7426e7a840aaa04
+msgid "Guarantees of the Leader election process"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:326
+# 807cc1c0a0144e1f9af2c7e8e4bed8ac
+msgid "As you can see for a Sentinel to become a leader the majority is not strictly required. A user can force the majority to be needed just setting the master quorum to, for instance, the value of 5 if there are a total of 9 sentinels."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:331
+# fe6ab0a520bd4b0ead2687783b559b28
+msgid "However it is also possible to set the quorum to the value of 2 with 9 sentinels in order to improve the resistance to netsplits or failing Sentinels or other error conditions. In such a case the protection against race conditions (multiple Sentinels starting to perform the fail over at the same time) is given by the random delay used to start the fail over, and the continuous monitor of the slave instances to detect if another Sentinel (or an human) started the failover process."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:339
+# 54e0bf19419740b9975881438e7ccce2
+msgid "Moreover the slave to promote is selected using a deterministic process to minimize the chance that two different Sentinels with full vision of the working slaves may pick two different slaves to promote."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:343
+# 03a9199f300e43e6a89a5340e7fa1ad8
+msgid "However it is possible to easily imagine netsplits and specific configurations where two Sentinels may start to act as a leader at the same time, electing two different slaves as masters, in two different parts of the net that can't communicate. The Redis Sentinel user should evaluate the network topology and select an appropriate quorum considering his or her goals and the different trade offs."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:351
+# 79264723da0f46db967ad2ebfae9bf67
+msgid "How observers understand that the failover started"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:353
+# 7633cf8e67714e41a7b371316d76a5e8
+msgid "An observer is just a Sentinel that does not believe to be the Leader, but still sees a master in ``O_DOWN`` condition."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:356
+# 4b540620f24a4b1d90e8541a225fbd59
+msgid "The observer is still able to follow and update the internal state based on what is happening with the failover, but does not directly rely on the Leader to communicate with it to be informed by progresses. It simply observes the state of the slaves to understand what is happening."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:361
+# ed461f3663654319ae6fb1f0337a8dd4
+msgid "Specifically the observers flags the master as ``FAILOVER_IN_PROGRESS`` if a slave attached to a master turns into a master (observers can see it in the INFO output). An observer will also consider the failover complete once all the other reachable slaves appear to be slaves of this slave that was turned into a master."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:367
+# d90037ffa928453daa48621cb8a9acc2
+msgid "If a Slave is in ``FAILOVER_IN_PROGRESS`` and the failover is not progressing for too much time, and at the same time the other Sentinels start claiming that this Sentinel is the objective leader (because for example the old leader is no longer reachable), the Sentinel will flag itself as ``IM_THE_LEADER`` and will proceed with the failover."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:373
+# 5c2ab44c41a7411aa291157f2f22ba6f
+msgid "Note: all the Sentinel state, including the subjective and objective leadership is a dynamic process that is continuously refreshed with period of 10 HZ. There is no \"one time decision\" step in Sentinel."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:378
+# b91f9a7330b64b23a914687c9a220358
+msgid "Selection of the Slave to promote"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:380
+# 201554e08014408ca5e7684726e9f0d6
+msgid "If a master has multiple slaves, the slave to promote to master is selected checking the slave priority (a new configuration option of Redis instances that is propagated via INFO output), and picking the one with lower priority value (it is an integer similar to the one of the MX field of the DNS system). All the slaves that appears to be disconnected from the master for a long time are discarded (stale data)."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:387
+# 00b0dc1ac1f64800bd2952843be2d7f8
+msgid "If slaves with the same priority exist, the one with the lexicographically smaller Run ID is selected."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:390
+# 05c874547ef440a1a17b3aba8f76631f
+msgid "If there is no Slave to select because all the salves are failing the failover is not started at all. Instead if there is no Slave to select because the master *never* used to have slaves in the monitoring session, then the failover is performed nonetheless just calling the user scripts. However for this to happen a special configuration option must be set for that master (force-failover-without-slaves)."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:397
+# 5fde8c9a757e4d4aa259632386fdba57
+msgid "This is useful because there are configurations where a new Instance can be provisioned at IP protocol level by the script, but there are no attached slaves."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:402
+# d588a88b367a4f5484640c80c15c2bda
+msgid "Fail over process"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:404
+# 8cbec786f77647b2aa8f54c2ba41e4e6
+msgid "The fail over process consists of the following steps:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:408
+# b0107db6412d47448e0c8630672f0794
+msgid "Turn the selected slave into a master using the SLAVEOF NO ONE command."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:413
+# 343ce3c6ae2f4a548b6cc0dad539d915
+msgid "Turn all the remaining slaves, if any, to slaves of the new master. This is done incrementally, one slave after the other, waiting for the previous slave to complete the synchronization process before starting with the next one."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:420
+# 526b28a7dbd14535bedac56226967e40
+msgid "Call a user script to inform the clients that the configuration changed."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:425
+# 15564f7098be43b18c76ec4a2b4ea79c
+msgid "Completely remove the old failing master from the table, and add the new master with the same name."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:428
+# bc86ec62745e418e80a77fb94a768e3f
+msgid "If Steps \"1\" fails, the fail over is aborted."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:430
+# d5607aa71e734b3ea7365a79bb1dd069
+msgid "All the other errors are considered to be non-fatal."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:433
+# c4b425468b0842e18980a9ab4e2088b2
+msgid "TILT mode"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:435
+# 776e55b2bf044710b120d51cc021d197
+msgid "Redis Sentinel is heavily dependent on the computer time: for instance in order to understand if an instance is available it remembers the time of the latest successful reply to the PING command, and compares it with the current time to understand how old it is."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:440
+# 88f82d8c8bc04643812eb5b491207151
+msgid "However if the computer time changes in an unexpected way, or if the computer is very busy, or the process blocked for some reason, Sentinel may start to behave in an unexpected way."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:444
+# cbee7451a79c4eeeaa27d90887ef51ab
+msgid "The TILT mode is a special \"protection\" mode that a Sentinel can enter when something odd is detected that can lower the reliability of the system. The Sentinel timer interrupt is normally called 10 times per second, so we expect that more or less 100 milliseconds will elapse between two calls to the timer interrupt."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:450
+# d0b873d3011b42d5ac7f33596c1b2d75
+msgid "What a Sentinel does is to register the previous time the timer interrupt was called, and compare it with the current call: if the time difference is negative or unexpectedly big (2 seconds or more) the TILT mode is entered (or if it was already entered the exit from the TILT mode postponed)."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:456
+# 0b7543af3b5146f9b69491fade5f8e6b
+msgid "When in TILT mode the Sentinel will continue to monitor everything, but:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:458
+# fea484dd442f4a4eb824980002312992
+msgid "It stops acting at all."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:459
+# 0673231696e34590b55345280990dd97
+msgid "It starts to reply negatively to ``SENTINEL is-master-down-by-addr`` requests as the ability to detect a failure is no longer trusted."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:462
+# 6229470aadfe4bd79bba97de0fc4a6fe
+msgid "If everything appears to be normal for 30 second, the TILT mode is exited."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:466
+# 07ce19fd40604cc0a97dcbf348bb4f93
+msgid "Sentinels monitoring other sentinels"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:468
+# dbc69a9228404b048c1c12e8c892ffa3
+msgid "When a sentinel no longer advertises itself using the Pub/Sub channel for too much time (30 minutes more the configured timeout for the master), but at the same time the master appears to work correctly, the Sentinel is removed from the table of Sentinels for this master, and a notification is sent to the system administrator."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:475
+# 7519b038fcab4909b021df1104e2721a
+msgid "User provided scripts"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:477
+# 4a950ed725494836bd323b8d2938242a
+msgid "Sentinels can optionally call user-provided scripts to perform two tasks:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:480
+# e37550766b744b9196758d44bd6daaa1
+msgid "Inform clients that the configuration changed."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:481
+# 2a74d7e1ee6c4bd0aaa9e4d2a7efe230
+msgid "Notify the system administrator of problems."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:483
+# 76f2b4d7f9954df1a63ed73bcd57115e
+msgid "The script to inform clients of a configuration change has the following parameters:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:486
+#: ../../source/topics/sentinel-spec.rst:493
+# 6f6fb4cc2a4c407a80838c7a65a3bf08
+# 3a6a5c5c6b8e42ec9bad2f65cea108d8
+msgid "ip:port of the calling Sentinel."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:487
+# b4bb2b5cf1724cb6a1986496771aa0eb
+msgid "old master ip:port."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:488
+# a4e4ea6bee8148c7acd30d04264ec8e3
+msgid "new master ip:port."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:490
+# 376df7fae20b4a97a9bd92be2f578dc3
+msgid "The script to send notifications is called with the following parameters:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:494
+# ee90115ed5374b3eac66969ad44576d1
+msgid "The message to deliver to the system administrator is passed writing to the standard input."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:497
+# 830511e2767449c0b00d60e1094a6a67
+msgid "Using the ip:port of the calling sentinel, scripts may call SENTINEL subcommands to get more info if needed."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:500
+# ef24d9c3981c473fb239fecb757542d4
+msgid "Concrete implementations of notification scripts will likely use the \"mail\" command or some other command to deliver SMS messages, emails, tweets."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:504
+# c684736146d54a0399195f7d8cf970b1
+msgid "Implementations of the script to modify the configuration in web applications are likely to use HTTP GET requests to force clients to update the configuration, or any other sensible mechanism for the specific setup in use."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:510
+# 34e1d7259584496eac9e0f451733f5fe
+msgid "Setup examples"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:512
+#: ../../source/topics/sentinel-spec.rst:526
+# 6acac98e01ad492f863e4a99b910eac1
+# f90f71d256cb4f42883eb2df34ea821b
+msgid "Imaginary setup:"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:519
+# 2ad0fad5de7a415f92d45736eb55de54
+msgid "In this naive configuration it is possible to place a single sentinel, with \"minimal agreement\" set to the value of one (no acknowledge from other sentinels needed), running on \"B\"."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:523
+# b6d401beea754c4c925aa60568d8dd4a
+msgid "If \"A\" will fail the fail over process will start, the slave will be elected to master, and the client software will be reconfigured."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:534
+# 42fc62e40b4443c992fe33b3a091899c
+msgid "In this setup it is possible to run five sentinels placed at C,D,E,F,G with \"minimal agreement\" set to 3."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:537
+# d3293f21bc054025bd14e45eba042561
+msgid "In real production environments there is to evaluate how the different computers are networked together, and to check what happens during net splits in order to select where to place the sentinels, and the level of minimal agreement, so that a single arm of the network failing will not trigger a fail over."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:543
+# 48b14d4ec54d4afcbcda200029067cac
+msgid "In general if a complex network topology is present, the minimal agreement should be set to the max number of sentinels existing at the same time in the same network arm, plus one."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:548
+# 34c8d5d36fe447f5a276d0b8e0b47bf7
+msgid "SENTINEL SUBCOMMANDS"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:550
+# 501995f637d642bc928605a617aafb0c
+msgid "``SENTINEL masters``, provides a list of configured masters."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:551
+# 883417e7ad2f460ca43bb750d0d38b48
+msgid "``SENTINEL slaves <master name>``, provides a list of slaves for the master with the specified name."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:553
+# 56dbd839462f4379be977cf8aa3db2d6
+msgid "``SENTINEL sentinels <master name>``, provides a list of sentinels for the master with the specified name."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:555
+# b73121a2714e4632bce2f7137cbfb8fe
+msgid "``SENTINEL is-master-down-by-addr <ip> <port>``, returns a two elements multi bulk reply where the first element is :0 or :1, and the second is the Subjective Leader for the failover."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:560
+# c5a02200e7334b32be3d0d949b224f7c
+msgid "TODO"
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:562
+# 67cd5387975c4649a25ce90479b195fd
+msgid "More detailed specification of user script error handling, including what return codes may mean, like 0: try again. 1: fatal error. 2: try again, and so forth."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:565
+# b007ca34060c4657ad8df05a3ac3e62f
+msgid "More detailed specification of what happens when a user script does not return in a given amount of time."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:567
+# dea8dc8e595f40b9b79eed05cfdddda0
+msgid "Add a \"push\" notification system for configuration changes."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:568
+# 9c25beefcee448a9a3bf9b690eccacb4
+msgid "Document that for every master monitored the configuration specifies a name for the master that is reported by all the SENTINEL commands."
+msgstr ""
+
+#: ../../source/topics/sentinel-spec.rst:570
+# ec41620f2004431aa2623030bb23f65e
+msgid "Make clear that we handle a single Sentinel monitoring multiple masters."
+msgstr ""
+

@@ -1,0 +1,263 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/debugging.rst:2
+# 3f309829542241fbb26e29787b5594ab
+msgid "Redis debugging guide"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:4
+# b4a077ca8b0f440e92e467880605e907
+msgid "Redis is developed with a great stress on stability: we do our best with every release to make sure you'll experience a very stable product and no crashes. However even with our best efforts it is impossible to avoid all the critical bugs with 100% of success."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:9
+# ad2b75b87b4844e1857c9d4d85c8feef
+msgid "When Redis crashes it produces a detailed report of what happened, however sometimes looking at the crash report is not enough, nor it is possible for the Redis core team to reproduce the issue independently: in this scenario we need help from the user that is able to reproduce the issue."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:15
+# 65a17b8aad374b50888d0cccff1a52f4
+msgid "This little guide shows how to use GDB to provide all the informations the Redis developers will need to track the bug more easily."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:19
+# 504efdf06da7471392d85cf85db6e40f
+msgid "What is GDB?"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:21
+# c3d953a985d34b43911692de3dedb73f
+msgid "GDB is the Gnu Debugger: a program that is able to inspect the internal state of another program. Usually tracking and fixing a bug is an exercise in gathering more informations about the state of the program at the moment the bug happens, so GDB is an extremely useful tool."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:26
+# 628f1f332f1d46eea445a8ee36234cd1
+msgid "GDB can be used in two ways:"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:28
+# 12249c918bb244e9813bf648a44cc15b
+msgid "It can attach to a running program and inspect the state of it at runtime."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:30
+# 25d62e103a0a4a4d8b5202b69e82a6ea
+msgid "It can inspect the state of a program that already terminated using what is called a *core file*, that is, the image of the memory at the time the program was running."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:34
+# 7d4cd0548d4040d5a5db6d1215b2d1cb
+msgid "From the point of view of investigating Redis bugs we need to use both this GDB modes: the user able to reproduce the bug attaches GDB to his running Redis instance, and when the crash happens, he creates the ``core`` file that the in turn the developer will use to inspect the Redis internals at the time of the crash."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:40
+# 598f63faec964bedac143375a6af9da5
+msgid "This way the developer can perform all the inspections in his computer without the help of the user, and the user is free to restart Redis in the production environment."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:45
+# 5fa31f2309ad46649a56ecbbb7efea5a
+msgid "Compiling Redis without optimizations"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:47
+# f2cdada3daaf4c2c95fae073966d4a2e
+msgid "By default Redis is compiled with the ``-O2`` switch, this means that compiler optimizations are enabled. This makes the Redis executable faster, but at the same time it makes Redis (like any other program) harder to inspect using GDB."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:52
+# b9badc590282497797de763b747a25ee
+msgid "It is better to attach GDB to Redis compiled without optimizations using the ``make noopt`` command to compile it (instead of just using the plain ``make`` command). However if you have an already running Redis in production there is no need to recompile and restart it if this is going to create problems on your side. Even if by a lesser extent GDB still works against executables compiled with optimizations."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:59
+# bc8c3ba9df8a4e2e8c79167cb02ba5f2
+msgid "It is great if you make sure to recompile Redis with ``make noopt`` after the first crash, so that the next time it will be simpler to track the issue."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:63
+# 8b99b8353d4e427293734d96b596fc39
+msgid "You should not be concerned with the loss of performances compiling Redis without optimizations, it is very unlikely that this will cause problems in your environment since it is usually just a matter of a small percentage because Redis is not very CPU-bound (it does a lot of I/O to serve queries)."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:70
+# 85b27c249c9143f5bbc03c0a6bd023ca
+msgid "Attaching GDB to a running process"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:72
+# cbf133006c6140e0867090284ad84afd
+msgid "If you have an already running Redis server, you can attach GDB to it, so that if Redis will crash it will be possible to both inspect the internals and generate a ``core dump`` file."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:76
+# 14248e8d5d114ca99001ffe73495ad5f
+msgid "After you attach GDB to the Redis process it will continue running as usually without any loss of performance, so this is not a dangerous procedure."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:80
+# 17b71dec07444268a365f515918722a7
+msgid "In order to attach GDB the first thing you need is the *process ID* of the running Redis instance (the *pid* of the process). You can easily obtain it using ``redis-cli``:"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:89
+# 763bde87bf8243cb932628d9fdf63c13
+msgid "In the above example the process ID is **58414**."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:91
+# abf2547924504331b757c3baced0701b
+msgid "Login into your Redis server."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:92
+# 6bd3ffd326eb4102892e9931adc3ed26
+msgid "(Optional but recommended) Start **screen** or **tmux** or any other program that will make sure that your GDB session will not be closed if your ssh connection will timeout. If you don't know what screen is do yourself a favour and `Read this article <http://www.linuxjournal.com/article/6340>`__"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:97
+# e103d98ffe194aecbe858f1d29f0fd40
+msgid "Attach GDB to the running Redis server typing:"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:99
+# 7fecd30503fb455da481bc0443faa4af
+msgid "gdb ``<path-to-redis-executable>`` ``<pid>``"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:101
+# 332739d5c1e444da8c0fe335a4846b44
+msgid "For example: gdb /usr/local/bin/redis-server 58414"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:103
+# 6833dc17688e490dbdeb1759203bc598
+msgid "GDB will start and will attach to the running server printing something like the following:"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:112
+# ac7126cfd19f4c2daf261cf29bae4817
+msgid "At this point GDB is attached but **your Redis instance is blocked by GDB**. In order to let the Redis instance continue the execution just type **continue** at the GDB prompt, and press enter."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:121
+# 5938c796638549afb8b8b67c7a5c9d78
+msgid "Done! Now your Redis instance has GDB attached. You can wait for... the next crash :)"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:123
+# 266c030c2b754d74a2a403acce7e10de
+msgid "Now it's time to detach your screen / tmux session, if you are running GDB using it, pressing the usual **Ctrl-a a** key combination."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:128
+# 513b14693f8246bf88c19eeae3bddea5
+msgid "After the crash"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:130
+# 352ff370ea65441eb692dc9643634ca7
+msgid "Redis has a command to simulate a segmentation fault (in other words a bad crash) using the ``DEBUG SEGFAULT`` command (don't use it against a real production instance of course ;). So I'll use this command to crash my instance to show what happens in the GDB side:"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:145
+# 239799ff9d3146f683483046f4922b59
+msgid "As you can see GDB detected that Redis crashed, and was able to show me even the file name and line number causing the crash. This is already much better than the Redis crash report back trace (containing just function names and binary offsets)."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:151
+# a9c32ade416d4685a94ec1c184901e83
+msgid "Obtaining the stack trace"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:153
+# e71172e8816c4050ab8886514db50a69
+msgid "The first thing to do is to obtain a full stack trace with GDB. This is as simple as using the **bt** command: (that is a short for backtrace):"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:168
+# 147c771c7b3a4a6185d7f0b99470fd6c
+msgid "This shows the backtrace, but we also want to dump the processor registers using the **info registers** command:"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:199
+# fc07435e039a4e689fe9a7d6f4438199
+msgid "Please **make sure to include** both this outputs in your bug report."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:202
+# 72972c34964c4777957153dadf69221d
+msgid "Obtaining the core file"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:204
+# cacfd23fd5224ac7b964acfe0d5052bc
+msgid "The next step is to generate the core dump, that is the image of the memory of the running Redis process. This is performed using the ``gcore`` command:"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:213
+# 588a584cc8c249cfb8089c2f1411ecbb
+msgid "Now you have the core dump to send to the Redis developer, but **it is important to understand** that this happens to contain all the data that was inside the Redis instance at the time of the crash: Redis developers will make sure to don't share the content with any other, and will delete the file as soon as it is no longer used for debugging purposes, but you are warned that sending the core file you are sending your data."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:220
+# 7c90e93143404839b73971d978856676
+msgid "If there are sensible stuff in the data set we suggest sending the dump directly to Salvatore Sanfilippo (that is the guy writing this doc) at the email address **antirez at gmail dot com**."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:225
+# 0411119fdcb444448e87eeb2ef2922d9
+msgid "What to send to developers"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:227
+# 5c864df5ce964f3a96a643af87e24406
+msgid "Finally you can send everything to the Redis core team:"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:229
+# 338f1de7c4784984a9d4dea697c85997
+msgid "The Redis executable you are using."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:230
+# cff879a4880840eeb9213d3fa5845d9f
+msgid "The stack trace produced by the **bt** command, and the registers dump."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:232
+# 9eee43c03fac44b09edd307d68c2007b
+msgid "The core file you generated with gdb."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:233
+# 256e4fc012f9419dbd8abfed27666e0e
+msgid "Informations about the operating system and GCC version, and Redis version you are using."
+msgstr ""
+
+#: ../../source/topics/debugging.rst:237
+# 7bf02ad8cc03484cbdad5eb50885a903
+msgid "Thank you"
+msgstr ""
+
+#: ../../source/topics/debugging.rst:239
+# 91a266ca1d854311a40997b132070ec9
+msgid "Your help is extremely important! Many issues can only be tracked this way, thanks! It is also possible that helping Redis debugging you'll be among the winners of the next `Redis Moka Award <http://antirez.com/post/redis-moka-awards-2011.html>`__."
+msgstr ""
+

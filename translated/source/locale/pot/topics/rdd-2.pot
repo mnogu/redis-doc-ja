@@ -1,0 +1,219 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/rdd-2.rst:2
+# 67473c64606a4a38ae9871f3ae585d44
+msgid "Redis Design Draft 2 -- RDB version 7 info fields"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:4
+# 5bddbb46edcd45ae91e92e7db2b9b2a1
+msgid "Author: Salvatore Sanfilippo ``antirez@gmail.com``"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:5
+# 172f563dd04243ebb15a30e55e6590c5
+msgid "Github issue `#1048 <https://github.com/antirez/redis/issues/1048>`__"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:8
+# 6888ee9f864f4dfc82c196a5c8e052a1
+msgid "History of revisions"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:10
+# ffb966a38ed14818a81b5f115cc12911
+msgid "1.0, 10 April 2013 - Initial draft."
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:13
+# c7cc6af0d8414090ae4797782eb87f0e
+msgid "Overview"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:15
+# 457e24e237874ee6b53a359192e378de
+msgid "The Redis RDB format lacks a simple way to add info fields to an RDB file without causing a backward compatibility issue even if the added meta data is not required in order to load data from the RDB file."
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:19
+# 412016e662624c19b1d7958bb8ca1946
+msgid "For example thanks to the info fields specified in this document it will be possible to add to RDB informations like file creation time, Redis version generating the file, and any other useful information, in a way that not every field is required for an RDB version 7 file to be correctly processed."
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:25
+# f143253e9b384dc38058719a90fe7452
+msgid "Also with minimal changes it will be possible to add RDB version 7 support to Redis 2.6 without actually supporting the additional fields but just skipping them when loading an RDB file."
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:29
+# 2db0bc5079db4a12978b4be3b58c699c
+msgid "RDB info fields may have semantical meaning if needed, so that the presence of the field may add information about the data set specified in the RDB file format, however when an info field is required to be correctly decoded in order to understand and load the data set content of the RDB file, the RDB file format must be increased so that previous versions of Redis will not attempt to load it."
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:36
+# a854ceaec0444db0b3a17dacf3ac27c8
+msgid "However currently the info fields are designed to only hold additional informations that are not useful to load the dataset, but can better specify how the RDB file was created."
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:41
+# 6c7487d12bfb47279e5aecaf90c92af2
+msgid "Info fields representation"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:43
+# 78c8373c6d624046b32e2f9cee872f5e
+msgid "The RDB format 6 has the following layout:"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:45
+# 8db8fcf9122f45369905334045a94245
+msgid "A 9 bytes magic \"REDIS0006\""
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:46
+#: ../../source/topics/rdd-2.rst:59
+# 85a04e9b64ca422cb2211d0f6259c6d6
+# 07c51a064cfc4a27b8fe6403eeebb4f8
+msgid "key-value pairs"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:47
+#: ../../source/topics/rdd-2.rst:60
+# 6c1a0c388b614ff8a9960d0773755fae
+# fceca6e34ccd4f2ea1d5e544a5f854fb
+msgid "An EOF opcode"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:48
+#: ../../source/topics/rdd-2.rst:61
+# aa404b8bbad4411386988f4774d4146e
+# 6fe2f213c0ef462aae5f5b4e9d747543
+msgid "CRC64 checksum"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:50
+# edd5414d6a5b411aad3b62acdc8390af
+msgid "The proposal for RDB format 7 is to add the optional fields immediately after the first 9 bytes magic, so that the new format will be:"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:53
+# 4f3afec8cf1e40db8487d203768f0bf4
+msgid "A 9 bytes magic \"REDIS0007\""
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:54
+# 3d8887999ab04534a955862547c4b759
+msgid "Info field 1"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:55
+# fafe5133e2b346ee840c0513e3ad1f61
+msgid "Info field 2"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:56
+# 7989598f6aa04bd3b77759ef86af306a
+msgid "..."
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:57
+# e61788b63f1d4756abf5b3a3583959c6
+msgid "Info field N"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:58
+# 36914ad4e5404a9c9d805c22055cf73a
+msgid "Info field end-of-fields"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:63
+# dafb6ae6028b4bf8b0e5bab630042419
+msgid "Every single info field has the following structure:"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:65
+# fdfd03da0f11444bb78c54edbe594b1a
+msgid "A 16 bit identifier"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:66
+# 469d201da7c74fcd969a6fc6f0cf51cd
+msgid "A 64 bit data length"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:67
+# c81dc6f760a7440c9d631d80c7e42f9b
+msgid "A data section of the exact length as specified"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:69
+# da7af88389734cb68c3593925cba2343
+msgid "Both the identifier and the data length are stored in little endian byte ordering."
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:72
+# 3b92f06cd2f94658836428a0ec29f065
+msgid "The special identifier 0 means that there are no other info fields, and that the remaining of the RDB file contains the key-value pairs."
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:76
+# acc0a5ad1ae842b99fd00666f89f84ae
+msgid "Handling of info fields"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:78
+# c5ee37eea8e9436b9ec78ef1133f2d81
+msgid "A program can simply skip every info field it does not understand, as long as the RDB version matches the one that it is capable to load."
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:82
+# 7ba21e86fcce45278c83e96c9c9651a7
+msgid "Specification of info fields IDs and content."
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:85
+# d92ab4d527aa4b619af9aaa787339e02
+msgid "Info field 0 -- End of info fields"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:87
+# 3e242eeb9eeb4f16a608134591cb1701
+msgid "This just means there are no longer info fields to process."
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:90
+# 7e1995bfd5bd4c0bb96c043548dc7af5
+msgid "Info field 1 -- Creation date"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:92
+# a9f5b02111734aa79ee65d14a9780f33
+msgid "This field represents the unix time at which the RDB file was created. The format of the unix time is a 64 bit little endian integer representing seconds since 1th January 1970."
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:97
+# 393356f5ce9446a2961ccc2f79f53ee6
+msgid "Info field 2 -- Redis version"
+msgstr ""
+
+#: ../../source/topics/rdd-2.rst:99
+# 173891da32be489e91fcf87143e50828
+msgid "This field represents a null-terminated string containing the Redis version that generated the file, as displayed in the Redis version INFO field."
+msgstr ""
+

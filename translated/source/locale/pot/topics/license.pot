@@ -1,0 +1,108 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/license.rst:2
+# e5d32287b8134210b0f03da904d5dec1
+msgid "Redis license and trademark information"
+msgstr ""
+
+#: ../../source/topics/license.rst:4
+# 0e17b7826d4e423cae9c569c8f56acd0
+msgid "Redis is **open source software** released under the terms of the **three clause BSD license**. Most of the Redis source code was written and is copyrighted by Salvatore Sanfilippo and Pieter Noordhuis. A list of other contributors can be found in the git history."
+msgstr ""
+
+#: ../../source/topics/license.rst:9
+# bb42a5aead2a43b9b6f6c37ae5fe87e3
+msgid "The Redis trademark and logo are owned by Salvatore Sanfilippo and can be used in accordance with the `Redis Trademark Guidelines </topics/trademark>`__."
+msgstr ""
+
+#: ../../source/topics/license.rst:14
+# a85e0e23264c47ddb44c54bd04f6502c
+msgid "Three clause BSD license"
+msgstr ""
+
+#: ../../source/topics/license.rst:16
+# 71bb43666dfb40aaba9f07f6b9caaaf5
+msgid "Every file in the Redis distribution, with the exceptions of third party files specified in the list below, contain the following license:"
+msgstr ""
+
+#: ../../source/topics/license.rst:19
+# 52c631f5714045e2a1feb5d91f142490
+msgid "Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:"
+msgstr ""
+
+#: ../../source/topics/license.rst:23
+# ddc5a2268f364c909a89599609ff4249
+msgid "Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer."
+msgstr ""
+
+#: ../../source/topics/license.rst:26
+# 7b7a822f7ad4451caa76164c0c791898
+msgid "Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution."
+msgstr ""
+
+#: ../../source/topics/license.rst:30
+# 914e978d1db648ecac7e9d44b0b7954d
+msgid "Neither the name of Redis nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission."
+msgstr ""
+
+#: ../../source/topics/license.rst:34
+# 02b59ebcdf064b5c82956e7fa359365d
+msgid "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+msgstr ""
+
+#: ../../source/topics/license.rst:47
+# e52422b0ec124efcab81f7730aaf5915
+msgid "Third party files and licenses"
+msgstr ""
+
+#: ../../source/topics/license.rst:49
+# a696a68045b343c39b0fcd3a2e2d29e0
+msgid "Redis uses source code from third parties. All this code contians a BSD or BSD-compatible license. The following is a list of third party files and information about their copyright."
+msgstr ""
+
+#: ../../source/topics/license.rst:53
+# 2721060f13ba47e0a4ca87513be5238a
+msgid "Redis uses the `LHF compression library <http://oldhome.schmorp.de/marc/liblzf.html>`__. LibLZF is copyright Marc Alexander Lehmann and is released under the terms of the **two clause BSD license**."
+msgstr ""
+
+#: ../../source/topics/license.rst:58
+# bf696f325ab94a77a55b52950e9b1fb9
+msgid "Redis uses the ``sha1.c`` file that is copyright by Steve Reid and released under the **public domain**. This file is extremely popular and used among open source and proprietary code."
+msgstr ""
+
+#: ../../source/topics/license.rst:62
+# c5b84e3cd601430aa559b3b3dfa0dc4a
+msgid "When compiled on Linux Redis uses the `Jemalloc allocator <http://www.canonware.com/jemalloc/>`__, that is copyright by Jason Evans, Mozilla Foundation and Facebook, Inc and is released under the **two clause BSD license**."
+msgstr ""
+
+#: ../../source/topics/license.rst:67
+# 9f533b5e66c74082b22eb6aeaa8a84ca
+msgid "Inside Jemalloc the file ``pprof`` is copyright Google Inc and released under the **three clause BSD license**."
+msgstr ""
+
+#: ../../source/topics/license.rst:70
+# 370e0e26654f4b35a73a7028b7d204c2
+msgid "Inside Jemalloc the files ``inttypes.h``, ``stdbool.h``, ``stdint.h``, ``strings.h`` under the ``msvc_compat`` directory are copyright Alexander Chemeris and released under the **three clause BSD license**."
+msgstr ""
+
+#: ../../source/topics/license.rst:75
+# 11c5effb7c124144899f3d8e18430454
+msgid "The libraries **hiredis** and **linenoise** also included inside the Redis distribution are copyright Salvatore Sanfilippo and Pieter Noordhuis and released under the terms respectively of the **three clause BSD license** and **two clause BSD license**."
+msgstr ""
+

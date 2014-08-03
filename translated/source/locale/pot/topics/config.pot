@@ -1,0 +1,128 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/config.rst:2
+# 01989938eb9040caa29a86aecf303c89
+msgid "Redis configuration"
+msgstr ""
+
+#: ../../source/topics/config.rst:4
+# 0623c7589c684141b24134c7d88c574a
+msgid "Redis is able to start without a configuration file using a built-in default configuration, however this setup is only recommended for testing and development purposes."
+msgstr ""
+
+#: ../../source/topics/config.rst:8
+# 3b2cc37793984ae3875043078047a3ae
+msgid "The proper way to configure Redis is by providing a Redis configuration file, usually called ``redis.conf``."
+msgstr ""
+
+#: ../../source/topics/config.rst:11
+# ea124fa128cd4f75a2200fbef57c98f6
+msgid "The ``redis.conf`` file contains a number of directives that have a very simple format:"
+msgstr ""
+
+#: ../../source/topics/config.rst:18
+# 075fae5f8db44a73adf36548c44a5500
+msgid "This is an example of configuration directive:"
+msgstr ""
+
+#: ../../source/topics/config.rst:24
+# 84b37ea9bc0f4f5cbc73df747ba6faf8
+msgid "It is possible to provide strings containing spaces as arguments using quotes, as in the following example:"
+msgstr ""
+
+#: ../../source/topics/config.rst:31
+# 46279dc55dc04f29b9ce197d398874b3
+msgid "The list of configuration directives, and their meaning and intended usage is available in the self documented example redis.conf shipped into the Redis distribution."
+msgstr ""
+
+#: ../../source/topics/config.rst:35
+# 202ebad65be54aaf8a57b6bd255f9896
+msgid "The self documented `redis.conf for Redis 2.6 <https://raw.github.com/antirez/redis/2.6/redis.conf>`__."
+msgstr ""
+
+#: ../../source/topics/config.rst:37
+# dc59591bb2fb4d6f984dfc68928a96fd
+msgid "The self documented `redis.conf for Redis 2.4 <https://raw.github.com/antirez/redis/2.4/redis.conf>`__."
+msgstr ""
+
+#: ../../source/topics/config.rst:41
+# bc2c3819b76f4302b66c2a4b02d8cd28
+msgid "Passing arguments via the command line"
+msgstr ""
+
+#: ../../source/topics/config.rst:43
+# 1f20c07419e84f248c2ba8d5999e3923
+msgid "Since Redis 2.6 it is possible to also pass Redis configuration parameters using the command line directly. This is very useful for testing purposes. The following is an example that stats a new Redis instance using port 6380 as a slave of the instance running at 127.0.0.1 port 6379."
+msgstr ""
+
+#: ../../source/topics/config.rst:53
+# afb818deeb254d0680484312feacc8b1
+msgid "The format of the arguments passed via the command line is exactly the same as the one used in the redis.conf file, with the exception that the keyword is prefixed with ``--``."
+msgstr ""
+
+#: ../../source/topics/config.rst:57
+# fc7bfb2244bb45c58d78a2567bcc9756
+msgid "Note that internally this generates an in-memory temporary config file (possibly concatenating the config file passed by the user if any) where arguments are translated into the format of redis.conf."
+msgstr ""
+
+#: ../../source/topics/config.rst:62
+# a2ec648003114109822b309847f9f215
+msgid "Changing Redis configuration while the server is running"
+msgstr ""
+
+#: ../../source/topics/config.rst:64
+# 40f273063cc44884b7e131a9d4f129bd
+msgid "It is possible to reconfigure Redis on the fly without stopping and restarting the service, or querying the current configuration programmatically using the special commands `CONFIG SET </commands/config-set>`__ and `CONFIG GET </commands/config-get>`__"
+msgstr ""
+
+#: ../../source/topics/config.rst:69
+# c3ccd7aa4e364970aac873e4e374e522
+msgid "Not all the configuration directives are supported in this way, but most are supported as expected. Please refer to the `CONFIG SET </commands/config-set>`__ and `CONFIG GET </commands/config-get>`__ pages for more information."
+msgstr ""
+
+#: ../../source/topics/config.rst:74
+# 94b288998212431989f854fd986cbe53
+msgid "Note that modifying the configuration on the fly **has no effects on the redis.conf file** so at the next restart of Redis the old configuration will be used instead."
+msgstr ""
+
+#: ../../source/topics/config.rst:78
+# 2c9a166a4b8442e9be4f49a8bd0ad47f
+msgid "Make sure to also modify the ``redis.conf`` file accordingly to the configuration you set using `CONFIG SET </commands/config-set>`__. There are plans to provide a ``CONFIG REWRITE`` command that will be able to run the ``redis.conf`` file rewriting the configuration accordingly to the current server configuration, without modifying the comments and the structure of the current file."
+msgstr ""
+
+#: ../../source/topics/config.rst:86
+# 3bcd620c38b746edbab00551764e0703
+msgid "Configuring Redis as a cache"
+msgstr ""
+
+#: ../../source/topics/config.rst:88
+# 464b4e44124a4e5fa5cc729fde7b2f1f
+msgid "If you plan to use Redis just as a cache where every key will have an expire set, you may consider using the following configuration instead (assuming a max memory limit of 2 megabytes as an example):"
+msgstr ""
+
+#: ../../source/topics/config.rst:97
+# 9489c689b17b459bbcefdffd2727cf8b
+msgid "In this configuration there is no need for the application to set a time to live for keys using the ``EXPIRE`` command (or equivalent) since all the keys will be evicted using an approximated LRU algorithm as long as we hit the 2 megabyte memory limit."
+msgstr ""
+
+#: ../../source/topics/config.rst:102
+# bc6c6f20f80841018c05cd6c120fc36e
+msgid "Basically in this configuration Redis acts in a similar way to memcached. We have more extensive documentation about `using Redis as an LRU cache </topics/lru-cache>`__."
+msgstr ""
+

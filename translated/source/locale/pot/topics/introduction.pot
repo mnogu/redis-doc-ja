@@ -1,0 +1,58 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/introduction.rst:2
+# 20187c2ca8a241c780ce30674acc056b
+msgid "Introduction to Redis"
+msgstr ""
+
+#: ../../source/topics/introduction.rst:4
+# 5674a7f60bcd4726a74300252e03608d
+msgid "Redis is an open source, BSD licensed, advanced **key-value store**. It is often referred to as a **data structure server** since keys can contain `strings </topics/data-types#strings>`__, `hashes </topics/data-types#hashes>`__, `lists </topics/data-types#lists>`__, `sets </topics/data-types#sets>`__ and `sorted sets </topics/data-types#sorted-sets>`__."
+msgstr ""
+
+#: ../../source/topics/introduction.rst:11
+# 984d3555bc914b8892c519b3894593f5
+msgid "You can run **atomic operations** on these types, like `appending to a string </commands/append>`__; `incrementing the value in a hash </commands/hincrby>`__; `pushing to a list </commands/lpush>`__; `computing set intersection </commands/sinter>`__, `union </commands/sunion>`__ and `difference </commands/sdiff>`__; or `getting the member with highest ranking in a sorted set </commands/zrangebyscore>`__."
+msgstr ""
+
+#: ../../source/topics/introduction.rst:19
+# aec7f8c18eab48b6a82d9f12784ea2ab
+msgid "In order to achieve its outstanding performance, Redis works with an **in-memory dataset**. Depending on your use case, you can persist it either by `dumping the dataset to disk </topics/persistence#snapshotting>`__ every once in a while, or by `appending each command to a log </topics/persistence#append-only-file>`__."
+msgstr ""
+
+#: ../../source/topics/introduction.rst:26
+# fd8bb245e8b5440c8f056b0618fe8f30
+msgid "Redis also supports trivial-to-setup `master-slave replication </topics/replication>`__, with very fast non-blocking first synchronization, auto-reconnection on net split and so forth."
+msgstr ""
+
+#: ../../source/topics/introduction.rst:30
+# e0c4899275bb4040950dfe444866597d
+msgid "Other features include `Transactions </topics/transactions>`__, `Pub/Sub </topics/pubsub>`__, `Lua scripting </commands/eval>`__, `Keys with a limited time-to-live </commands/expire>`__, and configuration settings to make Redis behave like a cache."
+msgstr ""
+
+#: ../../source/topics/introduction.rst:35
+# 9b8bc9baf3784c18a4b343955f27aa18
+msgid "You can use Redis from `most programming languages </clients>`__ out there."
+msgstr ""
+
+#: ../../source/topics/introduction.rst:38
+# 4d7ab3ce3e9c4737a29774d45d9d4bd7
+msgid "Redis is written in **ANSI C** and works in most POSIX systems like Linux, \\*BSD, OS X without external dependencies. Linux and OSX are the two operating systems where Redis is developed and more tested, and we **recommend using Linux for deploying**. Redis may work in Solaris-derived systems like SmartOS, but the support is *best effort*. There is no official support for Windows builds, but Microsoft develops and maintains a `Win32-64 experimental version of Redis <https://github.com/MSOpenTech/redis>`__."
+msgstr ""
+

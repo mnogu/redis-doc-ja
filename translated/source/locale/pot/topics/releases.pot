@@ -1,0 +1,178 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/releases.rst:2
+# a958351fea0a4ccaacfd0781987d234d
+msgid "Redis release cycle"
+msgstr ""
+
+#: ../../source/topics/releases.rst:4
+# 0040a871060b4bc7a3f2fc9a67da3c79
+msgid "Redis is system software, and a type of system software that holds user data, so it is among the most critical pieces of a software stack."
+msgstr ""
+
+#: ../../source/topics/releases.rst:7
+# 5a1e236048a54121b7837c0c6006666d
+msgid "For this reason our release cycle tries hard to make sure that a stable release is only released when it reaches a sufficiently high level of stability, even at the cost of a slower release cycle."
+msgstr ""
+
+#: ../../source/topics/releases.rst:11
+# 200ea2acde7f4cd1b7374cf0e2f0c1f0
+msgid "A given version of Redis can be at three different levels of stability:"
+msgstr ""
+
+#: ../../source/topics/releases.rst:13
+# bdfdc4ff383f44edac0572dffe1071b2
+msgid "unstable"
+msgstr ""
+
+#: ../../source/topics/releases.rst:14
+# 72b6640ba28b41959a946d072f1d3497
+msgid "development"
+msgstr ""
+
+#: ../../source/topics/releases.rst:15
+# 0189c4b0e1674f8599dc49a59d601e97
+msgid "frozen"
+msgstr ""
+
+#: ../../source/topics/releases.rst:16
+# 5d8eeb6faa83458aa27790798b7305c7
+msgid "release candidate"
+msgstr ""
+
+#: ../../source/topics/releases.rst:17
+# 18514af0a78249daae325aa1ddf57aea
+msgid "stable"
+msgstr ""
+
+#: ../../source/topics/releases.rst:20
+# 4b2595b158d1494098e601ec1baa0be5
+msgid "Unstable tree"
+msgstr ""
+
+#: ../../source/topics/releases.rst:22
+# 0d7cb837649d48a891b4f9483fc02633
+msgid "The unstable version of Redis is always located in the ``unstable`` branch in the `Redis Github Repository <http://github.com/antirez/redis>`__."
+msgstr ""
+
+#: ../../source/topics/releases.rst:26
+# a17188a30e7c4c4ab1dfad56c1292587
+msgid "This is the source tree where most of the new features are developed and is not considered to be production ready: it may contain critical bugs, not entirely ready features, and may be unstable."
+msgstr ""
+
+#: ../../source/topics/releases.rst:30
+# 0f711b0d6f3e4f4fa9e9bbc679171bee
+msgid "However, we try hard to make sure that even the unstable branch is usable most of the time in a development environment without major issues."
+msgstr ""
+
+#: ../../source/topics/releases.rst:35
+# 03f47613a4f246999144a858bd09b18a
+msgid "Forked, Frozen, Release candidate tree"
+msgstr ""
+
+#: ../../source/topics/releases.rst:37
+# 3020494535734b3e8c0c5f8461686ffb
+msgid "When a new version of Redis starts to be planned, the unstable branch (or sometimes the currently stable branch) is forked into a new branch that has the name of the target release."
+msgstr ""
+
+#: ../../source/topics/releases.rst:41
+# a6aa79347e2c4d2a9016f687764d1895
+msgid "For instance, when Redis 2.6 was released as stable, the ``unstable`` branch was forked into the ``2.8`` branch."
+msgstr ""
+
+#: ../../source/topics/releases.rst:44
+# e886635c9ccb4e1aa125b74eb9bb8170
+msgid "This new branch can be at three different levels of stability: development, frozen, and release candidate."
+msgstr ""
+
+#: ../../source/topics/releases.rst:47
+# bfaf07a707434538995dcc387fa0c19d
+msgid "Development: new features and bug fixes are commited into the branch, but not everything going into ``unstable`` is merged here. Only the features that can become stable in a reasonable timeframe are merged."
+msgstr ""
+
+#: ../../source/topics/releases.rst:50
+# b7a7c2ae73a34f8ebf61681cc26d444b
+msgid "Frozen: no new feature is added, unless it is almost guaranteed to have zero stability impacts on the source code, and at the same time for some reason it is a very important feature that must be shipped ASAP. Big code changes are only allowed when they are needed in order to fix bugs."
+msgstr ""
+
+#: ../../source/topics/releases.rst:55
+# 1000a44cfe7147fb914fe9919947057d
+msgid "Release Candidate: only fixes are committed against this release."
+msgstr ""
+
+#: ../../source/topics/releases.rst:58
+# 0ddbb431434e4a7fb05987527854ff80
+msgid "Stable tree"
+msgstr ""
+
+#: ../../source/topics/releases.rst:60
+# 692c29e9f9f346b0bbae8ff1712c7c42
+msgid "At some point, when a given Redis release is in the Release Candidate state for enough time, we observe that the frequency at which critical bugs are signaled starts to decrease, to the point that for a few weeks we don't have any serious bugs reported."
+msgstr ""
+
+#: ../../source/topics/releases.rst:65
+# 6b69fa179f494fe1ba983d395daa6724
+msgid "When this happens, the release is marked as stable."
+msgstr ""
+
+#: ../../source/topics/releases.rst:68
+# a5865347a0694047ab7e3f41b9bb1f5d
+msgid "Version numbers"
+msgstr ""
+
+#: ../../source/topics/releases.rst:70
+# 9e47efeb17804212ae42f8911274c855
+msgid "Stable releases follow the usual ``major.minor.patch`` versioning schema, with the following special rules:"
+msgstr ""
+
+#: ../../source/topics/releases.rst:73
+# c97b6c6b7cc942cfada36d95a0dcb278
+msgid "The minor is even in stable versions of Redis."
+msgstr ""
+
+#: ../../source/topics/releases.rst:74
+# 7311bf79de8047ff9f68cf761ecf3565
+msgid "The minor is odd in unstable, development, frozen, release candidates. For instance the unstable version of 2.8.x will have a version number in the form 2.7.x. In general the unstable version of x.y.z will have a version x.(y-1).z."
+msgstr ""
+
+#: ../../source/topics/releases.rst:78
+# 89863d1dcabe408486a2074c4394d10d
+msgid "As an unstable version of Redis progresses, the patchlevel is incremented from time to time, so at a given time you may have 2.7.2, and later 2.7.3 and so forth. However when the release candidate state is reached, the patchlevel starts from 101. So for instance 2.7.101 is the first release candidate for 2.8, 2.7.105 is Release Candidate 5, and so forth."
+msgstr ""
+
+#: ../../source/topics/releases.rst:86
+# 10b9c30473d340328978c5961c050e58
+msgid "Support"
+msgstr ""
+
+#: ../../source/topics/releases.rst:88
+# c878bcb9f8c2496fa2461e0d813002e8
+msgid "Older versions are not supported as we try very hard to make the Redis API mostly backward compatible. Upgrading to newer versions is usually trivial."
+msgstr ""
+
+#: ../../source/topics/releases.rst:92
+# 4553678f7e464823922acbcede9a7e64
+msgid "For example, if the current stable release is 2.6.x, we accept bug reports and provide support for the previous stable release (2.4.x), but not for older ones such as 2.2.x."
+msgstr ""
+
+#: ../../source/topics/releases.rst:96
+# 82b734daf8b14075b58cac8b977f7528
+msgid "When 2.8 becomes the current stable release, the 2.6.x will be the oldest supported release."
+msgstr ""
+

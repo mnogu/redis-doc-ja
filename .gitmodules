@@ -1,0 +1,3 @@
+[submodule "redis-doc"]
+	path = redis-doc
+	url = https://github.com/antirez/redis-doc

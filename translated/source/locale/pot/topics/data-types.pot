@@ -1,0 +1,243 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/data-types.rst:2
+# 24ac1c7a560b4edda4f0493b5e209d90
+msgid "Data types"
+msgstr ""
+
+#: ../../source/topics/data-types.rst:4
+# cea6e05178fa44a3b431781ed6042524
+msgid "Strings ---"
+msgstr ""
+
+#: ../../source/topics/data-types.rst:6
+# 278f6efec61d4986bcd0a48f6f4a4705
+msgid "Strings are the most basic kind of Redis value. Redis Strings are binary safe, this means that a Redis string can contain any kind of data, for instance a JPEG image or a serialized Ruby object."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:10
+# 5f19c3403d704c83a3f163218dd49eab
+msgid "A String value can be at max 512 Megabytes in length."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:12
+# e992ec2751c8412497465965e54ec9b2
+msgid "You can do a number of interesting things using strings in Redis, for instance you can:"
+msgstr ""
+
+#: ../../source/topics/data-types.rst:15
+# 2f018dbacd1549a7942aa9a2f509134e
+msgid "Use Strings as atomic counters using commands in the INCR family: `INCR </commands/incr>`__, `DECR </commands/decr>`__, `INCRBY </commands/incrby>`__."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:18
+# b15f977b15994b969d56b4afc8dd6c26
+msgid "Append to strings with the `APPEND </commands/append>`__ command."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:19
+# fa5af7898f164834be5912171415d1d7
+msgid "Use Strings as a random access vectors with `GETRANGE </commands/getrange>`__ and `SETRANGE </commands/setrange>`__."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:22
+# 3a02da26af6f47f9b094e3a00e958338
+msgid "Encode a lot of data in little space, or create a Redis backed Bloom Filter using `GETBIT </commands/getbit>`__ and `SETBIT </commands/setbit>`__."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:26
+# 5365fb3d359f45a69a35a2f5eab53f91
+msgid "Check all the `available string commands </commands/#string>`__ for more information."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:29
+# 2c7b555b38bd4cadabee99a6a61ab03d
+msgid "Lists ---"
+msgstr ""
+
+#: ../../source/topics/data-types.rst:31
+# 643a33d159674a3ab7064807f3910fa3
+msgid "Redis Lists are simply lists of strings, sorted by insertion order. It is possible to add elements to a Redis List pushing new elements on the head (on the left) or on the tail (on the right) of the list."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:35
+# 7eeff67fddb24ca0a557c6067bdd474a
+msgid "The `LPUSH </commands/lpush>`__ command inserts a new element on the head, while `RPUSH </commands/rpush>`__ inserts a new element on the tail. A new list is created when one of this operations is performed against an empty key. Similarly the key is removed from the key space if a list operation will empty the list. These are very handy semantics since all the list commands will behave exactly like they were called with an empty list if called with a non-existing key as argument."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:43
+# dd1d7512f81b41dcb0b653f8912933af
+msgid "Some example of list operations and resulting lists:"
+msgstr ""
+
+#: ../../source/topics/data-types.rst:51
+# e348670477de4238a28dd19bbec23848
+msgid "The max length of a list is 2^32 - 1 elements (4294967295, more than 4 billion of elements per list)."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:54
+# 12b0c956f31542158c97b369b6b27f1b
+msgid "The main features of Redis Lists from the point of view of time complexity are the support for constant time insertion and deletion of elements near the head and tail, even with many millions of inserted items. Accessing elements is very fast near the extremes of the list but is slow if you try accessing the middle of a very big list, as it is an O(N) operation."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:61
+# f57c8017aeb54bb98e04dbeb005abbb0
+msgid "You can do many interesting things with Redis Lists, for instance you can:"
+msgstr ""
+
+#: ../../source/topics/data-types.rst:64
+# fb054cfe476b49edbc4b896d2462fb42
+msgid "Model a timeline in a social network, using `LPUSH </commands/lpush>`__ in order to add new elements in the user time line, and using `LRANGE </commands/lrange>`__ in order to retrieve a few of recently inserted items."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:68
+# e765430c9ae3498fa2ce6d3b60517b68
+msgid "You can use `LPUSH </commands/lpush>`__ together with `LTRIM </commands/ltrim>`__ to create a list that never exceeds a given number of elements, but just remembers the latest N elements."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:71
+# d0e48fbb75a24f3f9570707e36faf33c
+msgid "Lists can be used as a message passing primitive, See for instance the well known `Resque <https://github.com/defunkt/resque>`__ Ruby library for creating background jobs."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:74
+# df72fc0ef449459b86d2fc43c5921e5d
+msgid "You can do a lot more with lists, this data type supports a number of commands, including blocking commands like `BLPOP </commands/blpop>`__. Please check all the `available commands operating on lists </commands#list>`__ for more information."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:79
+# c865421da3a241948c26f295a792a98a
+msgid "Sets ---"
+msgstr ""
+
+#: ../../source/topics/data-types.rst:81
+# 5afdc6036c8b4f10854c51dbb975a56a
+msgid "Redis Sets are an unordered collection of Strings. It is possible to add, remove, and test for existence of members in O(1) (constant time regardless of the number of elements contained inside the Set)."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:85
+# 0b495c3c69864eaab5b3d474f952ad85
+msgid "Redis Sets have the desirable property of not allowing repeated members. Adding the same element multiple times will result in a set having a single copy of this element. Practically speaking this means that adding a member does not require a *check if exists then add* operation."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:90
+# adc7c717de8348e19a736d223a3c6afb
+msgid "A very interesting thing about Redis Sets is that they support a number of server side commands to compute sets starting from existing sets, so you can do unions, intersections, differences of sets in very short time."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:95
+# 0f0c904180b24dc08aae9226e9813317
+msgid "The max number of members in a set is 2^32 - 1 (4294967295, more than 4 billion of members per set)."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:98
+# a2d4ba68db454d519bfab9a6b5be2a36
+msgid "You can do many interesting things using Redis Sets, for instance you can:"
+msgstr ""
+
+#: ../../source/topics/data-types.rst:101
+# 70ef9250fa3243d9807d408d0498f9a7
+msgid "You can track unique things using Redis Sets. Want to know all the unique IP addresses visiting a given blog post? Simply use `SADD </commands/sadd>`__ every time you process a page view. You are sure repeated IPs will not be inserted."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:105
+# ea37656989e049a88e3c8af17e00c7bd
+msgid "Redis Sets are good to represent relations. You can create a tagging system with Redis using a Set to represent every tag. Then you can add all the IDs of all the objects having a given tag into a Set representing this particular tag, using the `SADD </commands/sadd>`__ command. Do you want all the IDs of all the Objects having a three different tags at the same time? Just use `SINTER </commands/sinter>`__."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:112
+# 3005c51b134d46e2a0a95f5e3bedc785
+msgid "You can use Sets to extract elements at random using the `SPOP </commands/spop>`__ or `SRANDMEMBER </commands/srandmember>`__ commands."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:115
+# 6366744f65df4b4ca6428c8656c35df7
+msgid "As usually check the `full list of Set commands </commands#set>`__ for more information."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:118
+# a11e2ed1a0b543f6ba0d9653f715f39b
+msgid "Hashes ---"
+msgstr ""
+
+#: ../../source/topics/data-types.rst:120
+# c06e5314b2404fafaa05c1bc876e7758
+msgid "Redis Hashes are maps between string fields and string values, so they are the perfect data type to represent objects (eg: A User with a number of fields like name, surname, age, and so forth):"
+msgstr ""
+
+#: ../../source/topics/data-types.rst:132
+# b6a87bfeec3d439892090e40bbd90ea1
+msgid "A hash with a few fields (where few means up to one hundred or so) is stored in a way that takes very little space, so you can store millions of objects in a small Redis instance."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:136
+# 36b96183f85e4b528393aae3bae6ad48
+msgid "While Hashes are used mainly to represent objects, they are capable of storing many elements, so you can use Hashes for many other tasks as well."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:140
+# 9a409c897b574173abfcee39d45d88b2
+msgid "Every hash can store up to 2^32 - 1 field-value pairs (more than 4 billion)."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:143
+# c0be531669e04975a71f8975ed597cf5
+msgid "Check the `full list of Hash commands </commands#hash>`__ for more information."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:146
+# b0aaab3a79db49029230d850324668ae
+msgid "Sorted sets ---"
+msgstr ""
+
+#: ../../source/topics/data-types.rst:148
+# 36a4363fdf414171813f86a100e7f9da
+msgid "Redis Sorted Sets are, similarly to Redis Sets, non repeating collections of Strings. The difference is that every member of a Sorted Set is associated with score, that is used in order to take the sorted set ordered, from the smallest to the greatest score. While members are unique, scores may be repeated."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:154
+# 4cea71dad7a546d59156dc97f5e7456d
+msgid "With sorted sets you can add, remove, or update elements in a very fast way (in a time proportional to the logarithm of the number of elements). Since elements are *taken in order* and not ordered afterwards, you can also get ranges by score or by rank (position) in a very fast way. Accessing the middle of a sorted set is also very fast, so you can use Sorted Sets as a smart list of non repeating elements where you can quickly access everything you need: elements in order, fast existence test, fast access to elements in the middle!"
+msgstr ""
+
+#: ../../source/topics/data-types.rst:163
+# 592014f8633e47ab9431ff4b5a3c766c
+msgid "In short with sorted sets you can do a lot of tasks with great performance that are really hard to model in other kind of databases."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:166
+# 7877cc34d83f4c93b6f0fabcf3e8eabc
+msgid "With Sorted Sets you can:"
+msgstr ""
+
+#: ../../source/topics/data-types.rst:168
+# 4939023c5bf24f7da167db6e874a5744
+msgid "Take a leader board in a massive online game, where every time a new score is submitted you update it using `ZADD </commands/zadd>`__. You can easily take the top users using `ZRANGE </commands/zrange>`__, you can also, given an user name, return its rank in the listing using `ZRANK </commands/zrank>`__. Using ZRANK and ZRANGE together you can show users with a score similar to a given user. All very *quickly*."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:175
+# 9294cb951b834823a9de77ed593fefae
+msgid "Sorted Sets are often used in order to index data that is stored inside Redis. For instance if you have many hashes representing users, you can use a sorted set with elements having the age of the user as the score and the ID of the user as the value. So using `ZRANGEBYSCORE </commands/zrangebyscore>`__ it will be trivial and fast to retrieve all the users with a given interval of ages."
+msgstr ""
+
+#: ../../source/topics/data-types.rst:181
+# 4593751700ea470c8f48a82be05de945
+msgid "Sorted Sets are probably the most advanced Redis data types, so take some time to check the `full list of Sorted Set commands </commands#sorted_set>`__ to discover what you can do with Redis!"
+msgstr ""
+

@@ -1,0 +1,183 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/trademark.rst:2
+# 714770801c5b4e77ba78e937d9c823f8
+msgid "Redis TRADEMARK GUIDELINES"
+msgstr ""
+
+#: ../../source/topics/trademark.rst:4
+# a4b198fff9464280a97f84ff23ab9298
+msgid "**PURPOSE**. The Redis trademark and logo identify the Redis community and individual Redis projects. This policy outlines our policy and guidelines about the use of the Redis trademarks and logo by members of the Redis development and user community."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:9
+# 7cf67d453a4a48c7b6fb2ae317b312be
+msgid "**WHY HAVE TRADEMARK GUIDELINES?** The Redis trademarks are a symbol of the quality and community support associated with the Redis open source software. Trademarks protect not only those using the marks, but the entire community as well. Our community members need to know that they can rely on the quality represented by the brand. We also want to provide a level playing field. No one should use the Redis marks in ways that mislead or take advantage of the community, or make unfair use of the trademarks. Also, use of our marks should not be in a disparaging manner because we prefer that our marks not be used to be rude about the Redis open source project or its members."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:20
+# 3874f632aa484155adb0127895f326fb
+msgid "**OPEN SOURCE LICENSE VS. TRADEMARKS**. The three-clause BSD license gives you the right to redistribute and use the software in source and binary forms, with or without modification, under certain conditions. However, open source licenses like the three-clause BSD license do not address trademarks. Redis trademarks and brands need to be used in a way consistent with trademark law, and that is why we have prepared this policy – to help you understand what branding is allowed or required when using our software."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:29
+# b5b29d0bd6f944c1ac9bb3a71d426798
+msgid "**PROPER USE OF THE Redis TRADEMARKS AND LOGO**. We want to encourage a robust community for the Redis open source project. Therefore, you may do any of the following, as long as you do so in a way that does not devalue, dilute, or disparage the Redis brand. In other words, when you do these things, you should behave responsibly and reasonably in the interest of the community, but you do not need a trademark license from us to do them."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:39
+# 66096c2c95d745f7a82f5f2d6ff9f7da
+msgid "Nominative Use. You may engage in “nominative use” of the Redis name, but this does not allow you to use the logo. Nominative use is sometimes called fair use of a trademark, and does not require a trademark license from us. Here are examples:"
+msgstr ""
+
+#: ../../source/topics/trademark.rst:44
+# 25e25ea692ca49c69dc75d4145eac801
+msgid "a.i. If you develop applications for Redis, you may state that your application is designed to work with Redis, without using the Redis logo. For example, if you are developing a Foobar tool for Redis, acceptable project titles would be “Foobar for Redis\" or \"Redis-powered Foobar Tool\". We strongly discourage, and likely would consider it a trademark problem, to use a name such as “Redis Foobar.”"
+msgstr ""
+
+#: ../../source/topics/trademark.rst:51
+# 74c533047b78475f956630e5e7bd1326
+msgid "a.ii. If you offer maintenance, support, or hosting services for Redis software, you may accurately state that in your marketing materials or portfolio, without using the Redis logo."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:54
+# 0757057202ad442ead99a33cac531eae
+msgid "a.iii. You may modify the Redis software and state that your modified software is “based on the Redis software” or a similar accurate statement, without using the Redis logo."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:57
+# 15ffd09622e54e39ab8065a088667b20
+msgid "a.iv. You may engage in community advocacy. The Redis software is developed by and for its community. We will allow the use of the trademarks in this context, provided:"
+msgstr ""
+
+#: ../../source/topics/trademark.rst:61
+# 80d591dc485d49068a20cfbfb17f5975
+msgid "a.iv.1. The trademark is used in a manner consistent with this policy"
+msgstr ""
+
+#: ../../source/topics/trademark.rst:63
+# 242b984ded474f558e4bfbed3d40d149
+msgid "a.iv.2. There is no commercial purpose behind the use"
+msgstr ""
+
+#: ../../source/topics/trademark.rst:64
+# bec19ceee8dc474b9e4d4362b4b734c7
+msgid "a.iv.3. There is no suggestion that your project is approved, sponsored, or affiliated with Redis."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:69
+# d49baf7df86647e292c31dcd67b4cbc3
+msgid "Attribution. Identify the trademarks and logo as trademarks and logo of Redis."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:74
+# bb21e64b4094454ab549d653bd4d4d32
+msgid "User or Development Groups. You may create Redis user or development groups, and publicize meetings or discussions for those groups. Please consider joining our official group."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:80
+# 67aabaf7fbf74ac5bcd5f7dafddd71d4
+msgid "Capitalization. “Redis” should be capitalized."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:84
+# 481a199390aa48bf9a1ba75780aa0dda
+msgid "Adjectives. Use the Redis mark as an adjective, not a noun or verb."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:87
+# 473d6ffd28b549a0a2652dbf5fada4e6
+msgid "**IMPROPER USE OF THE TRADEMARKS AND LOGOS**. Use of the logo is reserved solely for use by Redis and its projects in its unaltered form. Examples of unauthorized use of the Redis trademarks include:"
+msgstr ""
+
+#: ../../source/topics/trademark.rst:93
+# ae7af32a45aa4576864219cc61bbb115
+msgid "Entity Names. You may not form a company, use a company name, or create a software product name that implies any foundational or authorship role. If you have a software product that works with Redis, it is suggested you use terms such as \"``<product name>`` for Redis\" or \"``<product name>``, Redis Edition\". If you wish to form an entity for a user or developer group, please contact us and we will be glad to discuss a license for a suitable name."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:104
+# 7e820814c6144c52a869183e36b6b02b
+msgid "Class or Quality. You may not imply that you are providing a class or quality of Redis (e.g., \"enterprise-class\" or \"commercial quality\") in a way that implies Redis is not of that class, grade or quality, nor that other parties are not of that class, grade, or quality."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:112
+# dc0658d067f14254bc4541e4508f3710
+msgid "False or Misleading Statements. You may not make false or misleading statements regarding your use of Redis (e.g., \"we wrote the majority of the code\" or \"we are major contributors\" or \"we are committers\")."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:119
+# 6126ecb3c7b14c50abc875355fe0794b
+msgid "Domain Names. You must not use Redis or any confusingly similar phrase in a domain name. For instance “www.Redishost.com” is not allowed. If you wish to use such a domain name for a user or developer group, please contact us and we will be glad to discuss a license for a suitable domain name. Because of the many persons who, unfortunately, seek to spoof, swindle or deceive the community by using confusing domain names, we must be very strict about this rule."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:130
+# 8e4491524ca341448904096df99c0488
+msgid "Merchandise. You must not manufacture, sell or give away merchandise items, such as T-shirts and mugs, bearing the Redis logo, or create any mascot for Redis. If you wish to use the logo to do this for a user or developer group, please contact us and we will be glad to discuss a license to do this."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:138
+# 2ff2d682885e4b36b59a539d2ab91df3
+msgid "Variations, takeoffs or abbreviations. You may not use a variation of the Redis name or logo for any purpose. For example, the following are not acceptable:"
+msgstr ""
+
+#: ../../source/topics/trademark.rst:142
+# 1956d558ec5d4b6984935e60ef65060d
+msgid "f.i. Red"
+msgstr ""
+
+#: ../../source/topics/trademark.rst:143
+# f3f453d3cbf84e6d813622e22a9b3697
+msgid "f.ii. MyRedis"
+msgstr ""
+
+#: ../../source/topics/trademark.rst:144
+# a5fd5fde25194a8d9b05f2e0b858fec7
+msgid "f.iii. RedisHost"
+msgstr ""
+
+#: ../../source/topics/trademark.rst:148
+# 4f6d0d2e1a214bfbbc5d348d7848ebc8
+msgid "Endorsement or Sponsorship. You may not use the Redis logo in a manner that would imply Redis’ affiliation with or endorsement, sponsorship, or support of a product or service."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:154
+# 0f3d9c694e6f4b988c3eb0ab60046896
+msgid "Rebranding. You may not change the brand or logo on unmodified Redis software to your own brand or logo. You may not hold yourself out as the source of the Redis software, except to the extent you have modified it as allowed under the three-clause BSD license, and you make it clear that you are the source only of the modification."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:163
+# 882400b6828a489da6cc88541ff5e09b
+msgid "Combination Marks. Do not use our logos or trademarks in combination with any other marks or logos (for example Foobar Redis, or the name of your company or product typeset to look like the Redis logo)."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:170
+# 4ec3c2b1fe26483a9408dfc5e4bdcd4f
+msgid "Web Tags. Do not use the Redis trademark in a title or metatag of a web page to influence search engine rankings or result listings, rather than for discussion or advocacy of the Redis project."
+msgstr ""
+
+#: ../../source/topics/trademark.rst:175
+# e3f86e268d73439da35c58ccac48a927
+msgid "**PROPER NOTICE AND ATTRIBUTION**. The appropriate trademark symbol (i.e., ®) should appear at least with the first use of the Redis trademarks and all occurrences of the Redis logo. When you use a Redis trademark or logo you should include a statement attributing the trademark to Salvatore Sanfilippo. For example, \"Redis, and the Redis logo are the trademarks of Salvatore Sanfilippo in the U.S. and other countries.\""
+msgstr ""
+
+#: ../../source/topics/trademark.rst:183
+# e058cc31f3694b96acaf0bce7dd7e2bb
+msgid "**MORE QUESTIONS?** If you have questions about this policy, please contact us at **antirez@gmail.com**."
+msgstr ""
+

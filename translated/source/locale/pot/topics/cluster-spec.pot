@@ -1,0 +1,1723 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/cluster-spec.rst:2
+# 894215d70cdb4ecb939ccafd15da59aa
+msgid "Redis cluster Specification (work in progress)"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:5
+# 3282a66011a84aaf9cd1dbd7be83dea4
+msgid "Redis Cluster goals"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:7
+# bb06a48bde1f4be988702587887b087d
+msgid "Redis Cluster is a distributed implementation of Redis with the following goals, in order of importance in the design:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:10
+# 19cf7a69b6c142468926e09ffd1df7fe
+msgid "High performance and linear scalability up to 1000 nodes."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:11
+# b31402b428054efb9ea19f31810c13f8
+msgid "No merge operations in order to play well with values size and semantics typical of the Redis data model."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:13
+# 334e6ae619504a9abbeea28cf68e6351
+msgid "Write safety: the system tries to retain all the writes originating from clients connected with the majority of the nodes. However there are small windows where acknowledged writes can be lost."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:16
+# a0673f58cddd45fbb42e3449fbeacdd1
+msgid "Availability: Redis Cluster is able to survive to partitions where the majority of the master nodes are reachable and there is at least a reachable slave for every master node that is no longer reachable."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:20
+# 7ab55df06a4a49b5a84cd1edd92f33c5
+msgid "What is described in this document is implemented in the ``unstable`` branch of the Github Redis repository. Redis Cluster has now entered the beta stage, so new betas are released every month and can be found in the `download page <http://redis.io/download>`__ of the Redis web site."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:26
+# 23e42e462d3646a48fed5ddf6b9be8be
+msgid "Implemented subset"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:28
+# a83e327003d5437ba222390a5f8025e9
+msgid "Redis Cluster implements all the single keys commands available in the non distributed version of Redis. Commands performing complex multi key operations like Set type unions or intersections are implemented as well as long as the keys all belong to the same node."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:33
+# 944a606ba3704afb95afd454c97e8860
+msgid "Redis Cluster implements a concept called **hash tags** that can be used in order to force certain keys to be stored in the same node. However during manual reshardings multi-key operations may become unavailable for some time while single keys operations are always available."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:38
+# 54b61129144342cf963cabe21d9fef7f
+msgid "Redis Cluster does not support multiple databases like the stand alone version of Redis, there is just database 0, and ``SELECT`` is not allowed."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:43
+# 48e835d7e6d64b0c8fae835037f5cc5b
+msgid "Clients and Servers roles in the Redis cluster protocol"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:45
+# 34735537cd984d7cb8162d372b21783c
+msgid "In Redis cluster nodes are responsible for holding the data, and taking the state of the cluster, including mapping keys to the right nodes. Cluster nodes are also able to auto-discover other nodes, detect non working nodes, and performing slave nodes election to master when needed."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:51
+# f9670fc5aa3f4ba8889e500446af12dd
+msgid "To perform their tasks all the cluster nodes are connected using a TCP bus and a binary protocol (the **cluster bus**). Every node is connected to every other node in the cluster using the cluster bus. Nodes use a gossip protocol to propagate information about the cluster in order to discover new nodes, to send ping packets to make sure all the other nodes are working properly, and to send cluster messages needed to signal specific conditions. The cluster bus is also used in order to propagate Pub/Sub messages across the cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:60
+# 82607cd9cee4473d9b6fcde550e4a6b6
+msgid "Since cluster nodes are not able to proxy requests clients may be redirected to other nodes using redirections errors ``-MOVED`` and ``-ASK``. The client is in theory free to send requests to all the nodes in the cluster, getting redirected if needed, so the client is not required to take the state of the cluster. However clients that are able to cache the map between keys and nodes can improve the performance in a sensible way."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:69
+# 927453b2444348fabd629930dec05024
+msgid "Write safety"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:71
+# eb89a4ec63b64449b6c7af96b895e8ec
+msgid "Redis Cluster uses asynchronous replication between nodes, so there are always windows when it is possible to lose writes during partitions. However these windows are very different in the case of a client that is connected to the majority of masters, and a client that is connected to the minority of masters."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:77
+# 078aad0a196b4d3787934d1961c87ce3
+msgid "Redis Cluster tries hard to retain all the writes that are performed by clients connected to the majority of masters, with two exceptions:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:80
+# c547afba4faa41ec89e246aa770e483d
+msgid "A write may reach a master, but while the master may be able to reply to the client, the write may not be propagated to slaves via the asynchronous replication used between master and slave nodes. If the master dies without the write reaching the slaves, the write is lost forever in case the master is unreachable for a long enough period that one of its slaves is promoted."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:87
+# 3d95110fee4445bba579744454c3b833
+msgid "Another theoretically possible failure mode where writes are lost is the following:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:90
+# 415655faca0c42a5b2dd67c21a68f5b3
+msgid "A master is unreachable because of a partition."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:91
+# defc671758f44d2db36706f7ddb4e4d4
+msgid "It gets failed over by one of its slaves."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:92
+# 546d03b4be494db38481ed291dd39e30
+msgid "After some time it may be reachable again."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:93
+# c8940e34ddca42eda510860747c974ef
+msgid "A client with a not updated routing table may write to it before the master is converted to a slave (of the new master) by the cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:96
+# 82915ba80c324025b5f35f7c4f6070d4
+msgid "Practically this is very unlikely to happen because nodes not able to reach the majority of other masters for enough time to be failed over, no longer accept writes, and when the partition is fixed writes are still refused for a small amount of time to allow other nodes to inform about configuration changes."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:102
+# 50b4e67e5d4c476aabf27d16507d25ef
+msgid "Redis Cluster loses a non trivial amount of writes on partitions where there is a minority of masters and at least one or more clients, since all the writes sent to the masters may potentially get lost if the masters are failed over in the majority side."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:107
+# 053e72bcffc74e92ae2bf120814274d5
+msgid "Specifically, for a master to be failed over, it must be not reachable by the majority of masters for at least ``NODE_TIMEOUT``, so if the partition is fixed before that time, no write is lost. When the partition lasts for more than ``NODE_TIMEOUT``, the minority side of the cluster will start refusing writes as soon as ``NODE_TIMEOUT`` time has elapsed, so there is a maximum window after which the minority becomes no longer available, hence no write is accepted and lost after that time."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:117
+# a18353c0b5204008b994486972433050
+msgid "Availability"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:119
+# 5bda1512366c47719c5a5ff788855346
+msgid "Redis Cluster is not available in the minority side of the partition. In the majority side of the partition assuming that there are at least the majority of masters and a slave for every unreachable master, the cluster returns available after ``NODE_TIMEOUT`` plus some more second required for a slave to get elected and failover its master."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:125
+# 08af3c096c224ee6a05db3f1a270f316
+msgid "This means that Redis Cluster is designed to survive to failures of a few nodes in the cluster, but is not a suitable solution for applications that require availability in the event of large net splits."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:129
+# 1aee9b29ec4d4f05ae4ad1b56aef1d04
+msgid "In the example of a cluster composed of N master nodes where every node has a single slave, the majority side of the cluster will remain available as soon as a single node is partitioned away, and will remain available with a probability of ``1-(1/(N*2-1))`` when two nodes are partitioned away (After the first node fails we are left with ``N*2-1`` nodes in total, and the probability of the only master without a replica to fail is ``1/(N*2-1))``."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:137
+# bf347d8d9eac4e39835b3730b8d25eed
+msgid "For example in a cluster with 5 nodes and a single slave per node, there is a ``1/(5*2-1) = 0.1111`` probabilities that after two nodes are partitioned away from the majority, the cluster will no longer be available, that is about 11% of probabilities."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:142
+# bd3d81e5d39a47bea621d9f6a1890d60
+msgid "Thanks to a Redis Cluster feature called **replicas migration** the Cluster availability is improved in many real world scenarios by the fact that replicas migrate to orphaned masters (masters no longer having replicas)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:148
+# 998b239bd1744763a3d40114e01346c3
+msgid "Performance"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:150
+# 155059b8dc584c6bb1e975aa70d0e77c
+msgid "In Redis Cluster nodes don't proxy commands to the right node in charge for a given key, but instead they redirect clients to the right nodes serving a given portion of the key space."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:154
+# 617c63518749443295fbb8fb5308f60f
+msgid "Eventually clients obtain an up to date representation of the cluster and which node serves which subset of keys, so during normal operations clients directly contact the right nodes in order to send a given command."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:159
+# 306f353f9714435aa77a360eb8cc0490
+msgid "Because of the use of asynchronous replication, nodes does not wait for other nodes acknowledgment of writes (optional synchronous replication is a work in progress and will be likely added in future releases)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:163
+# 34551ece68a646a0ba2568df946c597f
+msgid "Also, because of the restriction to the subset of commands that don't perform operations on multiple keys, data is never moved between nodes if not in case of resharding."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:167
+# 5eb93df297614bac8831cf032d4d97da
+msgid "So normal operations are handled exactly as in the case of a single Redis instance. This means that in a Redis Cluster with N master nodes you can expect the same performance as a single Redis instance multiplied by N as the design allows to scale linearly. At the same time the query is usually performed in a single round trip, since clients usually retain persistent connections with the nodes, so latency figures are also the same as the single stand alone Redis node case."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:175
+# 06536ffb3351463fa06387e010a0c0c0
+msgid "Very high performances and scalability while preserving weak (non CAP) but reasonable forms of consistency and availability is the main goal of Redis Cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:180
+# e0391dca005e46d3bb27835a8529584c
+msgid "Why merge operations are avoided"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:182
+# 3949ac58f0604099a7e205113f67c853
+msgid "Redis Cluster design avoids conflicting versions of the same key-value pair in multiple nodes since in the case of the Redis data model this is not always desirable: values in Redis are often very large, it is common to see lists or sorted sets with millions of elements. Also data types are semantically complex. Transferring and merging these kind of values can be a major bottleneck and/or may require a non trivial involvement of application-side logic."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:191
+# 2dd639d8f63542d0bdf4f534cabaf967
+msgid "Keys distribution model"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:193
+# e425ed00da3c4a479a575641298afac8
+msgid "The key space is split into 16384 slots, effectively setting an upper limit for the cluster size of 16384 nodes (however the suggested max size of nodes is in the order of ~ 1000 nodes)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:197
+# 746f5385b99c4352b6b10d8d17f3306e
+msgid "All the master nodes will handle a percentage of the 16384 hash slots. When the cluster is **stable**, that means that there is no a cluster reconfiguration in progress (where hash slots are moved from one node to another) a single hash slot will be served exactly by a single node (however the serving node can have one or more slaves that will replace it in the case of net splits or failures)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:204
+# ab8571f78d1d4d0bbe0166f257ef89f8
+msgid "The base algorithm used to map keys to hash slots is the following (read the next paragraph for the hash tag exception to this rule):"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:211
+# 35257ece4bce4d1e9a8eaf14d4fb8682
+msgid "The CRC16 is specified as follows:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:213
+# 90ff4bbc1d91409cb8783c37b8ffbf52
+msgid "Name: XMODEM (also known as ZMODEM or CRC-16/ACORN)"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:214
+# 70c3b3c1764e4869895d64b41df59551
+msgid "Width: 16 bit"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:215
+# f5c521ddc08942558d80048c4bcd77d2
+msgid "Poly: 1021 (That is actually x^16 + x^12 + x^5 + 1)"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:216
+# d478c4543630417b9e0a8bbeea1c9065
+msgid "Initialization: 0000"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:217
+# 8206534ff3ce40d380f7c26d6ce9386d
+msgid "Reflect Input byte: False"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:218
+# 55a001330def41629418295914a41871
+msgid "Reflect Output CRC: False"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:219
+# a2b8535af82c45959891415e6a8f33bf
+msgid "Xor constant to output CRC: 0000"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:220
+# 640abc07d154481b9ccba1be63246498
+msgid "Output for \"123456789\": 31C3"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:222
+# 20df058acce14db48e3735939d75975a
+msgid "14 out of 16 bit of the output of CRC16 are used (this is why there is a modulo 16384 operation in the formula above)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:225
+# d5203135053e4dd8a3e148b2367768fd
+msgid "In our tests CRC16 behaved remarkably well in distributing different kind of keys evenly across the 16384 slots."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:228
+# 53cae76bb40d4ee7b9625b100cec4ea0
+msgid "**Note**: A reference implementation of the CRC16 algorithm used is available in the Appendix A of this document."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:232
+# ff2fb22579274569a9ca92a2d9581bad
+msgid "Keys hash tags"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:234
+# f07092734b444b70a7ee2cd4f1f8dda6
+msgid "There is an exception for the computation of the hash slot that is used in order to implement **hash tags**. Hash tags are a way to ensure that two keys are allocated in the same hash slot. This is used in order to implement multi-key operations in Redis Cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:239
+# 7e80a33db0be4c808836607250e74b98
+msgid "In order to implement hash tags, the hash slot is computed in a different way. Basically if the key contains a \"{...}\" pattern only the substring between ``{`` and ``}`` is hashed in order to obtain the hash slot. However since it is possible that there are multiple occurrences of ``{`` or ``}`` the algorithm is well specified by the following rules:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:246
+# 08d60e0ff6994bf6a3c79116d8dcc24d
+msgid "If the key contains a ``{`` character."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:247
+# a4ccc8627bed44a9861efe3f32d8b0f8
+msgid "There is a ``}`` character on the right of ``{``"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:248
+# 2c1c42122e6547c1a84efe676279fe50
+msgid "There are one or more characters between the first occurrence of ``{`` and the first occurrence of ``}`` after the first occurrence of ``{``."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:252
+# aebfd6fce3994d4fbd2906497509e2d8
+msgid "Then instead of hashing the key, only what is between the first occurrence of ``{`` and the first occurrence of ``}`` on its right are hashed."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:256
+# b98ab39888fc47f884e6b0758f56645f
+msgid "Examples:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:258
+# 1f330c4bb6384747a529c7d4981f7ed3
+msgid "The two keys ``{user1000}.following`` and ``{user1000}.followers`` will hash to the same hash slot since only the substring ``user1000`` will be hashed in order to compute the hash slot."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:261
+# 7abde208ccac4aa48efa3c5a29bf05b8
+msgid "For the key ``foo{}{bar}`` the whole key will be hashed as usually since the first occurrence of ``{`` is followed by ``}`` on the right without characters in the middle."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:264
+# 105f8fcf78af47168b3416a6337cf0d7
+msgid "For the key ``foo{{bar}}zap`` the substring ``{bar`` will be hashed, because it is the substring between the first occurrence of ``{`` and the first occurrence of ``}`` on its right."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:267
+# 6e2e0097ba734932bb8ee8f1072c9888
+msgid "For the key ``foo{bar}{zap}`` the substring ``bar`` will be hashed, since the algorithm stops at the first valid or invalid (without bytes inside) match of ``{`` and ``}``."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:270
+# 3071d37695ec4c8a8e6a46484827bf27
+msgid "What follows from the algorithm is that if the key starts with ``{}``, it is guaranteed to be hashes as a whole. This is useful when using binary data as key names."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:274
+# 7d34b2becdd748f793b1b92e2b561c61
+msgid "Adding the hash tags exception, the following is an implementation of the ``HASH_SLOT`` function in Ruby and C language."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:277
+# e3ccca85ddd6425aabc3590f4f3d1e6d
+msgid "Ruby example code:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:292
+# 0a47601082924e139de5f9ec9817f7f9
+msgid "C example code:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:319
+# ae19ca458ca24d2f9466103ef179f30e
+msgid "Cluster nodes attributes"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:321
+# 3d1ea2439d5a4eb5802e7f28dc938da9
+msgid "Every node has an unique name in the cluster. The node name is the hex representation of a 160 bit random number, obtained the first time a node is started (usually using /dev/urandom). The node will save its ID in the node configuration file, and will use the same ID forever, or at least as long as the node configuration file is not deleted by the system administrator."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:328
+# 5538661286c045efa4e92b6acb5ce89e
+msgid "The node ID is used to identify every node across the whole cluster. It is possible for a given node to change IP and address without any need to also change the node ID. The cluster is also able to detect the change in IP/port and reconfigure broadcast the information using the gossip protocol running over the cluster bus."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:334
+# 7a17efcc789c4f688cb8737378d13495
+msgid "Every node has other associated information that all the other nodes know:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:337
+# 6bab8251d6a44ff8a893e324ba82e950
+msgid "The IP address and TCP port where the node is located."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:338
+# b38bb48818bb4423b564f228ba4bfcdd
+msgid "A set of flags."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:339
+# fc8e100102ce44fe9ad0b66fd7a720b9
+msgid "A set of hash slots served by the node."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:340
+# 5fd18bfc2cb84bc2818af2a32136faa8
+msgid "Last time we sent a ping packet using the cluster bus."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:341
+# 8561ae30168844dd847760ec7c4dfad8
+msgid "Last time we received a pong packet in reply."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:342
+# fee28df7bb264d6aa834f13c4330634d
+msgid "The time at which we flagged the node as failing."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:343
+# dea0bfae6de144d68a4787f12f23a27a
+msgid "The number of slaves of this node."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:344
+# 73d6aecba7274c00ac332eabb3d51e37
+msgid "The master node ID, if this node is a slave (or 0000000... if it is a master)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:347
+# 5900ac72cd7c43a19e5346be919e63a0
+msgid "Some of this information is available using the ``CLUSTER NODES`` command that can be sent to all the nodes in the cluster, both master and slave nodes."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:351
+# 6470fcc126da41ebbb5f46816ae8e02a
+msgid "The following is an example of output of ``CLUSTER NODES`` sent to a master node in a small cluster of three nodes."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:361
+# aa01379e7f5a4634bfe11a51b9f63b5c
+msgid "In the above listing the different fields are in order: node id, address:port, flags, last ping sent, last pong received, link state, slots."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:366
+# b267f0d55d154fa59bdca434ac3dd636
+msgid "Cluster topology"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:368
+# fa6a005ee8ba41d9ab11661602598937
+msgid "Redis cluster is a full mesh where every node is connected with every other node using a TCP connection."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:371
+# 19a19979de4e4cc9813269bbde2911e3
+msgid "In a cluster of N nodes, every node has N-1 outgoing TCP connections, and N-1 incoming connections."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:374
+# 2631746f5dbe4a7fa30e700a32abd980
+msgid "These TCP connections are kept alive all the time and are not created on demand."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:378
+# 97bada64279c4d8fa5a535c08dac1fe3
+msgid "Nodes handshake"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:380
+# a4e582cdf0e54d809bf4295812fe9430
+msgid "Nodes always accept connection in the cluster bus port, and even reply to pings when received, even if the pinging node is not trusted. However all the other packets will be discarded by the node if the node is not considered part of the cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:385
+# 63cdfc2eeff443288b98ed46998a03f3
+msgid "A node will accept another node as part of the cluster only in two ways:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:387
+# 4d0da6722e104b4d816f848a9f1c2baa
+msgid "If a node will present itself with a ``MEET`` message. A meet message is exactly like a ``PING`` message, but forces the receiver to accept the node as part of the cluster. Nodes will send ``MEET`` messages to other nodes **only if** the system administrator requests this via the following command:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:393
+# 84bc42b1a9d3444c88bf825517d03508
+msgid "CLUSTER MEET ip port"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:395
+# 0716483d410b4d45ade45b464dc540ef
+msgid "A node will also register another node as part of the cluster if a node that is already trusted will gossip about this other node. So if A knows B, and B knows C, eventually B will send gossip messages to A about C. When this happens, A will register C as part of the network, and will try to connect with C."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:401
+# 170ef78f09124bda91a29b7936419e7c
+msgid "This means that as long as we join nodes in any connected graph, they'll eventually form a fully connected graph automatically. This means that basically the cluster is able to auto-discover other nodes, but only if there is a trusted relationship that was forced by the system administrator."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:407
+# aae17fa98402464dad791ac811b14db9
+msgid "This mechanism makes the cluster more robust but prevents that different Redis clusters will accidentally mix after change of IP addresses or other network related events."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:411
+# 7aa3a9d099054657b0b6e073f6216633
+msgid "All the nodes actively try to connect to all the other known nodes if the link is down."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:415
+# ac2999494f3c44aaa6c7b3f9f202f263
+msgid "MOVED Redirection"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:417
+# 960f960135fb4682a152e37e72306171
+msgid "A Redis client is free to send queries to every node in the cluster, including slave nodes. The node will analyze the query, and if it is acceptable (that is, only a single key is mentioned in the query) it will see what node is responsible for the hash slot where the key belongs."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:423
+# 5eec13fc50ab4c3284009a3ee3fc9833
+msgid "If the hash slot is served by the node, the query is simply processed, otherwise the node will check its internal hash slot -> node ID map and will reply to the client with a MOVED error."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:427
+# c17213f1792c4e19a2b485bfcf9cab56
+msgid "A MOVED error is like the following:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:434
+# fa7b3b1758784818ae7170bffdf6d93e
+msgid "The error includes the hash slot of the key (3999) and the ip:port of the instance that can serve the query. The client need to reissue the query to the specified ip address and port. Note that even if the client waits a long time before reissuing the query, and in the meantime the cluster configuration changed, the destination node will reply again with a MOVED error if the hash slot 3999 is now served by another node."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:441
+# 4b04fec54fa74031b801bdcabbded77c
+msgid "So while from the point of view of the cluster nodes are identified by IDs we try to simply our interface with the client just exposing a map between hash slots and Redis nodes identified by ip:port pairs."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:445
+# f634e508de39440b9be1e980e1b3ea27
+msgid "The client is not required to, but should try to memorize that hash slot 3999 is served by 127.0.0.1:6381. This way once a new command needs to be issued it can compute the hash slot of the target key and pick the right node with higher chances."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:450
+# 4de65097c38d49ae86433f77404d6a4a
+msgid "Note that when the Cluster is stable, eventually all the clients will obtain a map of hash slots -> nodes, making the cluster efficient, with clients directly addressing the right nodes without redirections nor proxies or other single point of failure entities."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:455
+# 20af78bc27db41069e33cffbd241f1ec
+msgid "A client should be also able to handle -ASK redirections that are described later in this document."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:459
+# 9500353970c649cdae9c3b43c8a83cc6
+msgid "Cluster live reconfiguration"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:461
+# f8cfcd6d19174534b86173bb236f7ec9
+msgid "Redis cluster supports the ability to add and remove nodes while the cluster is running. Actually adding or removing a node is abstracted into the same operation, that is, moving an hash slot from a node to another."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:466
+# 38c81da6dd95475a8749f0cb0688c026
+msgid "To add a new node to the cluster an empty node is added to the cluster and some hash slot is moved from existing nodes to the new node."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:469
+# 5c4d8e63bbca442990f860abe1f20139
+msgid "To remove a node from the cluster the hash slots assigned to that node are moved to other existing nodes."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:472
+# eafab6bf13394f7b9243b7752ac118bf
+msgid "So the core of the implementation is the ability to move slots around. Actually from a practical point of view an hash slot is just a set of keys, so what Redis cluster really does during *resharding* is to move keys from an instance to another instance."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:477
+# 793bf87dbc9b4916b8db85f768ec1a23
+msgid "To understand how this works we need to show the ``CLUSTER`` subcommands that are used to manipulate the slots translation table in a Redis cluster node."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:481
+# 3bc7bfaf7f1f4c998e1068e3aa10dfba
+msgid "The following subcommands are available:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:483
+# ccdce1e35e3d42fda8b9bd4db440da19
+msgid "CLUSTER ADDSLOTS slot1 [slot2] ... [slotN]"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:484
+# 9a1eb43f4f5148f387bba01bb7715eb0
+msgid "CLUSTER DELSLOTS slot1 [slot2] ... [slotN]"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:485
+# f97ce528c1d5409c9331f28e32f5cc8b
+msgid "CLUSTER SETSLOT slot NODE node"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:486
+# 74ea42cc766b4db4980c48ecf6a4ab01
+msgid "CLUSTER SETSLOT slot MIGRATING node"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:487
+# 2b4c37bacfe34cd3979a0a7ee556de0a
+msgid "CLUSTER SETSLOT slot IMPORTING node"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:489
+# 7b4b1760603a455eb2e187ce53ad7715
+msgid "The first two commands, ``ADDSLOTS`` and ``DELSLOTS``, are simply used to assign (or remove) slots to a Redis node. After the hash slots are assigned they will propagate across all the cluster using the gossip protocol. The ``ADDSLOTS`` command is usually used when a new cluster is configured from scratch to assign slots to all the nodes in a fast way."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:495
+# a61b282da39a4159920485726c38a569
+msgid "The ``SETSLOT`` subcommand is used to assign a slot to a specific node ID if the ``NODE`` form is used. Otherwise the slot can be set in the two special states ``MIGRATING`` and ``IMPORTING``:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:499
+# f96ddfcf106e4c3f9092bf2397a49043
+msgid "When a slot is set as MIGRATING, the node will accept all the requests for queries that are about this hash slot, but only if the key in question exists, otherwise the query is forwarded using a ``-ASK`` redirection to the node that is target of the migration."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:503
+# 829da5fc4b9d4832ba0b2e3aedf43145
+msgid "When a slot is set as IMPORTING, the node will accept all the requests for queries that are about this hash slot, but only if the request is preceded by an ASKING command. Otherwise if not ASKING command was given by the client, the query is redirected to the real hash slot owner via a ``-MOVED`` redirection error."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:509
+# dae9a5079a144edd82c09bbd885f1826
+msgid "At first this may appear strange, but now we'll make it more clear. Assume that we have two Redis nodes, called A and B. We want to move hash slot 8 from A to B, so we issue commands like this:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:513
+# 76a910d378ff470a9a335fb677a82bbc
+msgid "We send B: CLUSTER SETSLOT 8 IMPORTING A"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:514
+# 0148259218484f33b78645e5169de14a
+msgid "We send A: CLUSTER SETSLOT 8 MIGRATING B"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:516
+# 2358cf0f2991442a9cbe5a4f0eab697a
+msgid "All the other nodes will continue to point clients to node \"A\" every time they are queried with a key that belongs to hash slot 8, so what happens is that:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:520
+# 1696ead7ff374f249b02d47b25025ba1
+msgid "All the queries about already existing keys are processed by \"A\"."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:521
+# 7605bc45b12e4cbe8d75a7f359e3c0e0
+msgid "All the queries about non existing keys in A are processed by \"B\"."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:523
+# 35d62072e6174447abd97d87ff0b488b
+msgid "This way we no longer create new keys in \"A\". In the meantime, a special client that is called ``redis-trib`` and is the Redis cluster configuration utility will make sure to migrate existing keys from A to B. This is performed using the following command:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:532
+# a8d321ede73842ff99fe8c0e9957f506
+msgid "The above command will return ``count`` keys in the specified hash slot. For every key returned, redis-trib sends node A a ``MIGRATE`` command, that will migrate the specified key from A to B in an atomic way (both instances are locked for the time needed to migrate a key so there are no race conditions). This is how ``MIGRATE`` works:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:542
+# 6e19551a1d57450d9d6668b4af5abb1c
+msgid "``MIGRATE`` will connect to the target instance, send a serialized version of the key, and once an OK code is received will delete the old key from its own dataset. So from the point of view of an external client a key either exists in A or B in a given time."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:547
+# 7cd78a9941b6477fa6e8aae922f54c30
+msgid "In Redis cluster there is no need to specify a database other than 0, but ``MIGRATE`` can be used for other tasks as well not involving Redis cluster so it is a general enough command. ``MIGRATE`` is optimized to be as fast as possible even when moving complex keys such as long lists, but of course in Redis cluster reconfiguring the cluster where big keys are present is not considered a wise procedure if there are latency constraints in the application using the database."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:556
+# f6446ed55b1749e5af80a97508d7e3eb
+msgid "ASK redirection"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:558
+# 233aba748b1f49638077bceab5d6a8f2
+msgid "In the previous section we briefly talked about ASK redirection, why we can't simply use the MOVED redirection? Because while MOVED means that we think the hash slot is permanently served by a different node and the next queries should be tried against the specified node, ASK means to only ask the next query to the specified node."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:564
+# c51315db30ed46cda20655b88e6968ec
+msgid "This is needed because the next query about hash slot 8 can be about the key that is still in A, so we always want that the client will try A and then B if needed. Since this happens only for one hash slot out of 16384 available the performance hit on the cluster is acceptable."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:569
+# 48eadc89d6f446eeb0e8030e45e86fd5
+msgid "However we need to force that client behavior, so in order to make sure that clients will only try slot B after A was tried, node B will only accept queries of a slot that is set as IMPORTING if the client send the ASKING command before sending the query."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:574
+# 29115f40f9d74da1a3a2086e780cc53c
+msgid "Basically the ASKING command set a one-time flag on the client that forces a node to serve a query about an IMPORTING slot."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:577
+# aa79ff456ea84d1abfd39706db8f4767
+msgid "So the full semantics of the ASK redirection is the following, from the point of view of the client."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:580
+# 7d1d0fd97781443f867da7be791898ff
+msgid "If ASK redirection is received send only the query in object to the specified node."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:582
+# 70d1e3bf390544268e2b88357f32d3d4
+msgid "Start the query with the ASKING command."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:583
+# fe74b5c0dae848799d54c40c4ec728eb
+msgid "Don't update local client tables to map hash slot 8 to B for now."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:585
+# c4ed4ca5a3754963b3e487e3590ab647
+msgid "Once the hash slot 8 migration is completed, A will send a MOVED message and the client may permanently map hash slot 8 to the new ip:port pair. Note that however if a buggy client will perform the map earlier this is not a problem since it will not send the ASKING command before the query and B will redirect the client to A using a MOVED redirection error."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:592
+# 4d0987c046f94311bb4c3c2f99976f2f
+msgid "Clients first connection and handling of redirections."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:594
+# 0ba6ebb63a54436780be5a8826b0e77b
+msgid "While it is possible to have a Redis Cluster client implementation that does not takes the slots configuration (the map between slot numbers and addresses of nodes serving it) in memory, and only works contacting random nodes waiting to be redirected, such a client would be very inefficient."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:600
+# 924ac5d81b5248319da751b632697d04
+msgid "Redis Cluster clients should try to be smart enough to memorize the slots configuration. However this configuration does not *require* to be updated, since contacting the wrong node will simply result in a redirection."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:605
+# 79ee845ecd824b498ba5ff9c22afc9d2
+msgid "Clients usually need to fetch a complete list of slots and mapped node addresses in two different moments:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:608
+# 03633ed50fc34906adf45bfdb026f9a9
+msgid "At startup in order to populate the initial slots configuration."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:609
+# da25f20e3a2f4889afe207b0d40eb4d7
+msgid "When a ``MOVED`` redirection is received."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:611
+# 1020976ad6284fdeabf1fd002591a0ff
+msgid "Note that a client may handle the ``MOVED`` redirection updating just the moved slot in its table, however this is usually not efficient since often the configuration of multiple slots is modified at once (for example if a slave is promoted to master, all the slots served by the old master will be remapped). It is much simpler to react to a ``MOVED`` redirection fetching the full map of slots - nodes from scratch."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:618
+# d0a2bd0dcbdd4f5293e5f519bbbbeec6
+msgid "In order to retrieve the slots configuration Redis Cluster offers (starting with 3.0.0 beta-7) an alternative to the ``CLUSTER NODES`` command that does not require parsing, and only provides the information strictly needed to clients."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:623
+# 4a8d7703746f430990bd4b80dc4126fc
+msgid "The new command is called ``CLUSTER SLOTS`` and provides an array of slots ranges, and the associated master and slave nodes serving the specified range."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:627
+# 3e931d43145f4d6583f55d603d0bdda9
+msgid "The following is an example of output of ``CLUSTER SLOTS``:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:651
+# bc5be79b11b34e81a9611b2b0c7b2382
+msgid "The first two sub-elements of every element of the returned array are the start-end slots of the range, the additional elements represent address-port pairs. The first address-port pair is the master serving the slot, and the additional address-port pairs are all the slaves serving the same slot that are not in an error condition (the FAIL flag is not set)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:658
+# 83e6e957e1ee4a1c88c9405b5484d4d8
+msgid "For example the first element of the output says that slots from 5461 to 10922 (start and end included) are served by 127.0.0.1:7001, and it is possible to scale read-only load contacting the slave at 127.0.0.1:7004."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:662
+# 7e65116f6b274c3c90242c8169a4903f
+msgid "``CLUSTER SLOTS`` does not guarantee to return ranges that will cover all the 16k slots if the cluster is misconfigured, so clients should initialize the slots configuration map filling the target nodes with NULL objects, and report an error if the user will try to execute commands about keys that belong to misconfigured (unassigned) slots."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:668
+# a56da82893a54e20aac8439ee65fbaa4
+msgid "However before to return an error to the caller, when a slot is found to be be unassigned, the client should try to fetch the slots configuration again to check if the cluster is now configured properly."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:673
+# c8732e4cc1fb4695b9eae6dff98987ea
+msgid "Multiple keys operations"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:675
+# 3145a7c315fb451f9b79767287a8a3ec
+msgid "Using hash tags clients are free to use multiple-keys operations. For example the following operation is valid:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:682
+# c424cba85cce419cae8e72c7d6d38af9
+msgid "However multi-key operations become unavailable when a resharding of the hash slot the keys are hashing to is being moved form a node to another (because of a manual resharding)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:686
+# 4c6d3d37705c445083684d48aeb82a9b
+msgid "More specifically, even during a resharding, the multi-key operations targeting keys that all exist and are still all in the same node (either the source or destination node) are still available."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:690
+# 4c946d42814f4d1f83a0d661926250a3
+msgid "Operations about keys that don't exist or are, during the resharding, split between the source and destination node, will generate a ``-TRYAGAIN`` error. The client can try the operation after some time, or report back the error."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:696
+# bbc2399ad62745c1aa86577476da2f0a
+msgid "Fault Tolerance"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:699
+# 38e0913a7a474b7da8653db0dafa5381
+msgid "Nodes heartbeat and gossip messages"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:701
+# 5bb09ccbec5e4a51af1cb8a339abdd80
+msgid "Nodes in the cluster exchange ping / pong packets."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:703
+# 1a6a47d556bd441b81ad15a56f5cb978
+msgid "Usually a node will ping a few random nodes every second so that the total number of ping packets send (and pong packets received) is a constant amount regardless of the number of nodes in the cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:707
+# 04291e60651c4c7f96cf9aaf96baf90a
+msgid "However every node makes sure to ping every other node that we don't either sent a ping or received a pong for longer than half the ``NODE_TIMEOUT`` time. Before ``NODE_TIMEOUT`` has elapsed, nodes also try to reconnect the TCP link with another node to make sure nodes are not believed to be unreachable only because there is a problem in the current TCP connection."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:714
+# d32e3074e252438383b4a13c42db5d0e
+msgid "The amount of messages exchanged can be bigger than O(N) if ``NODE_TIMEOUT`` is set to a small figure and the number of nodes (N) is very large, since every node will try to ping every other node for which we don't have fresh information for half the ``NODE_TIMEOUT`` time."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:719
+# b05ab17398c54270ac1de0d09ff29247
+msgid "For example in a 100 nodes cluster with a node timeout set to 60 seconds, every node will try to send 99 pings every 30 seconds, with a total amount of pings of 3.3 per second, that multiplied for 100 nodes is 330 pings per second in the total cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:724
+# a01f2dc85f1c460fb365ef755758c521
+msgid "There are ways to use the gossip information already exchanged by Redis Cluster to reduce the amount of messages exchanged in a significant way. For example we may ping within half ``NODE_TIMEOUT`` only nodes that are already reported to be in \"possible failure\" state (see later) by other nodes, and ping the other nodes that are reported as working only in a best-effort way within the limit of the few packets per second. However in real-world tests large clusters with very small ``NODE_TIMEOUT`` settings used to work reliably so this change will be considered in the future as actual deployments of large clusters will be tested."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:735
+# 3d318faf0bd546ec8b0b7da63ba6793d
+msgid "Ping and Pong packets content"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:737
+# f0d2e0c9e82442e0a18ab943a18b94ad
+msgid "Ping and Pong packets contain an header that is common to all the kind of packets (for instance packets to request a vote), and a special Gossip Section that is specific of Ping and Pong packets."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:741
+# 7f5d38c3ae9542f19d05fb62cfc0175a
+msgid "The common header has the following information:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:743
+# d0c65bb1570a480ea25d65a3215b0d1d
+msgid "Node ID, that is a 160 bit pseudorandom string that is assigned the first time a node is created and remains the same for all the life of a Redis Cluster node."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:746
+# 161f48d5cc98407885b0cd8166f62252
+msgid "The ``currentEpoch`` and ``configEpoch`` field, that are used in order to mount the distributed algorithms used by Redis Cluster (this is explained in details in the next sections). If the node is a slave the ``configEpoch`` is the last known ``configEpoch`` of the master."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:750
+# cd094b400cf04c0a8581f0089c8bd23f
+msgid "The node flags, indicating if the node is a slave, a master, and other single-bit node information."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:752
+# a5149d53ac8b481ab48f11d60d17b00c
+msgid "A bitmap of the hash slots served by a given node, or if the node is a slave, a bitmap of the slots served by its master."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:754
+# bdea9c5a33954e028990907e37f4c562
+msgid "Port: the sender TCP base port (that is, the port used by Redis to accept client commands, add 10000 to this to obtain the cluster port)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:757
+# c391027bce3846058c063152e6144b09
+msgid "State: the state of the cluster from the point of view of the sender (down or ok)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:759
+# e793c6b5065d46468be6ca3ac0a0e37a
+msgid "The master node ID, if this is a slave."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:761
+# adc3c79cc00047689790d579bc0c89fa
+msgid "Ping and pong packets contain a gossip section. This section offers to the receiver a view about what the sender node thinks about other nodes in the cluster. The gossip section only contains information about a few random nodes among the known nodes set of the sender."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:766
+# b7fe6cc3787747ac8776ff95ecbd784d
+msgid "For every node added in the gossip section the following fields are reported:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:769
+# 04e0ca3f5a824e58a664cb437164fbb1
+msgid "Node ID."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:770
+# 848e906df9944cb3a9d8c5b60109c600
+msgid "IP and port of the node."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:771
+# 291dfb5f54714641a86b174eb1b451e2
+msgid "Node flags."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:773
+# 7f0b11baecf54d47b8e12d3fcad731d7
+msgid "Gossip sections allow receiving nodes to get information about the state of other nodes from the point of view of the sender. This is useful both for failure detection and to discover other nodes in the cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:778
+# e4c059dab0984866909fd99e80c3fb16
+msgid "Failure detection"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:780
+# 2eb1d4b3860a4c5f882d993e8636f216
+msgid "Redis Cluster failure detection is used to recognize when a master or slave node is no longer reachable by the majority of nodes, and as a result of this event, either promote a slave to the role of master, of when this is not possible, put the cluster in an error state to stop receiving queries from clients."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:786
+# d60c972132e840c08d4e70b7ac050884
+msgid "Every node takes a list of flags associated with other known nodes. There are two flags that are used for failure detection that are called ``PFAIL`` and ``FAIL``. ``PFAIL`` means *Possible failure*, and is a non acknowledged failure type. ``FAIL`` means that a node is failing and that this condition was confirmed by a majority of masters in a fixed amount of time."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:793
+# a70537df79864b5b9779c1fed1847386
+msgid "**PFAIL flag:**"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:795
+# e2128dce286a43d6a9fcc585f752fd44
+msgid "A node flags another node with the ``PFAIL`` flag when the node is not reachable for more than ``NODE_TIMEOUT`` time. Both master and slave nodes can flag another node as ``PFAIL``, regardless of its type."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:799
+# e69a8b9bb35a4cf5a16383d11ba0f760
+msgid "The concept of non reachability for a Redis Cluster node is that we have an **active ping** (a ping that we sent for which we still have to get a reply) pending for more than ``NODE_TIMEOUT``, so for this mechanism to work the ``NODE_TIMEOUT`` must be large compared to the network round trip time. In order to add reliability during normal operations, nodes will try to reconnect with other nodes in the cluster as soon as half of the ``NODE_TIMEOUT`` has elapsed without a reply to a ping. This mechanism ensures that connections are kept alive so broken connections should usually not result into false failure reports between nodes."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:809
+# ad2002a5328d42b2a4051f1698b1d3e0
+msgid "**FAIL flag:**"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:811
+# b3094127514b44579050b87af918a78f
+msgid "The ``PFAIL`` flag alone is just some local information every node has about other nodes, but it is not used in order to act and is not sufficient to trigger a slave promotion. For a node to be really considered down the ``PFAIL`` condition needs to be promoted to a ``FAIL`` condition."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:817
+# 1be4b14876114265815c72fb7175a061
+msgid "As outlined in the node heartbeats section of this document, every node sends gossip messages to every other node including the state of a few random known nodes. So every node eventually receives the set of node flags for every other node. This way every node has a mechanism to signal other nodes about failure conditions they detected."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:823
+# cd2b24f38e62447ca04de1849954d25e
+msgid "This mechanism is used in order to escalate a ``PFAIL`` condition to a ``FAIL`` condition, when the following set of conditions are met:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:826
+# 50b707c834db4268916aea1dd162c405
+msgid "Some node, that we'll call A, has another node B flagged as ``PFAIL``."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:828
+# 471c9a0e12654b82bd5afcb366409b87
+msgid "Node A collected, via gossip sections, information about the state of B from the point of view of the majority of masters in the cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:830
+# 33adca1a3511487cb4a5bb997b2f7960
+msgid "The majority of masters signaled the ``PFAIL`` or ``PFAIL`` condition within ``NODE_TIMEOUT * FAIL_REPORT_VALIDITY_MULT`` time."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:833
+# a9f37981cdbc47a3a6cf39c874f55f4c
+msgid "If all the above conditions are true, Node A will:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:835
+# 3312f5ad073c4766a2b8b34ba7168700
+msgid "Mark the node as ``FAIL``."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:836
+# df87dc495f7249bfa965ceaec46b1ec2
+msgid "Send a ``FAIL`` message to all the reachable nodes."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:838
+# cfa6957747284240b2fa6b9d8706f888
+msgid "The ``FAIL`` message will force every receiving node to mark the node in ``FAIL`` state."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:841
+# f8df7bf05c0c40539e347577fa5e2ee8
+msgid "Note that *the FAIL flag is mostly one way*, that is, a node can go from ``PFAIL`` to ``FAIL``, but for the ``FAIL`` flag to be cleared there are only two possibilities:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:845
+# 9298133816c3466d94b0c77ac7a7df54
+msgid "The node is already reachable, and it is a slave. In this case the ``FAIL`` flag can be cleared as slaves are not failed over."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:847
+# 65c85bb3f43d4fd59a6b137e16c9a991
+msgid "The node is already reachable, and it is a master not serving any slot. In this case the ``FAIL`` flag can be cleared as masters without slots do not really participate to the cluster, and are waiting to be configured in order to join the cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:851
+# a0a28a5d52174e219bfc8f3a28c39288
+msgid "The node is already reachable, is a master, but a long time (N times the ``NODE_TIMEOUT``) has elapsed without any detectable slave promotion."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:855
+# 4f85b87ecc0c444688babcc677360ae7
+msgid "**While the ``PFAIL`` -> ``FAIL`` transition uses a form of agreement, the agreement used is weak:**"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:858
+# ca1f83e097e04352b433325ba49e1baa
+msgid "Nodes collect views of other nodes during some time, so even if the majority of master nodes need to \"agree\", actually this is just state that we collected from different nodes at different times and we are not sure this state is stable."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:863
+# ec462d43a6b34e4cbb9127639b69bf18
+msgid "While every node detecting the ``FAIL`` condition will force that condition on other nodes in the cluster using the ``FAIL`` message, there is no way to ensure the message will reach all the nodes. For instance a node may detect the ``FAIL`` condition and because of a partition will not be able to reach any other node."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:869
+# a777add2bd6541d1b97028e4911c6be2
+msgid "However the Redis Cluster failure detection has liveness requirement: eventually all the nodes should agree about the state of a given node even in case of partitions, once the partitions heal. There are two cases that can originate from split brain conditions, either some minority of nodes believe the node is in ``FAIL`` state, or a minority of nodes believe the node is not in ``FAIL`` state. In both the cases eventually the cluster will have a single view of the state of a given node:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:878
+# ee19ccb2b6ab4958bbd596eae4b0d68a
+msgid "**Case 1**: If an actual majority of masters flagged a node as ``FAIL``, for the chain effect every other node will flag the master as ``FAIL`` eventually."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:882
+# 459e184234094a26bad955bd638be600
+msgid "**Case 2**: When only a minority of masters flagged a node as ``FAIL``, the slave promotion will not happen (as it uses a more formal algorithm that makes sure everybody will know about the promotion eventually) and every node will clear the ``FAIL`` state for the ``FAIL`` state clearing rules above (no promotion after some time > of N times the ``NODE_TIMEOUT``)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:889
+# 25ad566505144f2197e20293164852c8
+msgid "**Basically the ``FAIL`` flag is only used as a trigger to run the safe part of the algorithm** for the slave promotion. In theory a slave may act independently and start a slave promotion when its master is not reachable, and wait for the masters to refuse the provide acknowledgment if the master is actually reachable by the majority. However the added complexity of the ``PFAIL -> FAIL`` state, the weak agreement, and the ``FAIL`` message to force the propagation of the state in the shortest amount of time in the reachable part of the cluster, have practical advantages. Because of this mechanisms usually all the nodes will stop accepting writes about at the same time if the cluster is in an error condition, that is a desirable feature from the point of view of applications using Redis Cluster. Also not needed election attempts, initiated by slaves that can't reach its master for local problems (that is otherwise reachable by the majority of the other master nodes), are avoided."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:906
+# 1803d80bd672449989e8bf7afc30bdb0
+msgid "Cluster epoch"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:908
+# fa23e4d4e1f14695a6a3953c764005e1
+msgid "Redis Cluster uses a concept similar to the Raft algorithm \"term\". In Redis Cluster the term is called epoch instead, and it is used in order to give an incremental version to events, so that when multiple nodes provide conflicting information, it is possible for another node to understand which state is the most up to date."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:914
+# b2bba534a04543258130c89f44ebdf1b
+msgid "The ``currentEpoch`` is a 64 bit unsigned number."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:916
+# 9d506ca96ae640218fddb37c13f3a372
+msgid "At node creation every Redis Cluster node, both slaves and master nodes, set the ``currentEpoch`` to 0."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:919
+# dd1d0247a26f4c60830833f3c8461693
+msgid "Every time a ping or pong is received from another node, if the epoch of the sender (part of the cluster bus messages header) is greater than the local node epoch, then ``currentEpoch`` is updated to the sender epoch."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:923
+# 65a24a0d07fa48139b34755c8456fcdd
+msgid "Because of this semantics eventually all the nodes will agree to the greater epoch in the cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:926
+# 7ede3b3ed04940e7a516ebd7e4202a35
+msgid "The way this information is used is when the state is changed and a node seeks agreement in order to perform some action."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:929
+# dbd183f5e48d43f4b185f88e67569ab0
+msgid "Currently this happens only during slave promotion, as described in the next section. Basically the epoch is a logical clock for the cluster and dictates whatever a given information wins over one with a smaller epoch."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:935
+# d5a89b808e24443fa1a26f4dcbccd088
+msgid "Config epoch"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:937
+# 16373fd244ce40ddb1ddfda8f39549a8
+msgid "Every master always advertises its ``configEpoch`` in ping and pong packets along with a bitmap advertising the set of slots it serves."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:940
+# 09d36355e3e74654bce18280ff5c3a43
+msgid "The ``configEpoch`` is set to zero in masters when a new node is created."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:943
+# f9091da1383d4bdaa736446cffdfb9b7
+msgid "A new ``configEpoch`` is created during slave election. Slaves trying to replace failing masters increment their epoch and try to get the authorization from a majority of masters. When a slave is authorized, a new unique ``configEpoch`` is created, the slave turns into a master using the new ``configEpoch``."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:949
+# c13a4302845f4976b4cde32c09693a49
+msgid "As explained in the next sections the ``configEpoch`` helps to resolve conflicts due to different nodes claiming diverging configurations (a condition that may happen because of network partitions and node failures)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:954
+# b23d08a1e34341b095732f98a4d4564d
+msgid "Slave nodes also advertise the ``configEpoch`` field in ping and pong packets, but in case of slaves the field represents the ``configEpoch`` of its master the last time they exchanged packets. This allows other instances to detect when a slave has an old configuration that needs to be updated (Master nodes will not grant votes to slaves with an old configuration)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:961
+# fc029d19d6c047c49d347f46e0ee135d
+msgid "Every time the ``configEpoch`` changes for some known node, it is permanently stored in the nodes.conf file."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:964
+# 0dc3215f3878479f8c08889357fc8905
+msgid "Currently when a node is restarted its ``currentEpoch`` is set to the greatest ``configEpoch`` of the known nodes. This is not safe in a crash-recovery system model, and the system will be modified in order to store the currentEpoch in the persistent configuration as well."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:970
+# d9faa01e390e45f4ba41f5c3a439134e
+msgid "Slave election and promotion"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:972
+# ede5d6cc6b7c4b59992d2172ea527d38
+msgid "Slave election and promotion is handled by slave nodes, with the help of master nodes that vote for the slave to promote. A slave election happens when a master is in ``FAIL`` state from the point of view of at least one of its slaves that has the prerequisites in order to become a master."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:978
+# 1831293f40ec48c9a1dbcdbd33f36979
+msgid "In order for a slave to promote itself to master, it requires to start an election and win it. All the slaves for a given master can start an election if the master is in ``FAIL`` state, however only one slave will win the election and promote itself to master."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:983
+# 4ac49fddb1fd43f8949af2e79cedc29f
+msgid "A slave starts an election when the following conditions are met:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:985
+# 92ae7c9e6a184c1291b28773ace4279d
+msgid "The slave's master is in ``FAIL`` state."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:986
+# 618ca43b31f749efa002302fa7e286e6
+msgid "The master was serving a non-zero number of slots."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:987
+# f3cc52c1e6524a6e8678639331a73890
+msgid "The slave replication link was disconnected from the master for no longer than a given amount of time, in order to ensure to promote a slave with a reasonable data freshness."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:991
+# e39c2843531446f4b992da4cc4762995
+msgid "In order to be elected the first step for a slave is to increment its ``currentEpoch`` counter, and request votes from master instances."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:994
+# bb6da7e509924c3d8992e2f50ffd8a41
+msgid "Votes are requested by the slave by broadcasting a ``FAILOVER_AUTH_REQUEST`` packet to every master node of the cluster. Then it waits for replies to arrive for a maximum time of two times the ``NODE_TIMEOUT``, but always for at least for 2 seconds."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:999
+# de20a106a5d842fdb57b7b6db2275ffb
+msgid "Once a master voted for a given slave, replying positively with a ``FAILOVER_AUTH_ACK``, it can no longer vote for another slave of the same master for a period of ``NODE_TIMEOUT * 2``. In this period it will not be able to reply to other authorization requests for the same master. This is not needed to guarantee safety, but useful to avoid multiple slaves to get elected (even if with a different ``configEpoch``) about at the same time."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1007
+# 88a65247aacd4174b8743fc220d17f68
+msgid "A slave discards all the ``AUTH_ACK`` replies that are received having an epoch that is less than the ``currentEpoch`` at the time the vote request was sent, in order to never count as valid votes that are about a previous election."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1012
+# 2862d642c2cc487391ffe0a664829865
+msgid "Once the slave receives ACKs from the majority of masters, it wins the election. Otherwise if the majority is not reached within the period of two times ``NODE_TIMEOUT`` (but always at least 2 seconds), the election is aborted and a new one will be tried again after ``NODE_TIMEOUT * 4`` (and always at least 4 seconds)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1018
+# bc9de0c4d9264b68a329a39e0c7bcd50
+msgid "A slave does not try to get elected as soon as the master is in ``FAIL`` state, but there is a little delay, that is computed as:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1026
+# 6d496bb98b45452a9403b7dbd86b9108
+msgid "The fixed delay ensures that we wait for the ``FAIL`` state to propagate across the cluster, otherwise the slave may try to get elected when the masters are still not aware of the ``FAIL`` state, refusing to grant their vote."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1031
+# 69b3c7ec8d3145a6ab15ebc4440bcd3c
+msgid "The random delay is used to desynchronize slaves so they'll likely start an election in different moments."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1034
+# 1db9e514f291491e946b6a3e38b3f9a9
+msgid "The ``SLAVE_RANK`` is the rank of this slave regarding the amount of replication stream it processed from the master. Slaves exchange messages when the master is failing in order to establish a rank: the slave with the most updated replication offset is at rank 0, the second must updated at rank 1, and so forth. In this way the most updated slaves try to get elected before others."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1041
+# cd088e3b52f141f6b0d8175c582b9c1b
+msgid "Once a slave wins the election, it starts advertising itself as master in ping and pong packets, providing the set of served slots with a ``configEpoch`` set to the ``currentEpoch`` at which the election was started."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1046
+# 5c5238c15bfb46fd9440c14f04018b3c
+msgid "In order to speedup the reconfiguration of other nodes, a pong packet is broadcasted to all the nodes of the cluster (however nodes not currently reachable will eventually receive a ping or pong packet and will be reconfigured)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1051
+# 13cca94c497341dd9e44c5e7399f4e0c
+msgid "The other nodes will detect that there is a new master serving the same slots served by the old master but with a greater ``configEpoch``, and will upgrade the configuration. Slaves of the old master, or the failed over master that rejoins the cluster, will not just upgrade the configuration but will also configure to replicate from the new master."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1058
+# fb753a53534f47d8857e47161efb52c1
+msgid "Masters reply to slave vote request"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1060
+# c825c76223584595bb216a9b495254ee
+msgid "In the previous section it was discussed how slaves try to get elected, this section explains what happens from the point of view of a master that is requested to vote for a given slave."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1064
+# 1cb4dfe0dd7a465dbbba3c06de2ac100
+msgid "Masters receive requests for votes in form of ``FAILOVER_AUTH_REQUEST`` requests from slaves."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1067
+# a5166329bdd546c0b0e27af67177134d
+msgid "For a vote to be granted the following conditions need to be met:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1071
+# 7ab407963fb14f41bb78822701558b13
+msgid "A master only votes a single time for a given epoch, and refuses to vote for older epochs: every master has a lastVoteEpoch field and will refuse to vote again as long as the ``currentEpoch`` in the auth request packet is not greater than the lastVoteEpoch. When a master replies positively to an vote request, the lastVoteEpoch is updated accordingly."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1080
+# 1c5cc626833049ac869168e1dc2da6c8
+msgid "A master votes for a slave only if the slave's master is flagged as ``FAIL``."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1085
+# d041fb73931a4774b8af10563ca3a7ce
+msgid "Auth requests with a ``currentEpoch`` that is less than the master ``currentEpoch`` are ignored. Because of this the Master reply will always have the same ``currentEpoch`` as the auth request. If the same slave asks again to be voted, incrementing the ``currentEpoch``, it is guaranteed that an old delayed reply from the master can not be accepted for the new vote."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1092
+# ab42f8ef218b4a339fbeebb1be369c9d
+msgid "Example of the issue caused by not using this rule:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1094
+# 027fc800af70450cb326cd34007d4a2f
+msgid "Master ``currentEpoch`` is 5, lastVoteEpoch is 1 (this may happen after a few failed elections)"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1097
+# 235dbe4c24b24d1599a7403f21a38a06
+msgid "Slave ``currentEpoch`` is 3."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1098
+# 2563f12b614c4b69a03093083ffb4bf0
+msgid "Slave tries to be elected with epoch 4 (3+1), master replies with an ok with ``currentEpoch`` 5, however the reply is delayed."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1100
+# 977e1caa841a48e1956b76eddcee2b9d
+msgid "Slave tries to be elected again, with epoch 5 (4+1), the delayed reply reaches to slave with ``currentEpoch`` 5, and is accepted as valid."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1106
+# b7bf5cc369bb440ba851503f46e71f7e
+msgid "Masters don't vote a slave of the same master before ``NODE_TIMEOUT * 2`` has elapsed since a slave of that master was already voted. This is not strictly required as it is not possible that two slaves win the election in the same epoch, but in practical terms it ensures that normally when a slave is elected it has plenty of time to inform the other slaves avoiding that another slave will win a new election."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1116
+# f6e641288fd04a03993a7b811784e58a
+msgid "Masters don't try to select the best slave in any way, simply if the slave's master is in ``FAIL`` state and the master did not voted in the current term, the positive vote is granted. However the best slave is the most likely to start the election and win it before the other slaves."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1124
+# 33563deb293d40e8ae124807320cc925
+msgid "When a master refuses to vote for a given slave there is no negative response, the request is simply ignored."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1129
+# 0f8cdfff105c473ea2c69815a354f4ba
+msgid "Masters don't grant the vote to slaves sending a ``configEpoch`` that is less than any ``configEpoch`` in the master table for the slots claimed by the slave. Remember that the slave sends the ``configEpoch`` of its master, and the bitmap of the slots served by its master. What this means is basically that the slave requesting the vote must have a configuration, for the slots it wants to failover, that is newer or equal the one of the master granting the vote."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1139
+# dd17f8cc3537409d99744e5469c0fab4
+msgid "Race conditions during slaves election"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1141
+# 7288c119aa614b498e21280389530900
+msgid "This section illustrates how the concept of epoch is used to make the slave promotion process more resistant to partitions."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1144
+# c6fc1a1adbc9455f83ffe7f5f3b955d9
+msgid "A master is no longer reachable indefinitely. The master has three slaves A, B, C."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1146
+# db406d9c54fd4c5c9d5b23d71eff1f07
+msgid "Slave A wins the election and is promoted as master."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1147
+# e90d8b00c04844888e324a3d7b34408c
+msgid "A partition makes A not available for the majority of the cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1148
+# d105d702865b4c3db3b0550d10cec6ce
+msgid "Slave B wins the election and is promoted as master."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1149
+# 1368974387a54b30a68a972c5fa87444
+msgid "A partition makes B not available for the majority of the cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1150
+# d0f18fe8cfc24b918f483e4744488d92
+msgid "The previous partition is fixed, and A is available again."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1152
+# 00de3ce766064b5d8a89061a764d1cf7
+msgid "At this point B is down, and A is available again and will compete with C that will try to get elected in order to fail over B."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1155
+# a82d3cef6d2b4e15abbe25326e11e936
+msgid "Both will eventually claim to be promoted slaves for the same set of hash slots, however the ``configEpoch`` they publish will be different, and the C epoch will be greater, so all the other nodes will upgrade their configuration to C."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1160
+# 32b795372e764dc0989f0b2c90c45fa2
+msgid "A itself will detect pings from C serving the same slots with a greater epoch and will reconfigure as a slave of C."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1164
+# 768f69bae07b4c6a99760b853e1cf2f6
+msgid "Rules for server slots information propagation"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1166
+# 5bf0ec86aedb41c692240f9918a9a53d
+msgid "An important part of Redis Cluster is the mechanism used to propagate the information about which cluster node is serving a given set of hash slots. This is vital to both the startup of a fresh cluster and the ability to upgrade the configuration after a slave was promoted to serve the slots of its failing master."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1172
+# 5e370913c63b41f68e6634cdbdcdc046
+msgid "Ping and Pong packets that instances continuously exchange contain an header that is used by the sender in order to advertise the hash slots it claims to be responsible for. This is the main mechanism used in order to propagate change, with the exception of a manual reconfiguration operated by the cluster administrator (for example a manual resharding via redis-trib in order to move hash slots among masters)."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1180
+# acacd2d73c734a5ea8f861afb56cdfda
+msgid "When a new Redis Cluster node is created, its local slot table, that maps a given hash slot with a given node ID, is initialized so that every hash slot is assigned to nil, that is, the hash slot is unassigned."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1185
+# 510ed92989e347b8a4a1d9a0dcc7c7c1
+msgid "The first rule followed by a node in order to update its hash slot table is the following:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1188
+# bff8f6ab198541f2be30f58925ca95ec
+msgid "**Rule 1: If an hash slot is unassigned, and a known node claims it, I'll modify my hash slot table to associate the hash slot to this node.**"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1192
+# 35e1029432e64bb0a6c551845b877406
+msgid "Because of this rule, when a new cluster is created, it is only needed to manually assign (using the ``CLUSTER`` command, usually via the redis-trib command line tool) the slots served by each master node to the node itself, and the information will rapidly propagate across the cluster."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1198
+# 58dc7de7c3274d57915acf361cb4327b
+msgid "However this rule is not enough when a configuration update happens because of a slave gets promoted to master after a master failure. The new master instance will advertise the slots previously served by the old slave, but those slots are not unassigned from the point of view of the other nodes, that will not upgrade the configuration if they just follow the first rule."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1205
+# 214605e097964a299ff5fca2ab84f669
+msgid "For this reason there is a second rule that is used in order to rebind an hash slot already assigned to a previous node to a new node claiming it. The rule is the following:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1209
+# a8e17409eefa49b09bd8284716c98bcb
+msgid "**Rule 2: If an hash slot is already assigned, and a known node is advertising it using a ``configEpoch`` that is greater than the ``configEpoch`` advertised by the current owner of the slot, I'll rebind the hash slot to the new node.**"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1214
+# 74a20a59e99649b494fca9cc91069f38
+msgid "Because of the second rule eventually all the nodes in the cluster will agree that the owner of a slot is the one with the greatest ``configEpoch`` among the nodes advertising it."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1219
+# b6d6efc0b73d4c9b90e5f0f175fb68d2
+msgid "UPDATE messages"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1221
+# 527a0deeb28043479c780bf8b082be11
+msgid "The described system for the propagation of hash slots configurations only uses the normal ping and pong messages exchanged by nodes."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1224
+# 561cd90fa48e4993b0865ac07c81dd27
+msgid "It also requires that there is a node that is either a slave or a master for a given hash slot and has the updated configuration, because nodes send their own configuration in pong and pong packets headers."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1228
+# 28ee12b97d834232bed49db9f881ee4b
+msgid "However sometimes a node may recover after a partition in a setup where it is the only node serving a given hash slot, but with an old configuration."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1232
+# eecc08ff3f3f49a1a2addd0417504b6e
+msgid "Example: a given hash slot is served by node A and B. A is the master, and at some point fails, so B is promoted as master. Later B fails as well, and the cluster has no way to recover since there are no more replicas for this hash slot."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1237
+# 67ee7accdeb24bf3bf4f83de30d258d3
+msgid "However A may recover some time later, and rejoin the cluster with an old configuration in which it was writable as a master. There is no replica that can update its configuration. This is the goal of UPDATE messages: when a node detects that another node is advertising its hash slots with an old configuration, it sends the node an UPDATE message with the ID of the new node serving the slots and the set of hash slots (send as a bitmap) that it is serving."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1245
+# f60dd00d5923469e81181209c33412e5
+msgid "NOTE: while currently configuration updates via ping / pong and UPDATE share the same code path, there is a functional overlap between the two in the way they update a configuration of a node with stale information. However the two mechanisms are both useful because ping / pong messages after some time are able to populate the hash slots routing table of a new node, while UPDATE messages are only sent when an old configuration is detected, and only cover the information needed to fix the wrong configuration."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1255
+# 79a259ce1b07413aaa54eac3e7e9b6e7
+msgid "Replica migration"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1257
+# 826db7e4828347ee83acf4ddd39a8245
+msgid "Redis Cluster implements a concept called *replica migration* in order to improve the availability of the system. The idea is that in a cluster with a master-slave setup, if the map between slaves and masters is fixed there is limited availability over time if multiple independent failures of single nodes happen."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1263
+# 58e0dbf92e034397a6190acd1a59e9b3
+msgid "For example in a cluster where every master has a single slave, the cluster can continue the operations as long the master or the slave fail, but not if both fail the same time. However there is a class of failures, that are the independent failures of single nodes caused by hardware or software issues that can accumulate over time. For example:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1269
+# 17b26334386447ad8cdca220a4b6b327
+msgid "Master A has a single slave A1."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1270
+# cb847bed770d480b80ec7b4e4079cd33
+msgid "Master A fails. A1 is promoted as new slave."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1271
+# 1a4dd1d2a7034be2a35a90a4653611e4
+msgid "Three hours later A1 fails in an independent manner (not related to the failure of A). No other slave is available for promotion since also node A is still down. The cluster cannot continue normal operations."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1276
+# 67494b8578594ed48e5dceaff5c43bb8
+msgid "If the map between masters and slaves is fixed, the only way to make the cluster more resistant to the above scenario is to add slaves to every master, however this is costly as it requires more instances of Redis to be executed, more memory, and so forth."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1281
+# ce7f7f4badf440a7b83a2b43dd686347
+msgid "An alternative is to create an asymmetry in the cluster, and let the cluster layout automatically change over time. For example the cluster may have three masters A, B, C. A and B have a single slave each, A1 and B1. However the master C is different and has two slaves: C1 and C2."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1286
+# 293c912175df4254870a9d423d07f93e
+msgid "Replica migration is the process of automatic reconfiguration of a slave in order to *migrate* to a master that has no longer coverage (no working slaves). With replica migration the scenario mentioned above turns into the following:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1291
+# e767ef53e06b41bba7327ab323d044ee
+msgid "Master A fails. A1 is promoted."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1292
+# 6bd0d3dc7d484a49b2576c589b1d0393
+msgid "C2 migrates as slave of A1, that is otherwise not backed by any slave."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1294
+# dbfe26c3eab240fa81d284bb4918b560
+msgid "Three hours later A1 fails as well."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1295
+# 97b48b7d2a9549639bad4ee2445245b2
+msgid "C2 is promoted as new master to replace A1."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1296
+# 509120bf8e0a481290a5fc41769b78d1
+msgid "The cluster can continue the operations."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1299
+# f5b9e83f99244e9e8e6b98c4dfedea72
+msgid "Replica migration algorithm"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1301
+# d42265f8f2fa4a72abb14d6c6ba7e468
+msgid "The migration algorithm does not use any form of agreement, since the slaves layout in a Redis Cluster is not part of the cluster configuration that requires to be consistent and/or versioned with config epochs. Instead it uses an algorithm to avoid mass-migration of slaves when a master is not backed. The algorithm guarantees that eventually, once the cluster configuration is stable, every master will be backed by at least one slave."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1309
+# 25ca15de5eb442349b910b855061c69b
+msgid "This is how the algorithm works. To start we need to define what is a *good slave* in this context: a good slave is a slave not in FAIL state from the point of view of a given node."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1313
+# 39e79b600e4741339bd92f0a5e556408
+msgid "The execution of the algorithm is triggered in every slave that detects that there is at least a single master without good slaves. However among all the slaves detecting this condition, only a subset should act. This subset is actually often a single slave unless different slaves have in a given moment a slightly different vision of the failure state of other nodes."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1320
+# b5ec77a2da0941e3a36205a3cd87e4e4
+msgid "The *acting slave* is the slave among the masters having the maximum number of attached slaves, that is not in FAIL state and has the smallest node ID."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1324
+# ec732cd83a1b4d499db9413a163f7f16
+msgid "So for example if there are 10 masters with 1 slave each, and 2 masters with 5 slaves each, the slave that will try to migrate is, among the 2 masters having 5 slaves, the one with the lowest node ID. Given that no agreement is used, it is possible that when the cluster configuration is not stable, a race condition occurs where multiple slaves think to be the non-failing slave with the lower node ID (but it is an hard to trigger condition in practice). If this happens, the result is multiple slaves migrating to the same master, which is harmless. If the race happens in a way that will left the ceding master without slaves, as soon as the cluster is stable again the algorithm will be re-executed again and will migrate the slave back to the original master."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1336
+# 799cf67c529442f3b69e48806b4056e9
+msgid "Eventually every master will be backed by at least one slave, however normally the behavior is that a single slave migrates from a master with multiple slaves to an orphaned master."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1340
+# b0c427e98bd34e4aa9c996da373a1434
+msgid "The algorithm is controlled by an user-configurable parameter called ``cluster-migration-barrier``, that is the number of good slaves a master will be left with for a slave to migrate. So for example if this parameter is set to 2, a slave will try to migrate only if its master remains with two working slaves."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1347
+# a3d3d8ddf7d3464ba3c864bf93944976
+msgid "configEpoch conflicts resolution algorithm"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1349
+# 73c181f001bf441d8f22f8b04dd8862a
+msgid "When new ``configEpoch`` values are created via slave promotions during failovers, they are guaranteed to be unique."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1352
+# c1f56c32e54544ca8acdeacbab210dbc
+msgid "However during manual reshardings, when an hash slot is migrated from a node A to a node B, the resharding program will force B to upgrade its configuration to an epoch which is the greatest found in the cluster, plus 1 (unless the node is already the one with the greatest configuration epoch), without to require for an agreement from other nodes. This is needed so that the new slot configuration will win over the old one."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1360
+# e25a136974aa4799970bf5977763757b
+msgid "This process happens when the system administator performs a manual resharding, however it is possible that when the slot is closed after a resharding and the node assigns itself a new configuration epoch, at the same time a failure happens, just before the new ``configEpoch`` is propagated to the cluster. A slave may start a failover and obtain the authorization."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1367
+# d40d338e76e244b1a5d153216816810e
+msgid "This scenario may lead to two nodes having the same ``configEpoch``. There are other scenarios as well ending with two nodes having the same ``configEpoch``:"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1371
+# f44a9c0adcaa4ea5a9f5e7853e86b351
+msgid "New cluster creation: all nodes start with the same ``configEpoch`` of 0."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1373
+# d2ea50ac378145e99a28527fe614f6ec
+msgid "Possible software bugs."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1374
+# ec421be64aea46d0a02dcbb204b14a8b
+msgid "Manual editing of the configurations, filesystem corruptions."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1376
+# 1785a55d960c4aca864d2b6058ecf500
+msgid "When masters serving different hash slots have the same ``configEpoch``, there are no issues, and we are more interested in making sure slaves failing over a master have a different and unique configuration epoch."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1380
+# 8c1ffa6552e2411da12a7c35cf68d4a0
+msgid "However manual interventions or more reshardings may change the cluster configuration in different ways. The Redis Cluster main liveness property is that the slot configuration always converges, so we really want under every condition that all the master nodes have a different ``configEpoch``."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1386
+# 1a308a768de945c7a890c07f7e817c84
+msgid "In order to enforce this, a conflicts resolution is used in the event that two nodes end with the same ``configEpoch``."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1389
+# 83e651d04afc467a84c6f17f7324b422
+msgid "IF a master node detects another master node is advertising itself with the same ``configEpoch``."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1391
+# 369dcae1979c46829fb6810d0d0d6985
+msgid "AND IF the node has a lexicographically smaller Node ID compared to the other node claiming the same ``configEpoch``."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1393
+# c9a12a57de2e41aba081c6d85362a512
+msgid "THEN it increments its ``currentEpoch`` by 1, and uses it as the new ``configEpoch``."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1396
+# 81c39060ceac4349a2c7867ecda47ea4
+msgid "If there are any set of nodes with the same ``configEpoch``, all the nodes but the one with the greatest Node ID will move forward, guaranteeing that every node will pick an unique configEpoch regardless of what happened."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1401
+# a8737213b3934b28b498161e217e0d6f
+msgid "This mechanism also guarantees that after a fresh cluster is created all nodes start with a different ``configEpoch``."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1405
+# b142a921363c4b648c4759120f948fc3
+msgid "Publish/Subscribe"
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1407
+# 0d036cd9a8764d72a47b258b70b12f21
+msgid "In a Redis Cluster clients can subscribe to every node, and can also publish to every other node. The cluster will make sure that publish messages are forwarded as needed."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1411
+# bf89f90db63449919d146b3ff09a07ae
+msgid "The current implementation will simply broadcast all the publish messages to all the other nodes, but at some point this will be optimized either using bloom filters or other algorithms."
+msgstr ""
+
+#: ../../source/topics/cluster-spec.rst:1416
+# 135146bc13cc4641ba7c984582309e85
+msgid "Appendix A: CRC16 reference implementation in ANSI C"
+msgstr ""
+

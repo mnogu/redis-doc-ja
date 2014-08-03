@@ -1,0 +1,78 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/internals.rst:2
+# 1bacaaf748dd4092b096bb9422d44788
+msgid "Redis Internals documentation"
+msgstr ""
+
+#: ../../source/topics/internals.rst:4
+# 12581d98cc5343bea7b05304a917745d
+msgid "Redis source code is not very big (just 20k lines of code for the 2.2 release) and we try hard to make it simple and easy to understand. However we have some documentation explaining selected parts of the Redis internals."
+msgstr ""
+
+#: ../../source/topics/internals.rst:10
+# f758dee8e7974bf790187617265faf02
+msgid "Redis dynamic strings"
+msgstr ""
+
+#: ../../source/topics/internals.rst:12
+# 78b71b1e494043e4b8d3857bdd3acc02
+msgid "String is the basic building block of Redis types."
+msgstr ""
+
+#: ../../source/topics/internals.rst:14
+# 559366fd67604b4ebe5929512732b0a9
+msgid "Redis is a key-value store. All Redis keys are strings and its also the simplest value type."
+msgstr ""
+
+#: ../../source/topics/internals.rst:17
+# fcc925249f7e437c9ed0a3b3d2441c0a
+msgid "Lists, sets, sorted sets and hashes are other more complex value types and even these are composed of strings."
+msgstr ""
+
+#: ../../source/topics/internals.rst:20
+# 47fbac872cf444bb802847625f3e36c7
+msgid "`Hacking Strings </topics/internals-sds>`__ documents the Redis String implementation details."
+msgstr ""
+
+#: ../../source/topics/internals.rst:24
+# 13987b2242a0463e8ab0ac555174ae62
+msgid "Redis Virtual Memory"
+msgstr ""
+
+#: ../../source/topics/internals.rst:26
+# 38244ea1024e4eae8c2aa48eb680cdea
+msgid "We have a document explaining `virtual memory implementation details </topics/internals-vm>`__, but warning: this document refers to the 2.0 VM implementation. 2.2 is different... and better."
+msgstr ""
+
+#: ../../source/topics/internals.rst:31
+# 716cd23454c3411d9e1b4797de81fe12
+msgid "Redis Event Library"
+msgstr ""
+
+#: ../../source/topics/internals.rst:33
+# 3d6c7c5e1e304e7ea76c986522af9b53
+msgid "Read `event library </topics/internals-eventlib>`__ to understand what an event library does and why its needed."
+msgstr ""
+
+#: ../../source/topics/internals.rst:36
+# 70c3bdc32c274e55b9ec0490f8eac6ef
+msgid "`Redis event library </topics/internals-rediseventlib>`__ documents the implementation details of the event library used by Redis."
+msgstr ""
+

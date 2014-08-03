@@ -1,0 +1,188 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/signals.rst:2
+# 73fec16102ed4031856628fa88c4fe03
+msgid "Redis Signals Handling"
+msgstr ""
+
+#: ../../source/topics/signals.rst:4
+# 8e7d689c5ecc4f45bbadfbabdaacf920
+msgid "This document provides information about how Redis reacts to the reception of differe POSIX signals such as ``SIGTERM``, ``SIGSEGV`` and so forth."
+msgstr ""
+
+#: ../../source/topics/signals.rst:8
+# 930580ed76b04ed094585cf4c75f6dbf
+msgid "The information contained in this document is **only applicable to Redis version 2.6 or greater**."
+msgstr ""
+
+#: ../../source/topics/signals.rst:12
+# 12c0eb7fe2434f0195c05c0ebffbb3ff
+msgid "Handling of SIGTERM"
+msgstr ""
+
+#: ../../source/topics/signals.rst:14
+# 9e63e9a2f282404184197ae9e97ed054
+msgid "The ``SIGTERM`` signals tells Redis to shutdown gracefully. When this signal is received the server does not actually exits as a result, but it schedules a shutdown very similar to the one performed when the ``SHUTDOWN`` command is called. The scheduled shutdown starts ASAP, specifically as long as the current command in execution terminates (if any), with a possible additional delay of 0.1 seconds or less."
+msgstr ""
+
+#: ../../source/topics/signals.rst:21
+# 6d3b69d4f3d9425788df1794dbea8753
+msgid "In case the server is blocked by a Lua script that is taking too much time, if the script is killable with ``SCRIPT KILL`` the scheduled shutdown will be executed just after the script is killed, or if terminates spontaneously."
+msgstr ""
+
+#: ../../source/topics/signals.rst:26
+# 8e57752ddefe48ca9e17faa618d4452e
+msgid "The Shutdown performed in this condition includes the following actions:"
+msgstr ""
+
+#: ../../source/topics/signals.rst:28
+# f82c85c5379b481f8228c1259e8b00d9
+msgid "If there is a background child saving the RDB file or performing an AOF rewrite, the child is killed."
+msgstr ""
+
+#: ../../source/topics/signals.rst:30
+# ba144d7d63134af19341aa62c34bfa04
+msgid "If the AOF is active, Redis calls the ``fsync`` system call on the AOF file descriptor in order to flush the buffers on disk."
+msgstr ""
+
+#: ../../source/topics/signals.rst:32
+# 8fd6774105064811a1a7a5fbbf54fda7
+msgid "If Redis is configured to persist on disk using RDB files, a synchronous (blocking) save is performed. Since the save is performed in a synchronous way no additional memory is used."
+msgstr ""
+
+#: ../../source/topics/signals.rst:35
+# 7a81451a438a40ecb8c06612943d9f81
+msgid "If the server is daemonized, the pid file is removed."
+msgstr ""
+
+#: ../../source/topics/signals.rst:36
+# b8d192cba36c4f909b41713c08a8df77
+msgid "If the Unix domain socket is enabled, it gets removed."
+msgstr ""
+
+#: ../../source/topics/signals.rst:37
+# 3b2c083972054450887ffa2daed50336
+msgid "The server exits with an exit code of zero."
+msgstr ""
+
+#: ../../source/topics/signals.rst:39
+# d6588787ae90469bb664ebb2eb7f3ccb
+msgid "In case the RDB file can't be saved, the shutdown fails, and the server continues to run in order to ensure no data loss. Since Redis 2.6.11 no further attempt to shut down will be made unless a new ``SIGTERM`` will be received or the ``SHUTDOWN`` command issued."
+msgstr ""
+
+#: ../../source/topics/signals.rst:45
+# 56f70289ef624ebe8d3ed77565ab55b1
+msgid "Handling of SIGSEGV, SIGBUS, SIGFPE and SIGILL"
+msgstr ""
+
+#: ../../source/topics/signals.rst:47
+# 7c57fba78a684986915421a5c9e62327
+msgid "The following follow signals are handled as a Redis crash:"
+msgstr ""
+
+#: ../../source/topics/signals.rst:49
+# acbf467876cc4a8b8b76c1d93a6e28ff
+msgid "SIGSEGV"
+msgstr ""
+
+#: ../../source/topics/signals.rst:50
+# 5454a761858647d2bd34fc93ba08e663
+msgid "SIGBUS"
+msgstr ""
+
+#: ../../source/topics/signals.rst:51
+# 0e06537c166448a0b483391eb40f51c5
+msgid "SIGFPE"
+msgstr ""
+
+#: ../../source/topics/signals.rst:52
+# fe35d24f103c4999a40dd2c980669fa5
+msgid "SIGILL"
+msgstr ""
+
+#: ../../source/topics/signals.rst:54
+# 36a707fa85c348ebba85c54b88797d26
+msgid "One one of these signals is trapped, Redis aborts any current operation and performs the following actions:"
+msgstr ""
+
+#: ../../source/topics/signals.rst:57
+# 570fbaf8379e4795979193d65d4599bc
+msgid "A bug report is produced on the log file. This includes a stack trace, dump of registers, and information about the state of clients."
+msgstr ""
+
+#: ../../source/topics/signals.rst:59
+# ee130fbda652414f821a789844c7e839
+msgid "Since Redis 2.8 (currently a development version) a fast memory test is performed as a first check of the reliability of the crashing system."
+msgstr ""
+
+#: ../../source/topics/signals.rst:62
+# 092fc62593814906965d1012a1af8e2d
+msgid "If the server was daemonized, the pid file is removed."
+msgstr ""
+
+#: ../../source/topics/signals.rst:63
+# cbe297ff3fe542e88968d26e17c1dfc7
+msgid "Finally the server unregisters its own signal handler for the received signal, and sends the same signal again to itself, in order to make sure that the default action is performed, for instance dumping the core on the file system."
+msgstr ""
+
+#: ../../source/topics/signals.rst:69
+# 08536f82d51948e1b03b2071eb7f1c7f
+msgid "What happens when a child process gets killed"
+msgstr ""
+
+#: ../../source/topics/signals.rst:71
+# b5a1c49dc1a2414381712c83c7a06917
+msgid "When the child performing the Append Only File rewrite gets killed by a signal, Redis handles this as an error and discards the (probably partial or corrupted) AOF file. The rewrite will be re-triggered again later."
+msgstr ""
+
+#: ../../source/topics/signals.rst:76
+# 4fc83599cf444b0e873a8739726989cc
+msgid "When the child performing an RDB save is killed Redis will handle the condition as a more severe error, because while the effect of a lack of AOF file rewrite is a the AOF file enlargement, the effect of failed RDB file creation is lack of durability."
+msgstr ""
+
+#: ../../source/topics/signals.rst:81
+# 035dc5a3f83f4bc6ac794698ad9f0fc6
+msgid "As a result of the child producing the RDB file being killed by a signal, or when the child exits with an error (non zero exit code), Redis enters a special error condition where no further write command is accepted."
+msgstr ""
+
+#: ../../source/topics/signals.rst:86
+# bb2b91fa143342de87202e77907730e7
+msgid "Redis will continue to reply to read commands."
+msgstr ""
+
+#: ../../source/topics/signals.rst:87
+# c8cb6087c33c430dbe54560d7d3c6765
+msgid "Redis will reply to all write commands with a ``MISCONFIG`` error."
+msgstr ""
+
+#: ../../source/topics/signals.rst:89
+# 02fdbcffec424962b8e0c3863e3875c5
+msgid "This error condition is cleared only once it will be possible to create an RDB file with success."
+msgstr ""
+
+#: ../../source/topics/signals.rst:93
+# 5aea4cef74364abbb7997d4c241f76f8
+msgid "Killing the RDB file without triggering an error condition"
+msgstr ""
+
+#: ../../source/topics/signals.rst:95
+# 551f99fff30a4901b39d418724acc6b8
+msgid "However sometimes the user may want to kill the RDB saving child without generating an error. Since Redis version 2.6.10 this can be done using the special signal ``SIGUSR1`` that is handled in a special way: it kills the child process as any other signal, but the parent process will not detect this as a critical error and will continue to serve write requests as usually."
+msgstr ""
+

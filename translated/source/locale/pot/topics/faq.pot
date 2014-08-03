@@ -1,0 +1,273 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/faq.rst:2
+# 76c3567aace445fa8de6706076d64c12
+msgid "FAQ"
+msgstr ""
+
+#: ../../source/topics/faq.rst:5
+# 9bebb23ccc20495e9d0383df95602b2c
+msgid "Why Redis is different compared to other key-value stores?"
+msgstr ""
+
+#: ../../source/topics/faq.rst:7
+# a921e800c0dc4623a89fce263f8e786c
+msgid "There are two main reasons."
+msgstr ""
+
+#: ../../source/topics/faq.rst:9
+# 9d1f4e965700440791bca3b5ec1255e6
+msgid "Redis is a different evolution path in the key-value DBs where values can contain more complex data types, with atomic operations defined on those data types. Redis data types are closely related to fundamental data structures and are exposed to the programmer as such, without additional abstraction layers."
+msgstr ""
+
+#: ../../source/topics/faq.rst:14
+# bf909607d4dc464bbaea17b78a0d0e09
+msgid "Redis is an in-memory but persistent on disk database, so it represents a different trade off where very high write and read speed is achieved with the limitation of data sets that can't be larger than memory. Another advantage of in memory databases is that the memory representation of complex data structures is much simpler to manipulate compared to the same data structure on disk, so Redis can do a lot, with little internal complexity. At the same time the two on-disk storage formats (RDB and AOF) don't need to be suitable for random access, so they are compact and always generated in an append-only fashion (Even the AOF log rotation is an append-only operation, since the new version is generated from the copy of data in memory)."
+msgstr ""
+
+#: ../../source/topics/faq.rst:28
+# 48df069db0ab4ae9a82cca5f430a530e
+msgid "What's the Redis memory footprint?"
+msgstr ""
+
+#: ../../source/topics/faq.rst:30
+# 63b0dd6d5830427da6dcf479128ae345
+msgid "To give you a few examples (all obtained using 64-bit instances):"
+msgstr ""
+
+#: ../../source/topics/faq.rst:32
+# dac61216418c492c9fa28afb84f98e31
+msgid "An empty instance uses ~ 1MB of memory."
+msgstr ""
+
+#: ../../source/topics/faq.rst:33
+# 801a9a6978d24ba7a62e392f3e6c0138
+msgid "1 Million small Keys -> String Value pairs use ~ 100MB of memory."
+msgstr ""
+
+#: ../../source/topics/faq.rst:34
+# 2fc91e4a82ca47c19fd8d84f3f193314
+msgid "1 Million Keys -> Hash value, representing an object with 5 fields, use ~ 200 MB of memory."
+msgstr ""
+
+#: ../../source/topics/faq.rst:37
+# 895c52a04b444db6b9c7a26c23a45e3a
+msgid "To test your use case is trivial using the ``redis-benchmark`` utility to generate random data sets and check with the ``INFO memory`` command the space used."
+msgstr ""
+
+#: ../../source/topics/faq.rst:41
+# 89a41e311bae46758cf219e350ede3b8
+msgid "64 bit systems will use considerably more memory than 32 bit systems to store the same keys, especially if the keys and values are small, this is because pointers takes 8 bytes in 64 bit systems. But of course the advantage is that you can have a lot of memory in 64 bit systems, so in order to run large Redis servers a 64 bit system is more or less required. The alternative is sharding."
+msgstr ""
+
+#: ../../source/topics/faq.rst:49
+# ca0bbeb2f7ff4368ab7dec36ea3d6e50
+msgid "I like Redis high level operations and features, but I don't like that it takes everything in memory and I can't have a dataset larger the memory. Plans to change this?"
+msgstr ""
+
+#: ../../source/topics/faq.rst:51
+# c12b5fa9fdfe4b668608ac53f427a701
+msgid "In the past the Redis developers experimented with Virtual Memory and other systems in order to allow larger than RAM datasets, but after all we are very happy if we can do one thing well: data served from memory, disk used for storage. So for now there are no plans to create an on disk backend for Redis. Most of what Redis is, after all, is a direct result of its current design."
+msgstr ""
+
+#: ../../source/topics/faq.rst:58
+# 0b38e240c2e545d4ae5c6365fb4bf083
+msgid "If your real problem is not the total RAM needed, but the fact that you need to split your data set into multiple Redis instances, please read the `Partitioning page </topics/partitioning>`__ in this documentation for more info."
+msgstr ""
+
+#: ../../source/topics/faq.rst:64
+# f7dd10d0747c43598780510b584f39fb
+msgid "Is using Redis together with an on-disk database a good idea?"
+msgstr ""
+
+#: ../../source/topics/faq.rst:66
+# c7122c7e412d48b5a22ba1a6dc5fc3cb
+msgid "Yes, a common design pattern involves taking very write-heavy small data in Redis (and data you need the Redis data structures to model your problem in an efficinet way), and big *blobs* of data into an SQL or eventually consistent on-disk database."
+msgstr ""
+
+#: ../../source/topics/faq.rst:72
+# 3353e4adb94b40578f10b09f91fcd33d
+msgid "Is there something I can do to lower the Redis memory usage?"
+msgstr ""
+
+#: ../../source/topics/faq.rst:74
+# 22f155af7a424aec93b9fe0d47fa6f46
+msgid "If you can, use Redis 32 bit instances. Also make good use of small hashes, lists, sorted sets, and sets of integers, since Redis is able to represent those data types in the special case of a few elements in a much more compact way. There is more info in the `Memory Optimization page </topics/memory-optimization>`__."
+msgstr ""
+
+#: ../../source/topics/faq.rst:81
+# 3e65400de38441bda75d7e97c1ddbd02
+msgid "What happens if Redis runs out of memory?"
+msgstr ""
+
+#: ../../source/topics/faq.rst:83
+# 66ed3c7bbbbb4e8ab456b7ae04314734
+msgid "Redis will either be killed by the Linux kernel OOM killer, crash with an error, or will start to slow down. With modern operating systems malloc() returning NULL is not common, usually the server will start swapping and Redis performances will degrade so you'll probably notice there is something wrong."
+msgstr ""
+
+#: ../../source/topics/faq.rst:89
+# 8b9ab66fa77948c98d1030934ea95c81
+msgid "The INFO command will report the amount of memory Redis is using so you can write scripts that monitor your Redis servers checking for critical conditions."
+msgstr ""
+
+#: ../../source/topics/faq.rst:93
+# a610adecfa854ab496f7f9d10b8cb023
+msgid "Redis has built-in protections allowing the user to set a max limit to memory usage, using the ``maxmemory`` option in the config file to put a limit to the memory Redis can use. If this limit is reached Redis will start to reply with an error to write commands (but will continue to accept read-only commands), or you can configure it to evict keys when the max memory limit is reached in the case you are using Redis for caching."
+msgstr ""
+
+#: ../../source/topics/faq.rst:101
+# f8f21f201d25497f97fa35774b514f1e
+msgid "We have documentations you plan to use `Redis as an LRU cache </topics/lru-cache>`__."
+msgstr ""
+
+#: ../../source/topics/faq.rst:105
+# 4d2d9701751946b2bd26d4a1c58774a1
+msgid "Background saving is failing with a fork() error under Linux even if I've a lot of free RAM!"
+msgstr ""
+
+#: ../../source/topics/faq.rst:107
+# 6b7d014ad45d444b8b4d317212e98856
+msgid "Short answer: ``echo 1 > /proc/sys/vm/overcommit_memory`` :)"
+msgstr ""
+
+#: ../../source/topics/faq.rst:109
+# a532ddd5759d486cac32194f29d04e0b
+msgid "And now the long one:"
+msgstr ""
+
+#: ../../source/topics/faq.rst:111
+# 5c711815e7954b15ab84e631b6e459ea
+msgid "Redis background saving schema relies on the copy-on-write semantic of fork in modern operating systems: Redis forks (creates a child process) that is an exact copy of the parent. The child process dumps the DB on disk and finally exits. In theory the child should use as much memory as the parent being a copy, but actually thanks to the copy-on-write semantic implemented by most modern operating systems the parent and child process will *share* the common memory pages. A page will be duplicated only when it changes in the child or in the parent. Since in theory all the pages may change while the child process is saving, Linux can't tell in advance how much memory the child will take, so if the ``overcommit_memory`` setting is set to zero fork will fail unless there is as much free RAM as required to really duplicate all the parent memory pages, with the result that if you have a Redis dataset of 3 GB and just 2 GB of free memory it will fail."
+msgstr ""
+
+#: ../../source/topics/faq.rst:126
+# 4b585045ac5c4de6b6851b1810cf27e4
+msgid "Setting ``overcommit_memory`` to 1 says Linux to relax and perform the fork in a more optimistic allocation fashion, and this is indeed what you want for Redis."
+msgstr ""
+
+#: ../../source/topics/faq.rst:130
+# 6205e61c8f054aecb518e33aedad216e
+msgid "A good source to understand how Linux Virtual Memory work and other alternatives for ``overcommit_memory`` and ``overcommit_ratio`` is this classic from Red Hat Magazine, `\"Understanding Virtual Memory\" <http://www.redhat.com/magazine/001nov04/features/vm/>`__."
+msgstr ""
+
+#: ../../source/topics/faq.rst:136
+# b76b140b27704b3a974be937b09aa130
+msgid "Are Redis on-disk-snapshots atomic?"
+msgstr ""
+
+#: ../../source/topics/faq.rst:138
+# 610e212e0a0f4f999b4fdbd291b58e8c
+msgid "Yes, redis background saving process is always forked when the server is outside of the execution of a command, so every command reported to be atomic in RAM is also atomic from the point of view of the disk snapshot."
+msgstr ""
+
+#: ../../source/topics/faq.rst:144
+# ca4667a33a6a4b8ea5292ee2ded9ef40
+msgid "Redis is single threaded, how can I exploit multiple CPU / cores?"
+msgstr ""
+
+#: ../../source/topics/faq.rst:146
+# 63788fff098c48f8ab70855ffdf79ef4
+msgid "It's very unlikely that CPU becomes your bottleneck with Redis, as usually Redis is either memory or network bound. For instance using pipelining Redis running on an average Linux system can deliver even 500k requests per second, so if your application mainly uses O(N) or O(log(N)) commands it is hardly going to use too much CPU."
+msgstr ""
+
+#: ../../source/topics/faq.rst:152
+# c4e277e6c9b04248ab2a005f295e56d3
+msgid "However to maximize CPU usage you can start multiple instances of Redis in the same box and treat them as different servers. At some point a single box may not be enough anyway, so if you want to use multiple CPUs you can start thinking at some way to shard earlier."
+msgstr ""
+
+#: ../../source/topics/faq.rst:157
+# a269cb2d4d2d4a448b49a5d4180c826b
+msgid "You can find more information about using multiple Redis instances in the `Partitioning page </topics/partitioning>`__."
+msgstr ""
+
+#: ../../source/topics/faq.rst:161
+# 1d22bb6020a142a1820c5e8440525937
+msgid "What is the maximum number of keys a single Redis instance can hold? and what the max number of elements in a List, Set, Sorted Set?"
+msgstr ""
+
+#: ../../source/topics/faq.rst:163
+# 0bc7f5639bd74cea83f91a8d2fb1ca33
+msgid "Redis can handle up to 2^32 keys, and was tested in practice to handle at least 250 million of keys per instance."
+msgstr ""
+
+#: ../../source/topics/faq.rst:166
+# b85f02d371614461811a64a0664beb4b
+msgid "Every list, set, and sorted set, can hold 2^32 elements."
+msgstr ""
+
+#: ../../source/topics/faq.rst:168
+# 82f9bbe0e8d14983aa0319b4058d4e39
+msgid "In other words your limit is likely the available memory in your system."
+msgstr ""
+
+#: ../../source/topics/faq.rst:171
+# 3e0e0910aecf46ab892c972c47e0cad3
+msgid "My slave claims to have a different number of keys compared to its master, why?"
+msgstr ""
+
+#: ../../source/topics/faq.rst:173
+# aa8c04d76c974031a77505619eb36384
+msgid "If you use keys with limited time to live (Redis expires) this is normal behavior. This is what happens:"
+msgstr ""
+
+#: ../../source/topics/faq.rst:176
+# a20b7aaf25054068b037cdeab053cbd1
+msgid "The master generates an RDB file on the first synchronization with the slave."
+msgstr ""
+
+#: ../../source/topics/faq.rst:178
+# 7cd6c848f91d4cf2974c81d11779ec58
+msgid "The RDB file will not include keys already expired in the master, but that are still in memory."
+msgstr ""
+
+#: ../../source/topics/faq.rst:180
+# 6704cc7c01fd47c6b4ab411d5bee2984
+msgid "However these keys are still in the memory of the Redis master, even if logically expired. They'll not be considered as existing, but the memory will be reclaimed later, both incrementally and explicitly on access. However while these keys are not logical part of the dataset, they are advertised in ``INFO`` output and by the ``DBSIZE`` command."
+msgstr ""
+
+#: ../../source/topics/faq.rst:185
+# 57fd05c84f664c7ba387cca261f25642
+msgid "When the slave reads the RDB file generated by the master, this set of keys will not be loaded."
+msgstr ""
+
+#: ../../source/topics/faq.rst:188
+# dbd700ede76948dfa05cd395699313cc
+msgid "As a result of this, it is common for users with many keys with an expire set to see less keys in the slaves, because of this artifact, but there is no actual logical difference in the instances content."
+msgstr ""
+
+#: ../../source/topics/faq.rst:193
+# 6f8986f32ec44d28b6c1bccc181997a7
+msgid "What Redis means actually?"
+msgstr ""
+
+#: ../../source/topics/faq.rst:195
+# 41a7ed31fdf44b15a4ad2e932d562f7b
+msgid "It means REmote DIctionary Server."
+msgstr ""
+
+#: ../../source/topics/faq.rst:198
+# 2f3c210a54ab4c08aee7104cbdad2d06
+msgid "Why did you started the Redis project?"
+msgstr ""
+
+#: ../../source/topics/faq.rst:200
+# 574532f2efcd4a1ab28964f324418aac
+msgid "Originally Redis was started in order to scale `LLOOGG <http://lloogg.com>`__. But after I got the basic server working I liked the idea to share the work with other guys, and Redis was turned into an open source project."
+msgstr ""
+
