@@ -1,0 +1,128 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/config.rst:2
+# 01989938eb9040caa29a86aecf303c89
+msgid "Redis configuration"
+msgstr "Redis の設定"
+
+#: ../../source/topics/config.rst:4
+# 0623c7589c684141b24134c7d88c574a
+msgid "Redis is able to start without a configuration file using a built-in default configuration, however this setup is only recommended for testing and development purposes."
+msgstr "Redis はビルトインのデフォルト設定を使って、設定ファイルなしでも起動できますが、これはテストおよび開発プロセスにおいてのみ、推奨されます。"
+
+#: ../../source/topics/config.rst:8
+# 3b2cc37793984ae3875043078047a3ae
+msgid "The proper way to configure Redis is by providing a Redis configuration file, usually called ``redis.conf``."
+msgstr "Redis を設定する適切な方法は、通常 ``redis.conf`` と呼ばれる設定ファイルを与えることです。"
+
+#: ../../source/topics/config.rst:11
+# ea124fa128cd4f75a2200fbef57c98f6
+msgid "The ``redis.conf`` file contains a number of directives that have a very simple format:"
+msgstr "``redis.conf`` ファイルは、非常にシンプルなフォーマットで定義された、いくつかのディレクティブからなります:"
+
+#: ../../source/topics/config.rst:18
+# 075fae5f8db44a73adf36548c44a5500
+msgid "This is an example of configuration directive:"
+msgstr "以下は設定ディレクティブの例です:"
+
+#: ../../source/topics/config.rst:24
+# 84b37ea9bc0f4f5cbc73df747ba6faf8
+msgid "It is possible to provide strings containing spaces as arguments using quotes, as in the following example:"
+msgstr "次の例のように、スペースを含む文字列をクォートで囲んで引数に与えることもできます:"
+
+#: ../../source/topics/config.rst:31
+# 46279dc55dc04f29b9ce197d398874b3
+msgid "The list of configuration directives, and their meaning and intended usage is available in the self documented example redis.conf shipped into the Redis distribution."
+msgstr "設定ディレクティブの一覧と、その意味および使い方は、Redis 配布パッケージに同梱されている self documented な redis.conf 中に記載されています。"
+
+#: ../../source/topics/config.rst:35
+# 202ebad65be54aaf8a57b6bd255f9896
+msgid "The self documented `redis.conf for Redis 2.6 <https://raw.github.com/antirez/redis/2.6/redis.conf>`__."
+msgstr ""
+
+#: ../../source/topics/config.rst:37
+# dc59591bb2fb4d6f984dfc68928a96fd
+msgid "The self documented `redis.conf for Redis 2.4 <https://raw.github.com/antirez/redis/2.4/redis.conf>`__."
+msgstr ""
+
+#: ../../source/topics/config.rst:41
+# bc2c3819b76f4302b66c2a4b02d8cd28
+msgid "Passing arguments via the command line"
+msgstr "コマンドラインから引数を与える"
+
+#: ../../source/topics/config.rst:43
+# 1f20c07419e84f248c2ba8d5999e3923
+msgid "Since Redis 2.6 it is possible to also pass Redis configuration parameters using the command line directly. This is very useful for testing purposes. The following is an example that stats a new Redis instance using port 6380 as a slave of the instance running at 127.0.0.1 port 6379."
+msgstr "Redis 2.6 から、コマンドラインから直接 Redis に設定パラメータを与えることができるようになりました。これはテスト用途に大変便利です。以下の例では、127.0.0.1 のポート 6379 で稼働しているインスタンスのスレーブとして、ポート 6380 で新しい Redis インスタンスを起動しています。"
+
+#: ../../source/topics/config.rst:53
+# afb818deeb254d0680484312feacc8b1
+msgid "The format of the arguments passed via the command line is exactly the same as the one used in the redis.conf file, with the exception that the keyword is prefixed with ``--``."
+msgstr "コマンドライン経由で渡される引数のフォーマットは、redis.conf ファイルで使われるものとまったく同じです。ただし、キーワードには ``--`` というプレフィックスをつけます。"
+
+#: ../../source/topics/config.rst:57
+# fc7bfb2244bb45c58d78a2567bcc9756
+msgid "Note that internally this generates an in-memory temporary config file (possibly concatenating the config file passed by the user if any) where arguments are translated into the format of redis.conf."
+msgstr "内部的に、引数は redis.conf と同じフォーマットに変換されて、インメモリの一時設定ファイルを生成することに留意してください(ユーザーから指定された設定ファイルがもしあれば、それと結合されます)。"
+
+#: ../../source/topics/config.rst:62
+# a2ec648003114109822b309847f9f215
+msgid "Changing Redis configuration while the server is running"
+msgstr "サーバーの稼働中に Redis の設定を変更する"
+
+#: ../../source/topics/config.rst:64
+# 40f273063cc44884b7e131a9d4f129bd
+msgid "It is possible to reconfigure Redis on the fly without stopping and restarting the service, or querying the current configuration programmatically using the special commands `CONFIG SET </commands/config-set>`__ and `CONFIG GET </commands/config-get>`__"
+msgstr "サービスを停止したり再起動することなく、Redis の設定をその場(on the fly)で変更したり、現在の設定をプログラマティカルに問合せたりすることも可能です。このために、 `CONFIG SET <http://redis.io/commands/config-set>`_ や `CONFIG GET <http://redis.io/commands/config-get>`_ といった特別なコマンドを使います。"
+
+#: ../../source/topics/config.rst:69
+# c3ccd7aa4e364970aac873e4e374e522
+msgid "Not all the configuration directives are supported in this way, but most are supported as expected. Please refer to the `CONFIG SET </commands/config-set>`__ and `CONFIG GET </commands/config-get>`__ pages for more information."
+msgstr "この方法では、すべての設定ディレクティブをサポートしているわけではないですが、期待される多くのものはサポートされています。 `CONFIG SET <http://redis.io/commands/config-set>`_ と `CONFIG GET <http://redis.io/commands/config-get>`_ のページを参照してください。"
+
+#: ../../source/topics/config.rst:74
+# 94b288998212431989f854fd986cbe53
+msgid "Note that modifying the configuration on the fly **has no effects on the redis.conf file** so at the next restart of Redis the old configuration will be used instead."
+msgstr "On the fly で変更された設定は、 **redis.conf ファイルに一切影響しない** ことに注意してください。したがって、次の Redis 再起動時には古い設定が適用されます。"
+
+#: ../../source/topics/config.rst:78
+# 2c9a166a4b8442e9be4f49a8bd0ad47f
+msgid "Make sure to also modify the ``redis.conf`` file accordingly to the configuration you set using `CONFIG SET </commands/config-set>`__. There are plans to provide a ``CONFIG REWRITE`` command that will be able to run the ``redis.conf`` file rewriting the configuration accordingly to the current server configuration, without modifying the comments and the structure of the current file."
+msgstr "`CONFIG SET <http://redis.io/commands/config-set>`_ を使って変更した設定に追従して、 ``redis.conf`` を変更することを忘れないでください。 ``redis.conf`` ファイルを、コメントや構造自体に影響を与えることなく、 現在のサーバー設定にしたがって書き換える ``CONFIG REWRITE`` というコマンドを提供する計画があります。"
+
+#: ../../source/topics/config.rst:86
+# 3bcd620c38b746edbab00551764e0703
+msgid "Configuring Redis as a cache"
+msgstr "Redis をキャッシュとして使う設定"
+
+#: ../../source/topics/config.rst:88
+# 464b4e44124a4e5fa5cc729fde7b2f1f
+msgid "If you plan to use Redis just as a cache where every key will have an expire set, you may consider using the following configuration instead (assuming a max memory limit of 2 megabytes as an example):"
+msgstr "もし Redis をキャッシュ用途としてのみ使う、すなわちすべてのキーはある expire をもつなら、以下の設定を検討してください(最大メモリの制限を 2 メガバイトと仮定しています):"
+
+#: ../../source/topics/config.rst:97
+# 9489c689b17b459bbcefdffd2727cf8b
+msgid "In this configuration there is no need for the application to set a time to live for keys using the ``EXPIRE`` command (or equivalent) since all the keys will be evicted using an approximated LRU algorithm as long as we hit the 2 megabyte memory limit."
+msgstr "このように設定すると、アプリケーション自身で `EXPIRE <http://redis.io/commands/expire>`_ (またはそれと同様の)コマンドを使ってキーに time to live を指定する必要がなくなります。2 メガバイトの制限に達したら、近似的な LRU アルゴリズムによりキーが evict されるためです。"
+
+#: ../../source/topics/config.rst:102
+# bc6c6f20f80841018c05cd6c120fc36e
+msgid "Basically in this configuration Redis acts in a similar way to memcached. We have more extensive documentation about `using Redis as an LRU cache </topics/lru-cache>`__."
+msgstr "基本的に、この設定により Redis は memcached と似た動作をします。 `Redis を LRU キャッシュとして使う <lru-cache.html>`_ に、より詳しい説明があります。"
+
