@@ -34,7 +34,7 @@ msgstr "Redis を設定する適切な方法は、通常 ``redis.conf`` と呼�
 #: ../../source/topics/config.rst:11
 # ea124fa128cd4f75a2200fbef57c98f6
 msgid "The ``redis.conf`` file contains a number of directives that have a very simple format:"
-msgstr "``redis.conf`` ファイルは、非常にシンプルなフォーマットで定義された、いくつかのディレクティブからなります:"
+msgstr "``redis.conf`` ファイルは、非常にシンプルなフォーマットで定義された、多数のディレクティブからなります:"
 
 #: ../../source/topics/config.rst:18
 # 075fae5f8db44a73adf36548c44a5500
