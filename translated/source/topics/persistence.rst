@@ -138,7 +138,8 @@ into a single persistence model in the future (long term plan).
 The following sections will illustrate a few more details about the two
 persistence models.
 
- Snapshotting ---
+Snapshotting
+~~~~~~~~~~~~
 
 By default Redis saves snapshots of the dataset on disk, in a binary
 file called ``dump.rdb``. You can configure Redis to have it save the
@@ -169,7 +170,8 @@ Whenever Redis needs to dump the dataset to disk, this is what happens:
 
 This method allows Redis to benefit from copy-on-write semantics.
 
- Append-only file ---
+Append-only file
+~~~~~~~~~~~~~~~~
 
 Snapshotting is not very durable. If your computer running Redis stops,
 your power line fails, or you accidentally ``kill -9`` your instance,
