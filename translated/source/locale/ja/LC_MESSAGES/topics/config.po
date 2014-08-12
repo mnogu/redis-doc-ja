@@ -44,7 +44,7 @@ msgstr "以下は設定ディレクティブの例です:"
 #: ../../source/topics/config.rst:24
 # 84b37ea9bc0f4f5cbc73df747ba6faf8
 msgid "It is possible to provide strings containing spaces as arguments using quotes, as in the following example:"
-msgstr "次の例のように、スペースを含む文字列をクォートで囲んで引数に与えることもできます:"
+msgstr "次の例のように、スペースを含む文字列をクォートで囲んで引数として与えることもできます:"
 
 #: ../../source/topics/config.rst:31
 # 46279dc55dc04f29b9ce197d398874b3
