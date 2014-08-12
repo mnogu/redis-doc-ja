@@ -1,6 +1,8 @@
 #!/bin/bash
 
-mkdir translated/source/topics
+if [[ ! -d translated/source/topics ]]; then
+    mkdir translated/source/topics
+fi
 
 cd redis-doc
 find topics -name "*.md" -print0 | while read -r -d '' md;
