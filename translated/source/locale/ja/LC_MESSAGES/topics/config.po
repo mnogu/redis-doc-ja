@@ -119,7 +119,7 @@ msgstr "もし Redis をキャッシュ用途としてのみ使う、すなわ�
 #: ../../source/topics/config.rst:97
 # 9489c689b17b459bbcefdffd2727cf8b
 msgid "In this configuration there is no need for the application to set a time to live for keys using the ``EXPIRE`` command (or equivalent) since all the keys will be evicted using an approximated LRU algorithm as long as we hit the 2 megabyte memory limit."
-msgstr "このように設定すると、アプリケーション自身で `EXPIRE <http://redis.io/commands/expire>`_ (またはそれと同様の)コマンドを使ってキーに time to live を指定する必要がなくなります。2 メガバイトの制限に達したら、近似的な LRU アルゴリズムによりキーが evict されるためです。"
+msgstr "このように設定すると、アプリケーション自身で `EXPIRE <http://redis.io/commands/expire>`_ (またはそれと同様の)コマンドを使ってキーに time to live を指定する必要がなくなります。2 メガバイトの制限に達したら、近似的な LRU アルゴリズムによりキーが追い出されるためです。"
 
 #: ../../source/topics/config.rst:102
 # bc6c6f20f80841018c05cd6c120fc36e
