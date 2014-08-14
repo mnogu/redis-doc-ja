@@ -94,7 +94,7 @@ msgstr "サービスを停止したり再起動することなく、Redis の設
 #: ../../source/topics/config.rst:69
 # c3ccd7aa4e364970aac873e4e374e522
 msgid "Not all the configuration directives are supported in this way, but most are supported as expected. Please refer to the `CONFIG SET </commands/config-set>`__ and `CONFIG GET </commands/config-get>`__ pages for more information."
-msgstr "この方法では、すべての設定ディレクティブをサポートしているわけではないですが、期待される多くのものはサポートされています。 `CONFIG SET <http://redis.io/commands/config-set>`_ と `CONFIG GET <http://redis.io/commands/config-get>`_ のページを参照してください。"
+msgstr "この方法では、すべての設定ディレクティブをサポートしているわけではないですが、ほとんどのものは期待通りにサポートされています。 `CONFIG SET <http://redis.io/commands/config-set>`_ と `CONFIG GET <http://redis.io/commands/config-get>`_ のページを参照してください。"
 
 #: ../../source/topics/config.rst:74
 # 94b288998212431989f854fd986cbe53
