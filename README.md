@@ -35,6 +35,7 @@ Redis documentation は、Creative Commons Attribution-ShareAlike 4.0 Internatio
 Change Log
 ==========
 
+* 2014.08.14 'Redis Administration' の翻訳を公開
 * 2014.08.09 'Redis Persistence' の翻訳を公開
 * 2014.08.07 'Replication' の翻訳を公開
 * 2014.08.06 'FAQ', 'Redis Configuration' の翻訳を公開

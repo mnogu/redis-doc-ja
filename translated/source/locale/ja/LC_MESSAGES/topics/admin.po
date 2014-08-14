@@ -1,0 +1,128 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, moco_beta
+# This file is distributed under the same license as the Redis Documentation (Japanese) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redis Documentation (Japanese) 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 23:30+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/topics/admin.rst:2
+# e18929bae4924e87b457ba131888636a
+msgid "Redis Administration"
+msgstr "Redis の管理"
+
+#: ../../source/topics/admin.rst:4
+# 2e23adab8dc743b591c593e8336b7175
+msgid "This page contains topics related to the administration of Redis instances. Every topic is self contained in form of a FAQ. New topics will be created in the future."
+msgstr "このページでは Redis の管理に関する話題を記述します。すべてのトピックは、FAQ 形式で完結しています。新しいトピックは随時追加される予定です。"
+
+#: ../../source/topics/admin.rst:9
+# d824a3b7c9714807a65719bf83f89a1a
+msgid "Redis setup hints"
+msgstr "Redis セットアップヒント"
+
+#: ../../source/topics/admin.rst:11
+# 6e423f33264d44058b1c59e20f775992
+msgid "We suggest deploying Redis using the **Linux operating system**. Redis is also tested heavily on osx, and tested from time to time on FreeBSD and OpenBSD systems. However Linux is where we do all the major stress testing, and where most production deployments are working."
+msgstr "**Linux オペレーティングシステム** 上に Redis をデプロイすることを推奨します。Redis は OSX でも十分に、またしばしば FreeBSD や OpenBSD でもテストされています。しかし、私たちは Linux にて主な負荷テストを実施しており、またほとんどのプロダクション環境は Linux で稼働しています。"
+
+#: ../../source/topics/admin.rst:16
+# 966d3bf1e5844127a5927174a956a969
+msgid "Make sure to set the Linux kernel **overcommit memory setting to 1**. Add ``vm.overcommit_memory = 1`` to ``/etc/sysctl.conf`` and then reboot or run the command ``sysctl vm.overcommit_memory=1`` for this to take effect immediately."
+msgstr "Linux のカーネルを **overcommit memory setting to 1** としてください。 ``/etc/sysctl.conf`` に ``vm.overcommit_memory = 1`` を設定し、リブートもしくは即時反映のため ``sysctl vm.overcommit_memory=1`` コマンドを発行してください。"
+
+#: ../../source/topics/admin.rst:20
+# 9b1a6f4d340147078070674061d2f458
+msgid "Make sure to **setup some swap** in your system (we suggest as much as swap as memory). If Linux does not have swap and your Redis instance accidentally consumes too much memory, either Redis will crash for out of memory or the Linux kernel OOM killer will kill the Redis process."
+msgstr "システムに **いくらかの swap を設定してください** (メモリと同じ大きさを推奨します)。もし swap がないと、Redis が急激にメモリを消費しすぎてしまったり、クラッシュしたり、Linux カーネルの OOM killer に Redis プロセスが kill されてしまうことがあります。"
+
+#: ../../source/topics/admin.rst:25
+# baaf2981c54d45a6ac443665c617cf8f
+msgid "If you are using Redis in a very write-heavy application, while saving an RDB file on disk or rewriting the AOF log **Redis may use up to 2 times the memory normally used**. The additional memory used is proportional to the number of memory pages modified by writes during the saving process, so it is often proportional to the number of keys (or aggregate types items) touched during this time. Make sure to size your memory accordingly."
+msgstr "更新が非常に多いシステムで Redis を使う場合、RDB ファイルの保存時や AOF ログのリライト時に、 **Redis は通常の 2 倍のメモリを使用します** 。追加で必要なメモリ量は、保存するプロセスが書き込みを行っている間に変更されたメモリページ数に比例します。つまり、この間に変更されたキー(または集約タイプの要素)の数に比例します。そのことを考慮してメモリサイズを見積もってください。"
+
+#: ../../source/topics/admin.rst:32
+# 5a18e12ce0744429a558e584ad335297
+msgid "Even if you have persistence disabled, Redis will need to perform RDB saves if you use replication."
+msgstr "永続化を無効にした場合でも、レプリケーションを行う場合は Redis は RDB の保存を実行します。"
+
+#: ../../source/topics/admin.rst:34
+# 7bdda3967e17489aba3482c8dc816184
+msgid "The use of Redis persistence with **EC2 EBS volumes is discouraged** since EBS performance is usually poor. Use ephemeral storage to persist and then move your persistence files to EBS when possible."
+msgstr "Redis の永続化を **EC2 EBS ボリュームで行うことは推奨されません** 。 EBS の性能はあまり良くないためです。永続化には ephemeral ストレージを使い、可能なタイミングで永続化したファイルを EBS に移動してください。"
+
+#: ../../source/topics/admin.rst:37
+# c398d0e8d5694d838b2698b717df8893
+msgid "If you are deploying using a virtual machine that uses the **Xen hypervisor you may experience slow fork() times**. This may block Redis from a few milliseconds up to a few seconds depending on the dataset size. Check the `latency page </topics/latency>`__ for more information. This problem is not common to other hypervisors."
+msgstr "**Xen ハイパーバイザを使った仮想環境にデプロイすると fork() 時間が長くなることがあります** 。データセットのサイズによりますが、数ミリ秒から数秒にわたって Redis がブロックされることがあります。より詳しい情報は、 `latency の ページ <./latency.html>`_ を参照してください。この問題は他のハイパーバイザで一般的なものではありません。"
+
+#: ../../source/topics/admin.rst:42
+# 72f20b128c5e49d0b88366726540ba63
+msgid "Use ``daemonize no`` when run under daemontools."
+msgstr "daemontools を使う場合は、 ``daemonize no`` を指定してください。"
+
+#: ../../source/topics/admin.rst:45
+# 977520bbc2654c6198774dd67164c575
+msgid "Upgrading or restarting a Redis instance without downtime"
+msgstr "ダウンタイムなしで Redis インスタンスをアップグレード、再起動する"
+
+#: ../../source/topics/admin.rst:47
+# 41433dd2af3742acb90033f9109f1380
+msgid "Redis is designed to be a very long running process in your server. For instance many configuration options can be modified without any kind of restart using the `CONFIG SET command </commands/config-set>`__."
+msgstr "Redis は、非常に長期間稼働し続けるように設計されています。たとえば、多くの設定オプションは `CONFIG SET コマンド <http://redis.io/commands/config-set>`_ を使って、再起動なしに変更が可能です。"
+
+#: ../../source/topics/admin.rst:51
+# aff39edc5c424f2c8ea9dd3109855ebc
+msgid "Starting from Redis 2.2 it is even possible to switch from AOF to RDB snapshots persistence or the other way around without restarting Redis. Check the output of the 'CONFIG GET \\*' command for more information."
+msgstr "Redis 2.2 から、再起動なしで AOF から RDB スナップショット永続化へ切り替えることができるようになりました。詳しくは 'CONFIG GET \\*' コマンドの出力を確認してください。"
+
+#: ../../source/topics/admin.rst:55
+# 852d312db28245a2ab81698538d39227
+msgid "However from time to time a restart is mandatory, for instance in order to upgrade the Redis process to a newer version, or when you need to modify some configuration parameter that is currently not supported by the CONFIG command."
+msgstr "しかし、時には再起動が必須となる場合もあります。たとえば Redis プロセスを新しいバージョンにアップグレードする、CONFIG コマンドが現在のところサポートしていないパラメータを変更する必要がある、などです。"
+
+#: ../../source/topics/admin.rst:60
+# 555ae0af58194e9eab8e8ebd9580b99e
+msgid "The following steps provide a very commonly used way in order to avoid any downtime."
+msgstr "以下のステップは、ダウンタイムを回避[訳注: しながら再起動]するもっとも一般的な方法です。"
+
+#: ../../source/topics/admin.rst:63
+# 9c89be6fd7324136920d3493e65e7da5
+msgid "Setup your new Redis instance as a slave for your current Redis instance. In order to do so you need a different server, or a server that has enough RAM to keep two instances of Redis running at the same time."
+msgstr "新しい Redis インスタンスを現在の Redis インスタンスのスレーブとして起動します。そのため、別のサーバーか、2 つの Redis インスタンスを同時に稼働させられるだけの十分な RAM をもつサーバーが必要です。"
+
+#: ../../source/topics/admin.rst:67
+# 6f2ba62e71b2433c93d864cad49b4a5c
+msgid "If you use a single server, make sure that the slave is started in a different port than the master instance, otherwise the slave will not be able to start at all."
+msgstr "1 つのサーバーを使う場合、必ずマスターインスタンスとは別のポートで起動させてください。そうしないと、スレーブは起動できません。"
+
+#: ../../source/topics/admin.rst:70
+# 641d28c82b1846f8a40c70cbb701f602
+msgid "Wait for the replication initial synchronization to complete (check the slave log file)."
+msgstr "レプリケーションの初回同期が完了するまで待ちます(スレーブのログファイルを確認してください)。"
+
+#: ../../source/topics/admin.rst:72
+# 791bdd1bb7674068860b9c0519d0226d
+msgid "Make sure using INFO that there are the same number of keys in the master and in the slave. Check with redis-cli that the slave is working as you wish and is replying to your commands."
+msgstr "INFO コマンドを使って、マスターと同じ数のキーがスレーブ上に存在することを確認してください。redis-cli で、スレーブが期待どおりに稼働していること、コマンドに応答することを確認してください。"
+
+#: ../../source/topics/admin.rst:75
+# 5146c4de518243678bd8dddfd56d39c2
+msgid "Configure all your clients in order to use the new instance (that is, the slave)."
+msgstr "すべてのクライアントが、新しいインスタンス(つまり、スレーブ)を向くように設定してください。"
+
+#: ../../source/topics/admin.rst:77
+# 5881a274aede4f828365e53de0c13970
+msgid "Once you are sure that the master is no longer receiving any query (you can check this with the `MONITOR command </commands/monitor>`__), elect the slave to master using the **SLAVEOF NO ONE** command, and shut down your master."
+msgstr "マスターがどのようなクエリも受け付けていないことが確認できたら(`MONITOR コマンド <http://redis.io/commands/monitor>`_ で確認できます)、 **SLAVEOF NO ONE** コマンドでスレーブをマスターに昇格させ、マスターを停止してください。"
+
