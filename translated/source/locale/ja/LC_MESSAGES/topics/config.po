@@ -89,7 +89,7 @@ msgstr "サーバーの稼働中に Redis の設定を変更する"
 #: ../../source/topics/config.rst:64
 # 40f273063cc44884b7e131a9d4f129bd
 msgid "It is possible to reconfigure Redis on the fly without stopping and restarting the service, or querying the current configuration programmatically using the special commands `CONFIG SET </commands/config-set>`__ and `CONFIG GET </commands/config-get>`__"
-msgstr "サービスを停止したり再起動することなく、Redis の設定をその場(on the fly)で変更したり、現在の設定をプログラマティカルに問合せたりすることも可能です。このために、 `CONFIG SET <http://redis.io/commands/config-set>`_ や `CONFIG GET <http://redis.io/commands/config-get>`_ といった特別なコマンドを使います。"
+msgstr "サービスを停止したり再起動することなく、Redis の設定をその場(on the fly)で変更したり、現在の設定をプログラムから問合せたりすることも可能です。このために、 `CONFIG SET <http://redis.io/commands/config-set>`_ や `CONFIG GET <http://redis.io/commands/config-get>`_ といった特別なコマンドを使います。"
 
 #: ../../source/topics/config.rst:69
 # c3ccd7aa4e364970aac873e4e374e522
