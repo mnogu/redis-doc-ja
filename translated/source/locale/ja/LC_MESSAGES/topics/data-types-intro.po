@@ -24,7 +24,7 @@ msgstr "入門 : Redis のデータ構造と概念"
 #: ../../source/topics/data-types-intro.rst:4
 # c0ee52c06ce443ee9f455c9e96e0ffc8
 msgid "Redis is not a *plain* key-value store, actually it is a *data structures server*, supporting different kind of values. What this means is that, while in traditional key-value stores you associated string keys to string values, in Redis the value is not limited to a simple string, but can also hold more complex data structures. The following is the list of all the data structures supported by Redis, which will be covered separately in this tutorial:"
-msgstr "Redis は *プレーン* なキー・バリューストアではありません。実質的には、異なる種類の値をサポートする *データ構造サーバー (data structures server)* といえます。つまり、従来のキー・バリューストアでは、キーに文字列値を関連づけるのに対して、Redis では値はシンプルな文字列に限定されず、もっと複雑なデータ構造を格納することができます。以下のリストは、Redis でサポートされるすべてのデータ構造の一覧です。このチュートリアルで、それぞれについて説明していきいます:"
+msgstr "Redis は *プレーン* なキー・バリューストアではありません。実際は、異なる種類の値をサポートする *データ構造サーバー (data structures server)* といえます。つまり、従来のキー・バリューストアでは、文字列キーに文字列値を関連づけるのに対して、Redis では値はシンプルな文字列に限定されず、もっと複雑なデータ構造を格納することができます。以下のリストは、Redis でサポートされるすべてのデータ構造の一覧です。このチュートリアルで、それぞれについて説明していきいます:"
 
 #: ../../source/topics/data-types-intro.rst:12
 # 85cb7399df6f4eaa9c6248ce5eb083d2
@@ -34,42 +34,42 @@ msgstr "バイナリ・セーフな文字列"
 #: ../../source/topics/data-types-intro.rst:13
 # 20606d3191ca4669a9901114e193474c
 msgid "Lists: collections of string elements sorted according to the order of insertion. They are basically *linked lists*."
-msgstr "Lists: 文字列のコレクション。挿入された順序を保つ。基本的には *linked list*."
+msgstr "リスト: 挿入された順序によってソートされた文字列のコレクション。基本的には *連結リスト* です。"
 
 #: ../../source/topics/data-types-intro.rst:15
 # c0b4785ead494663b61bfa2001fd9fdc
 msgid "Sets: collections of unique, unsorted string elements."
-msgstr "Sets: ユニークで、順序づけられない文字列のコレクション。"
+msgstr "セット: ユニークで、ソートされていない文字列のコレクション。"
 
 #: ../../source/topics/data-types-intro.rst:16
 # 7e27ed799f5143e9b9794943ade21db5
 msgid "Sorted sets, similar to Sets but where every string element is associated to a floating number value, called *score*. The elements are always taken sorted by their score, so unlike Sets it is possible to retrieve range of elements (for example you may aks: give me the top 10, or the bottom 10)."
-msgstr "Sorted sets: Sets に似ているが、すべての要素には *スコア* と呼ばれる浮動小数点数が関連づけられる。要素は常にスコアによりソートされており、Sets とは違い特定の範囲の要素を取り出すことができる(たとえば、上位 10 件、または下位 10 件を返す、など)。"
+msgstr "ソート済みセット: セットに似ていますが、すべての文字列要素には *スコア* と呼ばれる浮動小数点数が関連づけられています。要素は常にスコアによりソートされており、セットとは違い特定の範囲の要素を取り出すことができます(たとえば、上位 10 件、または下位 10 件を返す、など)。"
 
 #: ../../source/topics/data-types-intro.rst:21
 # 5d1058147ebb484f9f8c5a03f5717331
 msgid "Hashes, which are maps composed of fields associated with values. Both the field and the value are strings. This are very similary to Ruby or Python hashes."
-msgstr "Hashes: フィールドと、それに関連づけられた値から構成されるマップ。フィールドと値はどちらも文字列。Ruby や Python でいうハッシュ、によく似ている。"
+msgstr "ハッシュ: 値に関連づけられたフィールドから構成されるマップ。フィールドと値はどちらも文字列です。Ruby や Python のハッシュ、によく似ています。"
 
 #: ../../source/topics/data-types-intro.rst:24
 # e7797f8ea0a04452b71b10af38e70525
 msgid "Bit arrays: it is possible, usign special commands, to handle String values like array of bits: you can set and clear individual bits, count all the bits set to 1, find the first set or unset bit, and so forth."
-msgstr "Bit arrays: 特殊なコマンドを使って、文字列値をビット配列のように扱うことができる。個々のビットをセットまたはクリアしたり、1 がセットされているビットの数を数えたり、最初にセットされている、またはアンセットされているビットを探したり、その他いろいろ。"
+msgstr "ビット配列: 特殊なコマンドを使って、文字列値をビットの配列のように扱うことができます。個々のビットをセットまたはクリアしたり、1 がセットされているビットの数を数えたり、最初にセットされている、またはアンセットされているビットを探したり、その他いろいろできます。"
 
 #: ../../source/topics/data-types-intro.rst:28
 # 915937c6ac5f48f38eb8198e63f4cab2
 msgid "HyperLogLogs: this is a probabilistic data structure which is used in order to estimate the cardinality of a set. Don't be scared, it is simpler than it seems... See later in the HyperLogLog section of this tutorial."
-msgstr "HyperLogLogs: 集合の濃度を推定するために使う、確率的なデータ構造。見た目よりはずっとシンプルなものなので、怖がらないで...。このチュートリアルの HyperLogLog の節を見てください。"
+msgstr "HyperLogLog: これは、集合の濃度を推定するために使う、確率的なデータ構造です。見た目よりはずっとシンプルなものなので、怖がらないでください...。このチュートリアルの HyperLogLog の節を見てください。"
 
 #: ../../source/topics/data-types-intro.rst:33
 # b37d6781a2fc4d39958bf811bb1266e6
 msgid "It's not always trivial to grasp how these data types work and what to use in order to solve a given problem from the `command reference </commands>`__, so this document is a crash course to Redis data types and their most used patterns."
-msgstr "これらのデータタイプがどのような働きをし、与えられた問題を解決するためにどう使えばよいのか、 `command reference <http://redis.io/commands>`_ から把握するのはしばしば簡単ではありません。このドキュメントは、Redis のデータタイプとそれらがよく使われるパターンについての、速習コースです。"
+msgstr "これらのデータタイプがどのような働きをし、与えられた問題を解決するために何を使えばよいのか、 `command reference <http://redis.io/commands>`_ から把握するのは必ずしも簡単ではありません。このドキュメントは、Redis のデータタイプとそれらがよく使われるパターンについての、速習コースです。"
 
 #: ../../source/topics/data-types-intro.rst:38
 # c22582fcd1d74d65b27326f472bdd29d
 msgid "For all the examples we'll use the ``redis-cli`` utility, that's a simple but handy command line utility to issue commands against the Redis server."
-msgstr "すべての例で、私たちは 'redis-cli' ユーティリティを使います。これは、Redis サーバーとやりとりするための、シンプルですが便利なコマンドライン・ユーティリティです。"
+msgstr "すべての例で、私たちは 'redis-cli' ユーティリティを使います。これは、Redis サーバーにコマンドを発行するための、シンプルですが便利なコマンドライン・ユーティリティです。"
 
 #: ../../source/topics/data-types-intro.rst:43
 # ec19b977f6f9488aaff4484b9da0c693
@@ -109,42 +109,42 @@ msgstr "許容される最大のキー長は 512 MB です。"
 #: ../../source/topics/data-types-intro.rst:71
 # 14f19a92534749b5a367eb06354ea09b
 msgid "Redis Strings"
-msgstr "Redis の Strings"
+msgstr "Redis の文字列"
 
 #: ../../source/topics/data-types-intro.rst:73
 # 38d5127a568a49578569c3f593114576
 msgid "The Redis String type is the simplest type of value you can associate to a Redis key. It is the only data type in Memcached, so it is also very natural for newcomers to use it in Redis."
-msgstr "Redis の String タイプは、キーに値を関連づけるための最もシンプルなタイプです。Memcached で使える唯一のデータタイプであり、Redis 初心者にとってもごく自然なものでしょう。"
+msgstr "Redis の文字列タイプは、キーに関連付けられる最もシンプルな値のタイプです。Memcached で使える唯一のデータタイプであり、Redis 初心者にとってもごく自然なものでしょう。"
 
 #: ../../source/topics/data-types-intro.rst:77
 # 7a003fe53d9f4e5383279d742d3d00b2
 msgid "Since Redis keys are strings, when we use the string type as a value too, we are mapping a string to another string. The string data type is useful for a number of use cases, like caching HTML fragments or pages."
-msgstr "Redis のキーは文字列であるため、String タイプを値として使うとき、ある文字列を別の文字列にマッピングしている、ということになります。String データタイプは、HTML フラグメントやページのキャッシングなど、様々なユースケースで有用です。"
+msgstr "Redis のキーは文字列であるため、文字列タイプを値として使うとき、ある文字列を別の文字列にマッピングしている、ということになります。文字列データタイプは、HTML フラグメントやページのキャッシングなど、いくつかのユースケースで有用です。"
 
 #: ../../source/topics/data-types-intro.rst:81
 # 00bf8bcfab60428c8a2e12b567ac29d7
 msgid "Let's play a bit with the string type, using ``redis-cli`` (all the examples will be performed via ``redis-cli`` in this tutorial)."
-msgstr "'redis-cli' を使って、少し String タイプで遊んでみましょう(このチュートリアルのすべてのサンプルは、'redis-cli' を使って実行します)。"
+msgstr "'redis-cli' を使って、少し文字列タイプで遊んでみましょう(このチュートリアルのすべての例は、'redis-cli' を使って実行します)。"
 
 #: ../../source/topics/data-types-intro.rst:91
 # bc93397df6c5415493c4aff206c13b67
 msgid "As you can see using the ``SET`` and the ``GET`` commands are the way we set and retrieve a string value. Note that ``SET`` will replace any existing value stored already into the key, in case the key already exists, even if the key is associated with a non-string value. So ``SET`` performs an assignment."
-msgstr "ここで見たように、 `SET <http://redis.io/commands/set>`_ と `GET <http://redis.io/commands/get>`_ コマンドを使って、文字列値のセットや検索を行います。 `SET <http://redis.io/commands/set>`_ はすでに存在するキーを置き換えることに注意してください。たとえ、そのキーが文字列ではない値に関連づけられている場合でも、です。すなわち、 `SET <http://redis.io/commands/set>`_ 操作は代入(assignment)を実行するものです。"
+msgstr "ここで見たように、 `SET <http://redis.io/commands/set>`_ と `GET <http://redis.io/commands/get>`_ コマンドを使って、文字列値の設定や取得を行います。もしキーがすでに存在する場合、 `SET <http://redis.io/commands/set>`_ はすでにキーへ保存された値を置き換えることに注意してください。たとえ、そのキーが文字列ではない値に関連づけられている場合でも置き換えます。すなわち、 `SET <http://redis.io/commands/set>`_ は代入(assignment)を実行します。"
 
 #: ../../source/topics/data-types-intro.rst:97
 # 22889718fe9745f49859464a5a2869c3
 msgid "Values can be strings (including binary data) of every kind, for instance you can store a jpeg image inside a key. A value can't be bigger than 512 MB."
-msgstr "値には(バイナリデータを含む)どんな種類の String も指定できます。たとえば、あるキーに jpeg 画像データも格納できます。値は、512 MB よりも大きくはできません。"
+msgstr "値には(バイナリデータを含む)どんな種類の文字列も指定できます。たとえば、あるキーに jpeg 画像データも格納できます。値は、512 MB よりも大きくはできません。"
 
 #: ../../source/topics/data-types-intro.rst:101
 # c1d0eb0bf188490dae60189759986ac6
 msgid "The ``SET`` command has interesting options, that are provided as additional arguments. For example if I may ask ``SET`` to fail if the key already exists, or the exact contrary, that is, to only succeed if the key already exists:"
-msgstr "`SET <http://redis.io/commands/set>`_ コマンドには、追加の引数として指定される、興味深いオプションがあります。たとえば、キーがすでに存在する場合は `SET` が失敗するように指示したり、またその逆、すでに存在する場合のみ成功するように指示したりできます:"
+msgstr "`SET <http://redis.io/commands/set>`_ コマンドには、追加の引数として提供される、興味深いオプションがあります。たとえば、キーがすでに存在する場合は `SET` が失敗するように指示したり、またその逆、すでに存在する場合のみ成功するように指示したりできます:"
 
 #: ../../source/topics/data-types-intro.rst:113
 # e7ea2083c4114c02b42f178f3930ebd4
 msgid "Even if strings are the basic values of Redis, there are interesting operations you can perform with them. For instance, one is atomic increment:"
-msgstr "String は Redis の基本的な値ですが、興味深い操作も行えます。一例としてはアトミックなインクリメントがあります:"
+msgstr "文字列は Redis の基本的な値ですが、興味深い操作も行えます。一例としてはアトミックなインクリメントがあります:"
 
 #: ../../source/topics/data-types-intro.rst:128
 # fad6962ed7804043b18be90cc389efa5
@@ -159,12 +159,12 @@ msgstr "INCR がアトミックである、とは何を意味するのでしょ�
 #: ../../source/topics/data-types-intro.rst:143
 # 29e56bec1cda40059ff95fe23cc3373d
 msgid "There are a number of commands operating on strings. For example the ``GETSET`` command sets a key to a new value, returning the old value as result. You can use this command, for example, if you have a system that increments a Redis key using ``INCR`` every time your web site receives a new visit. You want to collect this information one time every hour, without losing a single increment. You can ``GETSET`` the key, assigning it the new value of \"0\" and reading the old value back."
-msgstr "String を操作するコマンドは多数あります。たとえば `GETSET <http://redis.io/commands/getset>`_ コマンドはキーに新しい値をセットし、古い値を戻り値として返します。例として、Web サイトの訪問数を数えるために `INCR <http://redis.io/commands/incr>`_ を使ってあるキーをインクリメントするシステムを考えます。1 つのインクリメントも失うことなく、 1 時間ごとにこの情報を収集したい、としましょう。 `GETSET <http://redis.io/commands/getset>`_ を使って、新しい値として \"0\" を割り当てながら、古い値を取得することができます。"
+msgstr "文字列を操作するコマンドはいくつかあります。たとえば `GETSET <http://redis.io/commands/getset>`_ コマンドはキーに新しい値をセットし、古い値を戻り値として返します。例として、Web サイトの訪問数を数えるために `INCR <http://redis.io/commands/incr>`_ を使ってあるキーをインクリメントするシステムを考えます。1 つのインクリメントも失うことなく、 1 時間ごとにこの情報を収集したい、としましょう。 `GETSET <http://redis.io/commands/getset>`_ を使って、新しい値として \"0\" を割り当てながら、古い値を取得することができます。"
 
 #: ../../source/topics/data-types-intro.rst:151
 # f919286a8a60437ca6fc1b4a18f866be
 msgid "The ability to set or retrieve the value of multiple keys in a single command is also useful for reduce latency. For this reason there are the ``MSET`` and ``MGET`` commands:"
-msgstr "ひとつのコマンドで複数の値をセットしたり、検索ができると、レイテンシを削減するのに役立ちます。このため、 `MSET <http://redis.io/commands/mset>`_ と `MGET <http://redis.io/commands/mget>`_ コマンドがあります。"
+msgstr "ひとつのコマンドで複数キーの値を設定したり、取得ができると、レイテンシを削減するのに役立ちます。このため、 `MSET <http://redis.io/commands/mset>`_ と `MGET <http://redis.io/commands/mget>`_ コマンドがあります。"
 
 #: ../../source/topics/data-types-intro.rst:164
 # 299165324c5a4533851377e716ba4b18
@@ -194,37 +194,37 @@ msgstr "この例から、キーが削除された(存在した)か削除され�
 #: ../../source/topics/data-types-intro.rst:192
 # 5f2ca332beee494da03decfbc3a199e5
 msgid "There are many key space related commands, but the above two are the essential ones together with the ``TYPE`` command, that returns the kind of value stored at the specified key:"
-msgstr "キー・スペースに関連するコマンドは多くありますが、上記の 2 つとともに `TYPE <http://redis.io/commands/type>`_ コマンドと同様に最も重要なものです。これは特定のキーに格納されている値の種類を返します。"
+msgstr "キー・スペースに関連するコマンドは多くありますが、`TYPE <http://redis.io/commands/type>`_ コマンドとともに上記の 2 つは最も重要なものです。``TYPE`` コマンドは特定のキーに格納されている値の種類を返します。"
 
 #: ../../source/topics/data-types-intro.rst:208
 # 363677bc62014755ac2fa0ea3a5140e7
 msgid "Redis expires: keys with limited time to live"
-msgstr "Redis expires: 有効期間(time to live)が制限されたキー"
+msgstr "Redis expire: 有効期間(time to live)が制限されたキー"
 
 #: ../../source/topics/data-types-intro.rst:210
 # 17a5c92ecc5f4118800a0fe3a1f3514b
 msgid "Before to continue with more complex data structures, we need to expose another feature which works regardless of the value type, and is called **Redis expires**. Basically you can set a timeout to a key, which is, a limited time to live. When the time to live elapsed, the key is automatically destroyed, exactly like if the user called the ``DEL`` command with the key."
-msgstr "より複雑なデータ構造に進む前に、 **Redis expires** と呼ばれる別の特徴についてふれておく必要があります。これはどのようなタイプの値にも作用します。ざっくり言うと、制限された有効期間(time to live), タイムアウトをキーに設定できます。期間が過ぎると、ちょうどユーザーが `DEL <http://redis.io/commands/del>`_ コマンドを発行したのと全く同じように、キーは自動的に消去されます。"
+msgstr "より複雑なデータ構造に進む前に、どのようなタイプの値でも動く、もう一つの機能についてふれておく必要があります。これは**Redis expire** と呼ばれます。基本的には、制限された有効期間(time to live), タイムアウトをキーに設定できます。期間が過ぎると、ちょうどユーザーが `DEL <http://redis.io/commands/del>`_ コマンドを発行したのと全く同じように、キーは自動的に消去されます。"
 
 #: ../../source/topics/data-types-intro.rst:217
 # 165c632338754733992ff7d5b9358bf3
 msgid "A few quick info about Redis expires:"
-msgstr "Redis expires について、即席の情報をいくつか:"
+msgstr "Redis expire について、即席の情報をいくつか:"
 
 #: ../../source/topics/data-types-intro.rst:219
 # fbe99ce3bcdf49fc9c566899393dbe93
 msgid "They can be set both using seconds or milliseconds precision."
-msgstr "秒またはミリ秒の精度が指定できる"
+msgstr "秒またはミリ秒の精度で指定できる"
 
 #: ../../source/topics/data-types-intro.rst:220
 # 00eeb816c0db4548afc298d5ead2dcd0
 msgid "However the expire time resolution is always 1 millisecond."
-msgstr "ただし、 expire 時の精度は常に 1 ミリ秒"
+msgstr "ただし、 expire 時間の精度は常に 1 ミリ秒"
 
 #: ../../source/topics/data-types-intro.rst:221
 # 59df41dae16f412ca191f304e7104511
 msgid "Information about expires are replicated and persisted on disk, the time virtually passes when your Redis server remains stopped (this means that Redis saves the date at which a key will expire)."
-msgstr "expire に関する情報はレプリケーションおよびディスクに永続化され、Redis サーバーが停止している間も、実質的な時間が経過する(つまり、 Redis はキーが expire される日時を保存している)。"
+msgstr "expire に関する情報はレプリケーションおよびディスクに永続化され、Redis サーバーが停止している間も、実質的に時間が経過する(つまり、 Redis はキーが expire される日時を保存している)。"
 
 #: ../../source/topics/data-types-intro.rst:225
 # 0468cfe3971041cba934276de4818c03
@@ -234,12 +234,12 @@ msgstr "expire をセットするのは簡単です:"
 #: ../../source/topics/data-types-intro.rst:238
 # ea3a8b09e640446c9f49939ec0e03c4f
 msgid "The key vanished between the two ``GET`` calls, since the second call was delayed more than 5 seconds. In the example above we used ``EXPIRE`` in order to set the expire (it can also be used in order to set a different expire to a key already having one, like ``PERSIST`` can be used in order to remove the expire and make the key persistent forever). However we can also create keys with expires using other Redis commands. For example using ``SET`` options:"
-msgstr "2 つの `GET <http://redis.io/commands/get>`_ コマンドの間で、キーは消えてなくなっています。2 回めの呼び出しの時点で、5 秒以上が経過しているためです。上記の例では、expire をセットするために `EXPIRE <http://redis.io/commands/expire>`_ を使いました(すでに expire が設定されているキーに対して、異なる expire をセットすることもできます。同様に `PERSIST <http://redis.io/commands/persist>`_ を使うと、expire を取り除き、キーを永久に永続化できます)。他の Redis コマンドを使って、expire を設定しながらキーを作成することも可能です。たとえば `SET <http://redis.io/commands/set>`_ に次のようなオプションを指定します:"
+msgstr "2 つの `GET <http://redis.io/commands/get>`_ コマンドの間で、キーは消えてなくなっています。2 回めの呼び出しの時点で、5 秒以上が経過しているためです。上記の例では、expire をセットするために `EXPIRE <http://redis.io/commands/expire>`_ を使いました(すでに expire が設定されているキーに対して、異なる expire をセットすることもできます。同様に `PERSIST <http://redis.io/commands/persist>`_ を使うと、expire を取り除き、キーを永久に永続化できます)。他の Redis コマンドを使って、expire 付きのキーを作成することも可能です。たとえば `SET <http://redis.io/commands/set>`_ に次のようなオプションを指定します:"
 
 #: ../../source/topics/data-types-intro.rst:253
 # 89a8ca4a87034ea6b043dc9a5a206da7
 msgid "The example above sets a key with the string value ``100``, having an expire of ten seconds. Later the ``TTL`` command is called in order to check the remaining time to live for the key."
-msgstr "この例では、キーに '100' という String 値をセットしながら、10 秒の expire を指定しています。その後、キーの残り有効期間を確認するため `TTL <http://redis.io/commands/ttl>`_ コマンドを呼んでいます。"
+msgstr "この例では、キーに '100' という文字列値をセットしながら、10 秒の expire を指定しています。その後、キーの残り有効期間を確認するため `TTL <http://redis.io/commands/ttl>`_ コマンドを呼んでいます。"
 
 #: ../../source/topics/data-types-intro.rst:257
 # 3a67f80621394b7b8b9dac5404e2baad
@@ -249,42 +249,42 @@ msgstr "ミリ秒の精度で expire をセットしたり確認するには、 
 #: ../../source/topics/data-types-intro.rst:261
 # fc86a7f201284fcbbcefac6ef97d87d0
 msgid "Redis Lists"
-msgstr ""
+msgstr "Redis のリスト"
 
 #: ../../source/topics/data-types-intro.rst:263
 # a19a24f915c34ffca66b241dbcd3d26e
 msgid "To explain the List data type it's better to start with a little bit of theory, as the term *List* is often used in an improper way by information technology folks. For instance \"Python Lists\" are not what the name may suggest (Linked Lists), they are actually Arrays (the same data type is called Array in Ruby actually)."
-msgstr "List データタイプを説明するために、ちょっとした理論から始めます。なぜなら、情報技術に関わる人たちの間で、しばしば *List* という語は正しくない使い方をされるためです。たとえば、 \"Python Lists\" はそれが示唆するもの(Linked List)ではなく、実質的に配列(Ruby では実際に配列と呼ばれているデータタイプと同じもの)です。"
+msgstr "リストデータタイプを説明するために、ちょっとした理論から始めます。なぜなら、情報技術に関わる人たちの間で、しばしば *リスト* という語は正しくない使い方をされるためです。たとえば、 \"Pythonのリスト\" はそれが示唆するもの(連結リスト)ではなく、実際は配列です(実際、Ruby では同じデータタイプが配列と呼ばれています)。"
 
 #: ../../source/topics/data-types-intro.rst:269
 # cbde31deaf6f41d5a457432a9e46d86d
 msgid "From a very general point of view a List is just a sequence of ordered elements: 10,20,1,2,3 is a list. But the properties of a List implemented using an Array are very different from the properties of a List implemented using a *Linked List*."
-msgstr "非常に一般的な観点からいうと、リストは整列した要素の並びにすぎません: 10,20,1,2,3 というのはリストです。しかし、配列を使って実装されたリストの性質は、 *Linked List* を使って実装されたリストのそれとは非常に異なります。"
+msgstr "非常に一般的な観点からいうと、リストは整列した要素の並びにすぎません: 10,20,1,2,3 というのはリストです。しかし、配列を使って実装されたリストの性質は、 *連結リスト* を使って実装されたリストの性質とは大きく異なります。"
 
 #: ../../source/topics/data-types-intro.rst:274
 # 1cc3dafc77484c45b518b2661d8b0385
 msgid "Redis lists are implemented via Linked Lists. This means that even if you have millions of elements inside a list, the operation of adding a new element in the head or in the tail of the list is performed *in constant time*. Adding a new element with the ``LPUSH`` command to the head of a ten elements list is the same speed as adding an element to the head of a 10 million elements list."
-msgstr "Redis の List は Linked List で実装されています。これが何を意味するかというと、たとえリスト中に数百万個の要素があったとしても、新しい要素をリストの先頭や末尾に追加する操作は *定数時間* で完了します。 `LPUSH <http://redis.io/commands/lpush>`_ コマンドで、10 要素からなるリストの先頭に新しい要素を追加するのも、1000 万要素からなるリストの先頭に新しい要素を追加するのも、速度は同じです。"
+msgstr "Redis のリストは連結リストで実装されています。これが何を意味するかというと、たとえリスト中に数百万個の要素があったとしても、新しい要素をリストの先頭や末尾に追加する操作は *定数時間* で完了します。 `LPUSH <http://redis.io/commands/lpush>`_ コマンドで、10 要素からなるリストの先頭に新しい要素を追加するのも、1000 万要素からなるリストの先頭に新しい要素を追加するのも、速度は同じです。"
 
 #: ../../source/topics/data-types-intro.rst:281
 # e9bce7a5883d455fad1f07ed35107957
 msgid "What's the downside? Accessing an element *by index* is very fast in lists implemented with an Array (constant time indexed access) and not so fast in lists implemented by linked lists (where the operation requires an amount of work proportional to the index of the accessed element)."
-msgstr "マイナス面は何でしょう？ある要素に *インデックスによって* アクセスするのは、配列で実装されたリストの場合、非常に高速です(定数時間のインデックスアクセス)。一方、linked list で実装されたリストの場合、それほど速くはありません(アクセスされる要素のインデックスに比例する操作が必要)。"
+msgstr "マイナス面は何でしょう？ある要素に *インデックスによって* アクセスするのは、配列で実装されたリストの場合、非常に高速です(定数時間のインデックスアクセス)。一方、連結リストで実装されたリストの場合、それほど速くはありません(アクセスされる要素のインデックスに比例する処理が操作に必要)。"
 
 #: ../../source/topics/data-types-intro.rst:287
 # 19aa5646dfba4cc3a49efc1b479f2b33
 msgid "Redis Lists are implemented with linked lists because for a database system it is crucial to be able to add elements to a very long list in a very fast way. Another strong advantage is, as you'll see in a moment, that Redis Lists can be taken at constant length in constant time."
-msgstr "Redis のリストが Linked List で実装されているのは、非常に長いリストに要素を高速に追加できることが、データベースシステムにおいてとても重要だからです。別の強力な利点として、少し後で見るように、Redis のリストは、長さが固定の場合には定数時間でアクセスできます。"
+msgstr "Redis のリストが連結リストで実装されているのは、非常に長いリストに要素を高速に追加できることが、データベースシステムにおいてとても重要だからです。別の強力な利点として、少し後で見るように、Redis のリストは、長さが固定の場合には定数時間でアクセスできます。"
 
 #: ../../source/topics/data-types-intro.rst:292
 # c30d03803c7242989729ba49c76924a8
 msgid "When fast access to the middle of a large collection of elements is important, there is a different data structure that can be used, called sorted sets. Sorted sets will be covered later in this tutorial."
-msgstr "もし、大きなコレクション中の中間部分へ高速にアクセスすることが重要なら、Sorted set と呼ばれる別のデータ構造が使えます。Sorted set については、後ほどこのチュートリアルで触れます。"
+msgstr "もし、大きなコレクション中の中間部分へ高速にアクセスすることが重要なら、ソート済みセットと呼ばれる別のデータ構造が使えます。ソート済みセットについては、後ほどこのチュートリアルで触れます。"
 
 #: ../../source/topics/data-types-intro.rst:297
 # cb6989f1ac7f45ba8100dc8619dbcc5c
 msgid "First steps with Redis Lists"
-msgstr "Redis List のファースト・ステップ"
+msgstr "Redis リストのファースト・ステップ"
 
 #: ../../source/topics/data-types-intro.rst:299
 # d447348a7f8b406d899d42b8a6fbbadc
@@ -294,7 +294,7 @@ msgstr "`LPUSH <http://redis.io/commands/lpush>`_ コマンドはリストの左
 #: ../../source/topics/data-types-intro.rst:317
 # 580c161e3d3443a4ab8345be8b2595b2
 msgid "Note that `LRANGE </commands/lrange>`__ takes two indexes, the first and the last element of the range to return. Both the indexes can be negative to tell Redis to start to count from the end, so -1 is the last element, -2 is the penultimate element of the list, and so forth."
-msgstr "`LRANGE <http://redis.io/commands/lrange>`_ は、返却される範囲の最初と最後を示す 2 つのインデックスをとることに注意してください。どちらのインデックスも負の値をとることができ、その場合は末尾からカウントします。すなわち、-1 は最後の要素、-2 は最後から 2 番目の要素、となります。"
+msgstr "`LRANGE <http://redis.io/commands/lrange>`_ は、返却される範囲の最初と最後を示す 2 つのインデックスをとることに注意してください。どちらのインデックスも負の値をとることができ、その場合は末尾からカウントします。すなわち、-1 は最後の要素、-2 は最後から 2 番目の要素、などとなります。"
 
 #: ../../source/topics/data-types-intro.rst:322
 # 1a84df5adcb44271914ab8fe2978a6cd
@@ -309,7 +309,7 @@ msgstr "どちらのコマンドも、 *可変個の引数をとるコマンド*
 #: ../../source/topics/data-types-intro.rst:343
 # d00ad16f38744a0c8aa027f305c6eeec
 msgid "An important operation defined on Redis lists is the ability to *pop elements*. Popping elements is the operation of retrieving the element from the list, and eliminating it from the list, at the same time. You can pop elements from left and right, similarly to how you can push elements in both sides of the list:"
-msgstr "Redis の List に対して定義されている重要な操作の一つに、 *要素の pop* があります。要素の pop 操作は、リスト中の要素を検索し、同時にリストからその要素を削除します。リストの両端から要素を push できたように、左から、または右から要素を pop することができます。"
+msgstr "Redis のリストに対して定義されている重要な操作の一つに、 *要素の pop* があります。要素の pop 操作は、リスト中の要素を取得し、同時にリストからその要素を削除します。リストの両端から要素を push できたように、左から、または右から要素を pop することができます。"
 
 #: ../../source/topics/data-types-intro.rst:360
 # a487b0c2009b43ba9bb1305508e5d51d
@@ -324,32 +324,32 @@ msgstr "Redis はリスト中に要素がないことを示すシグナルとし
 #: ../../source/topics/data-types-intro.rst:373
 # e0a2994ef68f4e1382a385cf73da8291
 msgid "Common use cases for lists"
-msgstr "List のよくある使い方"
+msgstr "リストのよくある使い方"
 
 #: ../../source/topics/data-types-intro.rst:375
 # 448850b698554906ae8e7ea348eb31c8
 msgid "Lists are useful for a number of tasks, two very representative use cases are the following:"
-msgstr "リストは様々なタスクで有用ですが、以下に 2 つの代表的な使い方を挙げます:"
+msgstr "リストはいくつかのタスクで有用ですが、以下に 2 つの代表的な使い方を挙げます:"
 
 #: ../../source/topics/data-types-intro.rst:378
 # 340a2fcb58fb4b70ab208873214d83ae
 msgid "Remember the latest updates posted by users into a social network."
-msgstr "あるソーシャルネットワークのユーザーの、最後に更新された投稿を覚えておく"
+msgstr "あるソーシャルネットワークへユーザーによって投稿された最新の更新を覚えておく"
 
 #: ../../source/topics/data-types-intro.rst:379
 # cfbb36e524b24da1be656a690e37cc2c
 msgid "Communication between processes, using a consumer-producer pattern where the producer pushes items into a list, and a consumer (usually a *worker*) consumes those items executing actions. Redis has special list commands to make this use case both more reliable and efficient."
-msgstr "consumer-producer パターンを用いたプロセス間通信。ここで producer はアイテムをリストに push し、consumer (通常 *worker* と呼ばれる) がアイテムを消費してアクションを実行する。"
+msgstr "consumer-producer パターンを用いたプロセス間通信。ここで producer はアイテムをリストに push し、consumer (通常 *worker* と呼ばれる) がアイテムを消費してアクションを実行する。このユースケースを、より信頼性が高く、かつ効率的にする特別なリストコマンドが Redis にあります。"
 
 #: ../../source/topics/data-types-intro.rst:384
 # 81bf97f21537451a992cffee44f6c251
 msgid "For example both the popular Ruby libraries `resque <https://github.com/resque/resque>`__ and `sidekiq <https://github.com/mperham/sidekiq>`__ use Redis lists under the hoods in order to implement background jobs."
-msgstr "たとえば `resque <https://github.com/resque/resque>`_ や `sidekiq <https://github.com/mperham/sidekiq>`_ といった人気のある Ruby ライブラリはバックグラウンドジョブを実行するために内部で Redis の List を使っています。"
+msgstr "たとえば `resque <https://github.com/resque/resque>`_ や `sidekiq <https://github.com/mperham/sidekiq>`_ といった人気のある Ruby ライブラリはバックグラウンドジョブを実行するために内部で Redis のリストを使っています。"
 
 #: ../../source/topics/data-types-intro.rst:389
 # 0b3e8e6b8413438db7e913362323dcbd
 msgid "The popular Twitter social network `takes the latest tweets <http://www.infoq.com/presentations/Real-Time-Delivery-Twitter>`__ posted by users into Redis lists."
-msgstr "人気の高い Twitter ソーシャルネットワークでは、ユーザーの投稿を Redis に格納することで `最新のツイートを取得しています <http://www.infoq.com/presentations/Real-Time-Delivery-Twitter>`_ 。"
+msgstr "人気の高い Twitter ソーシャルネットワークでは、ユーザーによって投稿された最新のツイート <http://www.infoq.com/presentations/Real-Time-Delivery-Twitter>`_ を Redis のリストに格納しています。"
 
 #: ../../source/topics/data-types-intro.rst:393
 # 4eb4c4feea3b491584101fc37d8acec2
@@ -369,7 +369,7 @@ msgstr "ユーザーがホームページを訪問したとき、最新の 10 �
 #: ../../source/topics/data-types-intro.rst:403
 # 8c3bee8af94d4cefae689beb9465910d
 msgid "Capped lists"
-msgstr "上限つきの List (Capped Lists)"
+msgstr "上限つきのリスト (Capped Lists)"
 
 #: ../../source/topics/data-types-intro.rst:405
 # 601d3beeef6b407fa95a7993e0fa2ad8
@@ -379,7 +379,7 @@ msgstr "多くのユースケースにおいて、 *最新のアイテム* だ�
 #: ../../source/topics/data-types-intro.rst:408
 # 1b056fe6a31f4464b812fba5db3664dd
 msgid "Redis allows to use lists as a capped collection, only remembering the latest N items and discarding all the oldest items using the ``LTRIM`` command."
-msgstr "`LTRIM <http://redis.io/commands/ltrim>`_ コマンドを使って、最新の N アイテムだけを覚えておき、それよりも古い要素をすべて取り除くことで、リストを上限つきのコレクションとして使うことができます。"
+msgstr "`LTRIM <http://redis.io/commands/ltrim>`_ コマンドを使って、最新の N アイテムだけを覚えておき、それよりも古い要素をすべて取り除く、上限つきのコレクションとしてリストを使うことができます。"
 
 #: ../../source/topics/data-types-intro.rst:412
 # 44d929c65e7445f7a2c1e20b23886ad0
@@ -394,17 +394,17 @@ msgstr "例を見ればよりわかりやすいでしょう:"
 #: ../../source/topics/data-types-intro.rst:429
 # c0e6a6ab813a4bb2bd53aace3c60e21a
 msgid "The above ``LTRIM`` command tells Redis to take just list elements from index 0 to 2, everything else will be discarded. This makes you able to mount a very simple but useful patter, consisting in doing a List push operation + a List trim operation together in order to add a new element and discard exceeding elements:"
-msgstr "この `LTRIM <http://redis.io/commands/ltrim>`_ コマンドは Redis に、インデックス 0 から 2 の範囲の要素だけを残し、その他の要素はすべて捨てるように指示しています。これは非常にシンプルですが有用な道具を提供します。List の push 操作と trim 操作を組み合わせることで、新しい要素を追加しながら余分な要素を取り除くことができます:"
+msgstr "この `LTRIM <http://redis.io/commands/ltrim>`_ コマンドは Redis に、インデックス 0 から 2 の範囲の要素だけを残し、その他の要素はすべて捨てるように指示しています。これは非常にシンプルですが有用な道具を提供します。リストの push 操作と trim 操作を組み合わせることで、新しい要素を追加しながら余分な要素を取り除くことができます:"
 
 #: ../../source/topics/data-types-intro.rst:440
 # c4fe17e6f2ec4046996c5ea6d74fadb8
 msgid "The above combination of elements add a new element taking only the 1000 newest elements into the list. With ``LRANGE`` you can access the top items without any need to remember very old data."
-msgstr "上記の組合せでは、最新の 1000 要素だけをリストに残しながら、新しい要素を追加しています。併せて `LRANGE <http://redis.io/commands/lrange>`_ を使うことにより、古いデータを覚えておく必要なしに、上位のアイテムを取得することができます。"
+msgstr "上記の組合せでは、新しい要素を追加し、最新の 1000 要素だけをリストに残しています。`LRANGE <http://redis.io/commands/lrange>`_ を使うことにより、古いデータを覚えておく必要なしに、上位のアイテムを取得することができます。"
 
 #: ../../source/topics/data-types-intro.rst:444
 # baa9fcf2b1f24ad8a09added30a1f815
 msgid "Note: while ``LRANGE`` is technically an O(N) command, accessing small ranges towards the head or the tail of the list, is a constant time operation."
-msgstr "覚書: `LRANGE <http://redis.io/commands/lrange>`_ は技術的に O(N) の計算量がかかります。ただし、先頭や末尾に近い、小さな範囲に対してアクセスする場合は定数時間の操作とみなせます。"
+msgstr "注意: `LRANGE <http://redis.io/commands/lrange>`_ は技術的に O(N) の計算量がかかります。ただし、先頭や末尾に近い、小さな範囲に対してアクセスする場合は定数時間の操作です。"
 
 #: ../../source/topics/data-types-intro.rst:449
 # 75e17917c7914b57b23508d07aff1b61
@@ -414,7 +414,7 @@ msgstr "リストに関するブロッキング操作"
 #: ../../source/topics/data-types-intro.rst:451
 # 7bb327c1c5b0408190552b1ac58cf99c
 msgid "Lists have a special feature that make them suitable to implement queues, and in general as a building block for inter process communication systems: blocking operations."
-msgstr "List は、キュー (より一般的に言うと、プロセス間通信を行うシステムに欠かせない要素) を実装するのに適した特別な機能を備えています: ブロッキング操作といわれるものです。"
+msgstr "リストは、キュー (より一般的に言うと、プロセス間通信を行うシステムに欠かせない要素) を実装するのに適した特別な機能を備えています: ブロッキング操作です。"
 
 #: ../../source/topics/data-types-intro.rst:455
 # 020de724ae7c4e869fea3136b36edfbb
@@ -434,17 +434,17 @@ msgstr "アイテムを抽出 / 処理するため、consumer が `RPOP <http://
 #: ../../source/topics/data-types-intro.rst:463
 # 27076fd0b8964f108746cd256c77fe98
 msgid "However it is possible that sometimes the list is empty and there is nothing to process, so ``RPOP`` just returns NULL. So a consumer is forced to wait some time and retry again with ``RPOP``. This is called *polling*, and is not a good idea in this context because it has several drawbacks:"
-msgstr "しかし、リストが空で処理するアイテムがなく、 `RPOP <http://redis.io/commands/rpop>`_ が NULL を返すことはしばしば起こりえます。そうすると consumer はしばらく待った後、再度 `RPOP <http://redis.io/commands/rpop>`_ を試みることになります。これは *polling* と呼ばれ、いくつかの欠点のためにこの文脈においては良い方法ではありません。"
+msgstr "しかし、時にはリストが空で処理するアイテムがなく、 `RPOP <http://redis.io/commands/rpop>`_ が NULL を返すだけということが起こりえます。そうすると consumer はしばらく待った後、再度 `RPOP <http://redis.io/commands/rpop>`_ を試みることになります。これは *polling* と呼ばれ、いくつかの欠点のためにこの文脈においては良い方法ではありません。"
 
 #: ../../source/topics/data-types-intro.rst:469
 # a3bb7cf5533042849c20ff4ce5faa6c3
 msgid "Forces Redis and clients to process useless commands (all the requests when the list is empty will get no actual work done, they'll just return NULL)."
-msgstr "Redis とクライアントの双方に、不要なコマンドを強いる(リストが空で、実際になすべき仕事がないとき、すべてのリクエストは単に NULL を返す)。"
+msgstr "Redis とクライアントの双方に、不要なコマンド処理を強いる(リストが空のときのすべてのリクエストは、事実上処理は何もせず、単に NULL を返す)。"
 
 #: ../../source/topics/data-types-intro.rst:472
 # 30926bd31ec64e368a4bd31718a95f9e
 msgid "Adds a delay to the processing of items, since after a worker receives a NULL, it waits some time. To make the delay smaller, we could wait less between calls to ``RPOP``, with the effect of aggravating more problem number 1: more useless calls to Redis."
-msgstr "あるワーカーは NULL を受け取った後、次のアイテムを処理するまでの遅延時間を追加し、しばらく待ちます。遅延を小さくすると、 `RPOP <http://redis.io/commands/rpop>`_ 発行の間隔が短くなり、問題 1 よりもっと悪い状況になります: Redis に対するさらなる不要なコマンド呼び出し。"
+msgstr "あるワーカーは NULL を受け取った後、しばらく待つので、アイテム処理に遅延を加えます。遅延を小さくするために、 `RPOP <http://redis.io/commands/rpop>`_ 発行の間隔が短くすると、問題 1: Redis に対するさらなる不要なコマンド呼び出しをもっとひどくします。"
 
 #: ../../source/topics/data-types-intro.rst:477
 # 73abec532ce24b2a963da14ffe34ae7a
@@ -474,7 +474,7 @@ msgstr "`BRPOP <http://redis.io/commands/brpop>`_ に関するいくつかの留
 #: ../../source/topics/data-types-intro.rst:500
 # 4bf0cbb175b74e8bb38098c207144caa
 msgid "Clients are served in an ordered way: the first client that blocked waiting for a list, is served the first when an element is pushed by some other client, and so forth."
-msgstr "クライアントは、順序よくサーブされます: あるリストを待っている最初のクライアントが、他のクライアントにより push された最初の要素を受け取ります。以下同様です。"
+msgstr "クライアントは順番に受け取ります: あるリストを待っている最初のクライアントが、他のクライアントにより push された最初の要素を受け取ります。以下同様です。"
 
 #: ../../source/topics/data-types-intro.rst:503
 # e767f465488c4dd58b025190ce1e9ef1
@@ -489,17 +489,17 @@ msgstr "タイムアウトに達すると、NULL が返されます。"
 #: ../../source/topics/data-types-intro.rst:509
 # bfc99e64788441f686258519d768ec4f
 msgid "There are more things you should know about lists and blocking ops. We suggest you to read the following pages:"
-msgstr "List とブロッキング操作について、さらに知っておくべきことがあります。以下のページを参照することを勧めます:"
+msgstr "リストとブロッキング操作について、さらに知っておくべきことがあります。以下のページを参照することを勧めます:"
 
 #: ../../source/topics/data-types-intro.rst:512
 # 8008ec7114194f138c838d95ddd96b1b
 msgid "It is possible to build safer queues or rotating queues using ``RPOPLPUSH``."
-msgstr "`RPOPLPUSH <http://redis.io/commands/rpoplpush>`_ を使うと、安全なキュー、および循環キューを構築できます。"
+msgstr "`RPOPLPUSH <http://redis.io/commands/rpoplpush>`_ を使うと、安全なキュー、つまり循環キューを構築できます。"
 
 #: ../../source/topics/data-types-intro.rst:514
 # 031c4717c5954951b32a5e00e808d296
 msgid "There is also a blocking variant of the command, called ``BRPOPLPUSH``."
-msgstr "また、このコマンドのブロッキング版として `BRPOPLPUSH <http://redis.io/commands/brpoplpush>`_ があります。"
+msgstr "このコマンドのブロッキング版として `BRPOPLPUSH <http://redis.io/commands/brpoplpush>`_ もあります。"
 
 #: ../../source/topics/data-types-intro.rst:518
 # 7df56114610e4402a9b35db666d00f50
@@ -514,7 +514,7 @@ msgstr "ここまでの例で、要素の追加前に空のリストを作成し
 #: ../../source/topics/data-types-intro.rst:526
 # d7208cd9a63e469f8b2b5356ce60ed97
 msgid "This is not specific to lists, it applies to all the Redis data types composed of multiple elements, so also applies to Sets, Sorted Sets and Hashes."
-msgstr "これはリストに限った話ではなく、複数の要素をから構成されるすべての Redis データタイプについて適用されます。すなわち、Sets, Sorted Sets, Hashes についても同様です。"
+msgstr "これはリストに限った話ではなく、複数の要素から構成されるすべての Redis データタイプについて適用されます。すなわち、セット、ソート済みセット、ハッシュについても同様です。"
 
 #: ../../source/topics/data-types-intro.rst:530
 # 5d457227f80948ee8e4c97316f40a88a
@@ -534,7 +534,7 @@ msgstr "集約データタイプから要素を削除したとき、もしその
 #: ../../source/topics/data-types-intro.rst:537
 # 558561bc6a1b4ab8a51fd80baf1b8c66
 msgid "Calling a read-only command such as ``LLEN`` (which returns the length of the list), or a write command removing elements, with an empty key, always produces the same result as if the key is holding an empty aggregate type of the type the command expects to find."
-msgstr "空のキーに対して `LLEN <http://redis.io/commands/llen>`_ のような read-only コマンドや、要素を削除するコマンドを発行すると、そのキーが、コマンドが期待する空の集約データタイプを保持しているかのように結果を生成する。"
+msgstr "空のキーに対して `LLEN <http://redis.io/commands/llen>`_ のような読み込み専用コマンドや、要素を削除するコマンドを発行すると、そのキーが、コマンドが期待する空の集約データタイプを保持しているかのように結果を生成する。"
 
 #: ../../source/topics/data-types-intro.rst:542
 # 4c3a9e217ec14918ac8e41036ecacada
@@ -564,7 +564,7 @@ msgstr "ルール 3 の例:"
 #: ../../source/topics/data-types-intro.rst:594
 # 29d177411e494123940c46c36f79a529
 msgid "Redis Hashes"
-msgstr ""
+msgstr "Redis のハッシュ"
 
 #: ../../source/topics/data-types-intro.rst:596
 # d6c908c19cc84afdbe38a9bb3ae11e66
@@ -579,7 +579,7 @@ msgstr "これはちょうど、フィールドと値のペアの集合です。
 #: ../../source/topics/data-types-intro.rst:619
 # ca6fdb70dd7a4b0ab95af4918854a494
 msgid "The command ``HMSET`` sets multiple fields of the hash, while ``HGET`` retrieves a single field. ``HMGET`` is similar to ``HGET`` but returns an array of values:"
-msgstr "`HMSET <http://redis.io/commands/hmset>`_ は複数のフィールドをハッシュにセットします。一方、 `HGET <http://redis.io/commands/hget>`_ はひとつのフィールドを検索します。 `HMGET <http://redis.io/commands/hmget>`_ は `HGET <http://redis.io/commands/hget>`_ と似ていますが、値の配列を返します。"
+msgstr "`HMSET <http://redis.io/commands/hmset>`_ は複数のフィールドをハッシュに設定します。一方、 `HGET <http://redis.io/commands/hget>`_ はひとつのフィールドを取得します。 `HMGET <http://redis.io/commands/hmget>`_ は `HGET <http://redis.io/commands/hget>`_ と似ていますが、値の配列を返します。"
 
 #: ../../source/topics/data-types-intro.rst:630
 # 31c85ca0e55f4f28b5a22ec4f38719fa
@@ -599,17 +599,17 @@ msgstr "小さなハッシュ(少ない要素数、大きすぎない値)は、�
 #: ../../source/topics/data-types-intro.rst:648
 # 35d17ce3a620401d968a3cb293e56ab6
 msgid "Redis Sets"
-msgstr ""
+msgstr "Redis のセット"
 
 #: ../../source/topics/data-types-intro.rst:650
 # c213e030d75641f48df391a68f4b3f7d
 msgid "Redis Sets are unordered collections of strings. The ``SADD`` command adds new elements to a set. It's also possible to do a number of other operations against sets like testing if a given element already exists, performing the intersection, union or difference between multiple sets and so forth."
-msgstr "Redis の Set は、順序をもたない文字列のコレクションです。 `SADD <http://redis.io/commands/sadd>`_ コマンドはセットに新しい要素を追加します。その他、指定された要素がすでに存在するかチェックしたり、複数のセット間で共通集合や和集合や差集合をとったり、セットに対して多くの操作が可能です。"
+msgstr "Redis のセットは、順序をもたない文字列のコレクションです。 `SADD <http://redis.io/commands/sadd>`_ コマンドはセットに新しい要素を追加します。その他、指定された要素がすでに存在するかチェックしたり、複数のセット間で共通集合や和集合や差集合をとるなど、セットに対していくつかの操作が可能です。"
 
 #: ../../source/topics/data-types-intro.rst:665
 # 1a29b4290cb743aa9749c8dfcef61052
 msgid "I added three elements to my set and told Redis to return back all the elements. As you can see they are not sorted, Redis is free to return the elements in any order at every call, since there is no contract with the user about elements ordering."
-msgstr "ここでは、3 つの要素をセットに追加し、その後ですべての要素を返すよう、Redis に指示しています。見てわかるとおり、これらは順序づけられていません。要素間の順序についてどのような約束事も存在しないため、Redis は呼び出しごとに任意の順で要素を返却します。"
+msgstr "ここでは、3 つの要素をセットに追加し、その後ですべての要素を返すよう、Redis に指示しています。見てわかるとおり、これらは順序づけられていません。要素間の順序についてどのような約束事も存在しないため、Redis は呼び出しごとに任意の順で要素を返却できます。"
 
 #: ../../source/topics/data-types-intro.rst:670
 # 42d6f60082cd458bbdb524cafef28008
@@ -629,17 +629,17 @@ msgstr "セットは、オブジェクト間の関係を表現するのに有用
 #: ../../source/topics/data-types-intro.rst:684
 # 8e3808c249ce4e7e986655656a912d77
 msgid "A simple way to model this problem is to have a set for every object we want to tag. The set contains the IDs of the tags associated with the object."
-msgstr "この問題をモデリングする簡単な方法は、タグを付与したいすべてのオブジェクトごとにセットを用意することです。セットには、オブジェクトに関連するタグの ID をもたせます。"
+msgstr "この問題をモデリングする簡単な方法は、タグを付与したいすべてのオブジェクトに対してセットを用意することです。セットには、オブジェクトに関連するタグの ID をもたせます。"
 
 #: ../../source/topics/data-types-intro.rst:688
 # 01c41e5477db43e7b7b839045e6486bb
 msgid "Imagine we want to tag news. If our news ID 1000 is tagged with tag 1,2,5 and 77, we can have one set associating our tag IDs with the news:"
-msgstr "ニュースにタグづけすることを考えましょう。ID 1000 をもつニュースに、タグ 1,2,5,77 を付与したい場合、これらのタグ ID とニュースを関連づける一つのセットを作れます。"
+msgstr "ニュースにタグづけすることを考えましょう。ID 1000 をもつニュースに、タグ 1,2,5,77 を付与する場合、これらのタグ ID とニュースを関連づける一つのセットを作れます。"
 
 #: ../../source/topics/data-types-intro.rst:696
 # f03464f857ca41a9b68a20e829985566
 msgid "However sometimes I may want to have the inverse relation as well: the list of all the news tagged with a given tag:"
-msgstr "しばしば、逆の関係も保持しておきたいことがあります。つまり、あるタグが付与されたすべてのニュースの一覧です:"
+msgstr "しかし、時には逆の関係も保持しておきたいことがあります。つまり、あるタグが付与されたすべてのニュースの一覧です:"
 
 #: ../../source/topics/data-types-intro.rst:710
 # eeb51ac7cf5f4e53ae476f64e2b79693
@@ -649,22 +649,22 @@ msgstr "あるオブジェクトに付与されたすべてのタグを取得す
 #: ../../source/topics/data-types-intro.rst:720
 # b9da7d9d322b4e7da0284f062282164c
 msgid "Note: in the example we assume you have another data structure, for example a Redis hash, which maps tag IDs to tag names."
-msgstr "注意: この例では、タグ ID とタグの名前をマッピングするためのデータ構造(たとえば Redis のハッシュ)が別にあることを想定しています。"
+msgstr "注意: この例では、別のデータ構造(たとえば、タグ ID とタグの名前をマッピングする Redis のハッシュ)があることを想定しています。"
 
 #: ../../source/topics/data-types-intro.rst:723
 # 9ec65dbbef9b400da513de1e6f98c119
 msgid "There are other non trivial operations that are still easy to implement using the right Redis commands. For instance we may want a list of all the objects with the tags 1, 2, 10, and 27 together. We can do this using the ``SINTER`` command, that performs the intersection between different sets. We can just use:"
-msgstr "その他に、Redis のコマンドを適切に使えば、少し難しい操作も簡単に実装できます。たとえば、タグ 1, 2, 10, 27 がすべて付与されたニュースの一覧を取得したいとしましょう。これは `SINTER <http://redis.io/commands/sinter>`_ (複数のセットの共通集合をとるコマンド) で実現できます。使い方はこれだけです:"
+msgstr "その他に、Redis の正しいコマンドを使えば、少し複雑な操作も簡単に実装できます。たとえば、タグ 1, 2, 10, 27 がすべて付与されたニュースの一覧を取得したいとしましょう。これは `SINTER <http://redis.io/commands/sinter>`_ (複数のセットの共通集合をとるコマンド) で実現できます。使い方はこれだけです:"
 
 #: ../../source/topics/data-types-intro.rst:734
 # 0ee416712e0244b8bbcc6661227ce39e
 msgid "Intersection is not the only operation performed, you can also perform unions, difference, extract a random element, and so forth."
-msgstr "利用できる操作は共通集合だけではありません。和集合、差集合、ランダムな要素の抽出、その他いろいろあります:"
+msgstr "利用できる操作は共通集合だけではありません。和集合、差集合、ランダムな要素の抽出、その他いろいろ行えます:"
 
 #: ../../source/topics/data-types-intro.rst:737
 # d036b23707324dc4913b20c8c5b921f0
 msgid "The command to extract an element is called ``SPOP``, and is handy to model certain problems. For example in order to implement a web-based poker game, you may want to represent your deck into a set. Imagine we use a one-char prefix for (C)lubs, (D)iamonds, (H)earts, (S)pades."
-msgstr "ひとつの要素を抽出するコマンドは `SPOP <http://redis.io/commands/spop>`_ と呼ばれるもので、ある種の問題をモデル化するのに便利です。たとえば、Web ベースのポーカーゲームを実装するのに、デッキをセットで表現したいとしましょう。(C)lubs, (D)iamonds, (H)earts, (S)pades のようにプレフィックスとして 1 文字を使います"
+msgstr "ひとつの要素を抽出するコマンドは `SPOP <http://redis.io/commands/spop>`_ と呼ばれるもので、ある種の問題をモデル化するのに便利です。たとえば、Web ベースのポーカーゲームを実装するのに、デッキをセットで表現したいとしましょう。(C)lubs, (D)iamonds, (H)earts, (S)pades のようにプレフィックスとして 1 文字を使うことを想像してください"
 
 #: ../../source/topics/data-types-intro.rst:750
 # 2aed2a3de4524f0f9ba0c8b5e1faeddb
@@ -679,7 +679,7 @@ msgstr "しかし、これを直接デッキに適用してしまうと、ゲー
 #: ../../source/topics/data-types-intro.rst:759
 # 96daaa0042334ac6a9c55cdd64e3435e
 msgid "This is accomplished using ``SUNIONSTORE``, which normally performs the intersection between multiple sets, and stores the result into anther set. However the intersection of a single set, is itself, so I can copy my deck with:"
-msgstr "これは `SUNIONSTORE <http://redis.io/commands/sunionstore>`_ で実現できます。通常は複数のセットの和集合をとり、別のセットに結果を格納する操作ですが、ひとつのセットの和集合はそれ自身であるため、デッキのコピーをこのように書けます:"
+msgstr "これは `SUNIONSTORE <http://redis.io/commands/sunionstore>`_ で実現できます。このコマンドは通常、複数セットの和集合をとり、別のセットに結果を格納する操作です。しかし、ひとつのセットの和集合はそれ自身であるため、デッキをこのようにしてコピーできます:"
 
 #: ../../source/topics/data-types-intro.rst:769
 # 5b5ae60d7dde4df8b4cd59c282f08187
@@ -709,32 +709,32 @@ msgstr "セットから要素を削除せずにランダムな要素を取得し
 #: ../../source/topics/data-types-intro.rst:803
 # 70d72f5afb2044aaaf3b5b606989f96b
 msgid "Redis Sorted sets"
-msgstr ""
+msgstr "Redis のソート済みセット"
 
 #: ../../source/topics/data-types-intro.rst:805
 # f62c44aaa1c640b58948090d0a7945d3
 msgid "Sorted sets are a data type which is similar to a mix between asSet and an hash. Like sets, sorted sets are composed of unique, non-repeating string elements, so in some sense a sorted set is a set as well."
-msgstr "ソート済みセットは、セットとハッシュの混合に似ています。セットのように、ソート済みセットはユニークで繰り返しのない文字列要素から構成されます。そのため、ソート済みセットはある種のセットとみなすことができます。"
+msgstr "ソート済みセットは、セットとハッシュを混ぜたものに似たデータタイプです。セットのように、ソート済みセットはユニークで繰り返しのない文字列要素から構成されます。そのため、ソート済みセットはある種のセットとみなすことができます。"
 
 #: ../../source/topics/data-types-intro.rst:809
 # 9c919c4dc4ec4432948970a190fcbfb1
 msgid "However while elements inside sets are not ordered, every element in a sorted set is associated with a floating point value, called *the score* (this is why the type is also similar to an hash, since every element is mapped to a value)."
-msgstr "しかし一方、セットの要素は順序づけされていませんが、ソート済みセットのそれぞれの要素は、*スコア* と呼ばれる浮動小数点数と関連づけられています(ハッシュと似ている、というのは、各要素がある値にマッピングされるためです)。"
+msgstr "しかし一方、セットの要素は順序づけされていませんが、ソート済みセットのそれぞれの要素は、*スコア* と呼ばれる浮動小数点数と関連づけられています(各要素がある値にマッピングされるため、これが、このタイプがハッシュにも似ている理由です)。"
 
 #: ../../source/topics/data-types-intro.rst:814
 # a824422112094fbca66dab52a76429e8
 msgid "Moreover, elements in a sorted sets are *taken in order* (so they are not ordered on request, order is a peculiarity of the data structure used to represent sorted sets). They are ordered according to the following rule:"
-msgstr "さらに、ソート済みセット内の要素は *順序を意識します* (リクエスト時に順序づけられるわけではなく、順番はソート済みセットに使われるデータ構造に特有のものです)。要素は以下のルールに従って並べられます:"
+msgstr "さらに、ソート済みセット内の要素は *順番に取り出されます* (リクエスト時に順序づけられるわけではなく、順番はソート済みセットに使われるデータ構造に特有のものです)。要素は以下のルールに従って並べられます:"
 
 #: ../../source/topics/data-types-intro.rst:819
 # 7f2ea38a598d429492889fc798808738
 msgid "If A and B are two elements with a different score, then A > B if A.score is > B.score."
-msgstr "もし A と B が異なるスコア値をもつなら、A.score > B.score ならば A > B となる。"
+msgstr "もし A と B が異なるスコア値をもち、A.score > B.score ならば A > B となる。"
 
 #: ../../source/topics/data-types-intro.rst:821
 # 2a53230fc60c4b2290eacf5181768d9a
 msgid "If A and B have exactly the same score, than A > B if the A string is lexicographically greater than the B string. A and B strings can't be equal since sorted sets only have unique elements."
-msgstr "もし A と B がまったく同じスコア値をもつなら、A の文字列が辞書順で B より大きいならば A > B となる。ソート済みセットの要素はユニークなので、A と B の文字列は等しくなることはない。"
+msgstr "もし A と B がまったく同じスコア値をもち、A 文字列が辞書順で B 文字列より大きいならば A > B となる。ソート済みセットの要素はユニークなので、A と B の文字列は等しくなることはない。"
 
 #: ../../source/topics/data-types-intro.rst:825
 # 79ff75f80c9346fd80272f912f55de13
@@ -749,7 +749,7 @@ msgstr "`ZADD <http://redis.io/commands/zadd>`_ は `SADD <http://redis.io/comma
 #: ../../source/topics/data-types-intro.rst:854
 # be2e3872ff2c417086b34b4108f08df4
 msgid "With sorted sets it is trivial to return a list of hackers sorted by their birth year because actually *they are already sorted*."
-msgstr "ソート済みセットを使うと、ハッカーのリストが生年でソートされた状態で返却されるのは自明です。なぜなら、実際のところ *それらはすでにソート済みである* ためです。"
+msgstr "ソート済みセットを使うと、ハッカーのリストを生年でソートされた状態で返却するのは簡単です。なぜなら、実際に *それらはすでにソート済みである* ためです。"
 
 #: ../../source/topics/data-types-intro.rst:857
 # 416c64500503452597805502c5e12254
@@ -764,7 +764,7 @@ msgstr "注意: 0 と -1 は、インデックス 0 の要素から最後の要�
 #: ../../source/topics/data-types-intro.rst:879
 # e24bf9905ccf4683b709b48ec9c04e02
 msgid "What if I want to order them the opposite way, youngest to oldest? Use `ZREVRANGE </commands/zrevrange>`__ instead of `ZRANGE </commands/zrange>`__:"
-msgstr "逆方向、若い順に並べたい場合はどうしたら良いでしょう？ `ZRANGE <http://redis.io/commands/zrange>`_ の代わりに `ZREVRANGE <http://redis.io/commands/zrevrange>`_ が使えます。"
+msgstr "逆方向、若い順に並べたい場合はどうしたら良いでしょう？ `ZRANGE <http://redis.io/commands/zrange>`_ の代わりに `ZREVRANGE <http://redis.io/commands/zrevrange>`_ を使ってください。"
 
 #: ../../source/topics/data-types-intro.rst:896
 # cfdc5f43c0814d13bd8f824a921c76a5
@@ -779,7 +779,7 @@ msgstr "範囲操作"
 #: ../../source/topics/data-types-intro.rst:924
 # cfe50a4615f64a2b8fbd22ebf3ae3586
 msgid "Sorted sets are more powerful than this. They can operate on ranges. Let's get all the individuals that were born up to the 1950 inclusive. We use the ``ZRANGEBYSCORE`` command to do it:"
-msgstr "ソート済みセットは上記で説明したよりももっとパワフルで、範囲を扱う操作を実行できます。1950年以降に生まれた人、を取得してみましょう。 `ZRANGEBYSCORE <http://redis.io/commands/zrangebyscore>`_ コマンドがこの仕事をします:"
+msgstr "ソート済みセットは上記で説明したよりももっとパワフルで、範囲を扱う操作を実行できます。1950年までに生まれた人すべてを取得してみましょう。これをするのに `ZRANGEBYSCORE <http://redis.io/commands/zrangebyscore>`_ コマンドを使います:"
 
 #: ../../source/topics/data-types-intro.rst:937
 # 738a8ec1bb7d49bc82a7d1dd07711fe6
@@ -794,12 +794,12 @@ msgstr "特定の範囲にある要素を削除することもできます。ソ
 #: ../../source/topics/data-types-intro.rst:948
 # 2803bce9ec9e477a8d76c3030c1183e5
 msgid "``ZREMRANGEBYSCORE`` is perhaps not the best command name, but it can be very useful, and returns the number of removed elements."
-msgstr "`ZREMRANGEBYSCORE <http://redis.io/commands/zremrangebyscore>`_ はおそらく最適なコマンド名ではないですが、しかしとても役に立ち、戻り値としては削除された要素数を返します。"
+msgstr "`ZREMRANGEBYSCORE <http://redis.io/commands/zremrangebyscore>`_ はおそらく最適なコマンド名ではないですが、しかしとても役に立ち、削除された要素数を返します。"
 
 #: ../../source/topics/data-types-intro.rst:951
 # 36e478f0525c406184ac09137307b693
 msgid "Another extremely useful operation defined for sorted set elements is the get-rank operation. It is basically possible to ask what is the position of an element in the set of the order elements."
-msgstr "ソート済みセットに対して定義される、別の非常に便利な操作に、ランクを取得する操作があります。これはざっくり言って、順序づけられた要素の中で、ある要素が何番目にあるのかを問い合わせるものです。"
+msgstr "ソート済みセット要素に対して定義される、別の非常に便利な操作に、ランクを取得する操作があります。順序づけられた要素セットの中で、ある要素が何番目にあるのかを問い合わせることは基本的に可能です。"
 
 #: ../../source/topics/data-types-intro.rst:960
 # 4585ad8f27554313a9756fed22fab197
@@ -814,12 +814,12 @@ msgstr "辞書順のスコア"
 #: ../../source/topics/data-types-intro.rst:966
 # ab610723b4d0413b9b94a5c783de951b
 msgid "With recent versions of Redis 2.8, a new feature was introduced that allows, assuming elements in a sorted set are all inserted with the same identical score, to get ranges lexicographically (elements are compared with the C ``memcmp`` function, so it is guaranteed that there is no collation, and every Redis instance will reply with the same output)."
-msgstr "Redis 2.8 以降のバージョンでは、すべての要素が同じスコア値で追加されていることを前提として、辞書順で範囲を取得する新しい機能が導入されました(要素は C の 'memcmp' 関数で比較されるため、衝突がなく、すべての Redis インスタンスが同じ出力を返すことが保証されます)。"
+msgstr "最近のバージョンである Redis 2.8 では、すべての要素が同じスコア値で追加されていることを前提として、辞書順で範囲を取得する新しい機能が導入されました(要素は C の 'memcmp' 関数で比較されるため、照合がなく、すべての Redis インスタンスが同じ出力を返すことが保証されます)。"
 
 #: ../../source/topics/data-types-intro.rst:972
 # c203f2c5c10f4fcf8f44826306f6fd5d
 msgid "The main commands to operate with lexicographical ranges are ``ZRANGEBYLEX``, ``ZREVRANGEBYLEX``, ``ZREMRANGEBYLEX`` and ``ZLEXCOUNT``."
-msgstr "辞書順での範囲操作を行う主なコマンドには `ZRANGEBYLEX <http://redis.io/commands/zrangebylex>`_, `ZREVRANGEBYLEX`, `ZREMRANGEBYLEX <http://redis.io/commands/zremrangebylex>`_, そして `ZLEXCOUNT <http://redis.io/commands/zlexcount>`_ があります。"
+msgstr "辞書順での範囲操作を行う主なコマンドには `ZRANGEBYLEX <http://redis.io/commands/zrangebylex>`_, `ZREVRANGEBYLEX`, `ZREMRANGEBYLEX <http://redis.io/commands/zremrangebylex>`_, そして `ZLEXCOUNT <http://redis.io/commands/zlexcount>`_ です。"
 
 #: ../../source/topics/data-types-intro.rst:976
 # a925269fe8a74215a1cad8075f8b4797
@@ -829,7 +829,7 @@ msgstr "たとえば、リストにもう一度、有名なハッカーを追加
 #: ../../source/topics/data-types-intro.rst:985
 # cf21832cfb3b40758dfb1e03b113bd1c
 msgid "Because of the sorted sets ordering rules, they are already sorted lexicographically:"
-msgstr "ソート済みセットの順序づけルールに従い、これらは辞書順でソートされます。"
+msgstr "ソート済みセットの順序づけルールに従い、これらは既に辞書順でソートされています。"
 
 #: ../../source/topics/data-types-intro.rst:1001
 # de9b38ea1c2047fa8fd68cee33f49de4
@@ -844,7 +844,7 @@ msgstr "範囲は、端を含むことも含まないこともでき(最初の�
 #: ../../source/topics/data-types-intro.rst:1014
 # 9a3d9f1e3dc343ad946a41cc6539cc17
 msgid "This feature is important because allows to use sorted sets as a generic index. For example, if you want to index elements by a 128-bit unsigned integer argument, all you need to do is to add elements into a sorted set with the same score (for example 0) but with an 8 bytes prefix consisting of **the 128 bit number in big endian**. Since numbers in big endian, when ordered lexicographically (in raw bytes order) are actually ordered numerically as well, you can ask for ranges in the 128 bit space, and get the elements value discarding the prefix."
-msgstr "これにより、ソート済みセットを一般的なインデックスとして使うことができるようになるため、この機能は重要です。たとえば、要素を 128 bit の符号なし整数によりインデックスしたい、としましょう。必要なのは、ソート済みセットに、同じスコア(たとえば 0)で、ただし **128 bit をビッグエンディアン方式で表現した** 8 byte をプレフィックスに付与した要素を追加するだけです。数値はビッグエンディアン方式なので、辞書順(生のバイトオーダー)で並べたものは数値で並べたものと一致します。そのため、128 bit 空間で範囲を問合せることができ、その後でプレフィクスを除去することで求める要素が得られます。"
+msgstr "これにより、ソート済みセットを一般的なインデックスとして使うことができるようになるため、この機能は重要です。たとえば、要素を 128 bit の符号なし整数によりインデックスしたい、としましょう。必要なことは、ソート済みセットに、同じスコア(たとえば 0)で、ただし **ビッグエンディアン方式の128 bit 数字** から構成される8 byte のプレフィックスを付与した要素を追加するだけです。数値はビッグエンディアン方式なので、辞書順(生のバイトの順番)で並べたものは数値で並べたものと一致します。そのため、128 bit 空間で範囲を問合せることができ、その後でプレフィクスを除去することで求める要素が得られます。"
 
 #: ../../source/topics/data-types-intro.rst:1023
 # 3d2c78444c7f46bf96be3ab75afa396c
@@ -859,22 +859,22 @@ msgstr "スコア更新: 順位表(leader boards)"
 #: ../../source/topics/data-types-intro.rst:1029
 # 42af91b7dedc413bbc9c4ee8c8da1ba3
 msgid "Just a final note about sorted sets before switching to the next topic. Sorted sets scores can be updated at any time. Just calling again ZADD against an element already included in the sorted set will update its score (and position) with O(log(N)) time complexity, so sorted sets are suitable when there are tons of updates."
-msgstr "次のトピックに移る前に、ソート済みセットについて、最後の覚書です。ソート済みセットのスコアはいつでも更新可能です。ソート済みセット中にすでに含まれている要素に対して ZADD を呼ぶと、そのスコア(と位置)が更新されます。計算量は高々 O(log(N)) のため、ソート済みセットは大量の更新があるケースに適しています。"
+msgstr "次のトピックに移る前に、ソート済みセットについて、最後の注意です。ソート済みセットのスコアはいつでも更新可能です。ソート済みセット中にすでに含まれている要素に対して ZADD を呼ぶと、そのスコア(と位置)が更新されます。計算量は O(log(N)) のため、ソート済みセットは大量の更新があるケースに適しています。"
 
 #: ../../source/topics/data-types-intro.rst:1035
 # a8cf9e0d066c4e14bab80107af8d841c
 msgid "Because of this characteristic a common use case is leader boards. The typical application is a Facebook game where you combine the ability to take users sorted by their high score, plus the get-rank operation, in order to show the top-N users, and the user rank in the leader board (you are the #4932 best score here)."
-msgstr "この性質をもつため、よくあるユースケースのひとつは順位表(leader boards)です。典型的なアプリケーションに Facebook ゲームがあります。これは、ユーザーをスコアの高い順に並べる機能に加えて、ランキングを取得する操作を備えます。ユーザーに、上位 の N ユーザー、およびリーダーボードにおける自分の順位(「あなたはベストスコア順で 4932 位です」)を示すためです。"
+msgstr "この性質をもつため、よくあるユースケースは順位表(leader boards)です。典型的なアプリケーションに Facebook ゲームがあります。これは、ユーザーをスコアの高い順に並べる機能に加えて、ランキングを取得する操作を備えます。ユーザーに、上位 の N ユーザー、およびリーダーボードにおける自分の順位(「あなたはベストスコア順で 4932 位です」)を示すためです。"
 
 #: ../../source/topics/data-types-intro.rst:1042
 # 2a070ee755a84d529619e9ec0a219736
 msgid "HyperLogLogs"
-msgstr ""
+msgstr "HyperLogLog"
 
 #: ../../source/topics/data-types-intro.rst:1044
 # 3c58a041dc0644359a7ce1b6c3064aab
 msgid "An HyperLogLog is a probabilistic data structure used in order to count unique things (technically this is referred to estimating the cardinality of a set). Usually counting unique items require to use an amount of memory proportional to the number of items you want to count, because you need to remember the elements you already seen in the past, in order to avoid to count them multiple times. However there is a set of algorithms that trade memory for precision: you end with an estimated measure, with a standard error, in the case of the Redis implementation, which is less than 1%, but the magic of this algorithms is that you no longer need to use an amount of memory proportional to the number of things counted, you just need to use a constant amount of memory! 12k bytes in the worst case, or a lot less if you HyperLogLog (We'll just call them HLL from now) has seen very few elements."
-msgstr "HyperLogLog はユニークなものを数えるための確率的なデータ構造です(技術的には、集合の濃度を推定する際に言及されます)。通常、ユニークなアイテムを数え上げるためには、数えたいアイテム数に比例するメモリを必要とします。なぜなら、過去に数えた要素を、何度も数えてしまわないように覚えておく必要があるためです。メモリと精度のトレードオフを考慮して、いくつかのアルゴリズムが存在します: Redis の実装では、標準誤差を 1% 未満に抑えながらも、(アルゴリズムの魔法により)数え上げる対象の数に比例するメモリを必要とせず、必要なのは一定量のメモリだけです！最悪で 12k バイト、HyperLogLog (以降、単に HLL と呼びます) で考慮する要素数が非常に少ない場合は、もっと少なくて済みます。"
+msgstr "HyperLogLog はユニークなものを数えるための確率的なデータ構造です(技術的には、集合の濃度を推定する際に言及されます)。通常、ユニークなアイテムを数え上げるためには、数えたいアイテム数に比例するメモリ量を必要とします。なぜなら、過去に見た要素を、何度も数えてしまわないように覚えておく必要があるためです。精度を落とす代わりにメモリ使用量を抑えた、いくつかのアルゴリズムが存在します: つまり、標準誤差をもつ概算方法です。Redis の実装では、標準誤差を 1% 未満に抑えながらも、(アルゴリズムの魔法により)数え上げる対象の数に比例するメモリを必要とせず、必要なのは一定量のメモリだけです！最悪で 12k バイト、HyperLogLog (以降、単に HLL と呼びます) で考慮する要素数が非常に少ない場合は、もっと少なくて済みます。"
 
 #: ../../source/topics/data-types-intro.rst:1058
 # 9f9dddd369694a1595616388f460b5e9
@@ -889,7 +889,7 @@ msgstr "概念的に、HLL API はセットを使って同じタスクを実行�
 #: ../../source/topics/data-types-intro.rst:1067
 # df0754c8ae2645759f9ea0b0d8eb4b06
 msgid "While you don't really *add items* into an HLL, because the data structure only contains a state that does not include actual elements, the API is the same:"
-msgstr "HLL のデータ構造が含むのは状態だけで要素自体を含まないため、実際には *要素の追加* を行うわけではありませんが、API は同様です:"
+msgstr "HLL のデータ構造は要素自体を含まない状態だけを含むため、実際には *要素の追加* を行うわけではありませんが、API は同じです:"
 
 #: ../../source/topics/data-types-intro.rst:1071
 # d3c34fe2bc694a53855c3229f335ab9b
@@ -899,17 +899,17 @@ msgstr "新しい要素が見つかる都度、それを `PFADD <http://redis.io
 #: ../../source/topics/data-types-intro.rst:1073
 # cd02f0cbf8334d4d99f15d773f276f47
 msgid "Every time you want to retrieve the current approximation of the unique elements *added* with ``PFADD`` so far, you use the ``PFCOUNT``."
-msgstr "`PFADD <http://redis.io/commands/pfadd>`_ で *追加された* ユニークな要素数の現在の近似値を検索する都度、 `PFCOUNT <http://redis.io/commands/pfcount>`_ を使います。"
+msgstr "`PFADD <http://redis.io/commands/pfadd>`_ で *追加された* ユニークな要素数の現在の近似値を取得したいときはいつでも、 `PFCOUNT <http://redis.io/commands/pfcount>`_ を使います。"
 
 #: ../../source/topics/data-types-intro.rst:1077
 # 550ea6a887f34b3c95c65d11e9dd5e4f
 msgid "pfadd hll a b c d (integer) 1 pfcount hll (integer) 4"
-msgstr ""
+msgstr "pfadd hll a b c d (integer) 1 pfcount hll (integer) 4"
 
 #: ../../source/topics/data-types-intro.rst:1079
 # 046be28c03364155b8cbe56ff7c5b3bf
 msgid "An example of use case for this data structure is counting unique queries performed by users in a search form every day."
-msgstr "このデータ構造のひとつのユースケースは、ユーザーが検索フォームから実行した、日々のユニーククエリの数を数える、というものです。"
+msgstr "このデータ構造のユースケースの例は、ユーザーが検索フォームから実行した、日々のユニークなクエリの数を数える、というものです。"
 
 #: ../../source/topics/data-types-intro.rst:1082
 # e67a7a3bb8dd40afa138d0d22e5f97cb
@@ -929,12 +929,12 @@ msgstr "Redis API には他にも、このドキュメントでは詳しく掘�
 #: ../../source/topics/data-types-intro.rst:1091
 # 7bd304e7c23242fea4eb829dd946b752
 msgid "It is possible to `iterate the key space or a large collection incrementally </commands/scan>`__."
-msgstr "`大きなコレクションのキースペースをひとつひとつインクリメントする <http://redis.io/commands/scan>`_ ことができます。"
+msgstr "`大きなコレクションのキースペースを少しずつたどる <http://redis.io/commands/scan>`_ ことができます。"
 
 #: ../../source/topics/data-types-intro.rst:1093
 # e4c6840e1e94473085fa39bdb3ce4f6f
 msgid "It is possible to run `Lua scripts server side </commands/eval>`__ to win latency and bandwidth."
-msgstr "レイテンシと帯域を節約するため、 `サーバーサイド Lua スクリプト <http://redis.io/commands/eval>`_ を実行できます。"
+msgstr "レイテンシと帯域を節約するために、 `サーバー側で Lua スクリプト <http://redis.io/commands/eval>`_ を実行できます。"
 
 #: ../../source/topics/data-types-intro.rst:1095
 # 054a61f6df26403bac8ded6bfc97bbc2
@@ -949,10 +949,10 @@ msgstr "さらに学ぶ"
 #: ../../source/topics/data-types-intro.rst:1100
 # 9efbc1ce51b541a9a0416bcd7a036b8a
 msgid "This tutorial is in no way complete and has covered just the basics of the API. Read the `command reference </commands>`__ to discover a lot more."
-msgstr "このチュートリアルは、包括的なものではなく、API の基礎にすぎません。さらに学ぶため、 `コマンドリファレンス <http://redis.io/commands>`_ を読んでください。"
+msgstr "このチュートリアルは、決して包括的なものではなく、API の基礎を扱ったにすぎません。さらに学ぶためには、 `コマンドリファレンス <http://redis.io/commands>`_ を読んでください。"
 
 #: ../../source/topics/data-types-intro.rst:1104
 # 3ba311da78ce45db95ae80d33824fa1b
 msgid "Thanks for reading, and have a good hacking with Redis!"
-msgstr ""
+msgstr "読んでくれてありがとう。そして Redis でよいハックを!"
 
