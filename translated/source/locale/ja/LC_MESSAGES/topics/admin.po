@@ -34,17 +34,17 @@ msgstr "Redis セットアップヒント"
 #: ../../source/topics/admin.rst:11
 # 6e423f33264d44058b1c59e20f775992
 msgid "We suggest deploying Redis using the **Linux operating system**. Redis is also tested heavily on osx, and tested from time to time on FreeBSD and OpenBSD systems. However Linux is where we do all the major stress testing, and where most production deployments are working."
-msgstr "**Linux オペレーティングシステム** 上に Redis をデプロイすることを推奨します。Redis は OSX でも十分に、またしばしば FreeBSD や OpenBSD でもテストされています。しかし、私たちは Linux にて主な負荷テストを実施しており、またほとんどのプロダクション環境は Linux で稼働しています。"
+msgstr "**Linux オペレーティングシステム** 上に Redis をデプロイすることを推奨します。Redis は OSX でも十分に、また時にはFreeBSD や OpenBSD でもテストされています。しかし、私たちは Linux にてすべての重要な負荷テストを実施しており、またほとんどのプロダクション環境は Linux で稼働しています。"
 
 #: ../../source/topics/admin.rst:16
 # 966d3bf1e5844127a5927174a956a969
 msgid "Make sure to set the Linux kernel **overcommit memory setting to 1**. Add ``vm.overcommit_memory = 1`` to ``/etc/sysctl.conf`` and then reboot or run the command ``sysctl vm.overcommit_memory=1`` for this to take effect immediately."
-msgstr "Linux のカーネルを **overcommit memory setting to 1** としてください。 ``/etc/sysctl.conf`` に ``vm.overcommit_memory = 1`` を設定し、リブートもしくは即時反映のため ``sysctl vm.overcommit_memory=1`` コマンドを発行してください。"
+msgstr "Linux のカーネルにおける **メモリーのオーバコミット設定を1** にしてください。 ``/etc/sysctl.conf`` に ``vm.overcommit_memory = 1`` を設定しリブートするか、即時反映のため ``sysctl vm.overcommit_memory=1`` コマンドを発行してください。"
 
 #: ../../source/topics/admin.rst:20
 # 9b1a6f4d340147078070674061d2f458
 msgid "Make sure to **setup some swap** in your system (we suggest as much as swap as memory). If Linux does not have swap and your Redis instance accidentally consumes too much memory, either Redis will crash for out of memory or the Linux kernel OOM killer will kill the Redis process."
-msgstr "システムに **いくらかの swap を設定してください** (メモリと同じ大きさを推奨します)。もし swap がないと、Redis が急激にメモリを消費しすぎてしまったり、クラッシュしたり、Linux カーネルの OOM killer に Redis プロセスが kill されてしまうことがあります。"
+msgstr "システムに **いくらかの swap を設定してください** (メモリと同じ大きさを推奨します)。もし swap がなく、Redis がたまたまメモリを消費しすぎてしまうと、メモリ不足により Redis がクラッシュするか、Linux カーネルの OOM killer が Redis プロセスを kill するかします。"
 
 #: ../../source/topics/admin.rst:25
 # baaf2981c54d45a6ac443665c617cf8f
